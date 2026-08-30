@@ -1,0 +1,54 @@
+# ============================================================
+# YOLO 技术博客 — Git 忽略规则
+# 本仓库仅发布纯博客文章（13 篇核心文 + 5 篇归档 + 导读 + 配图）
+# 不包含：第三方克隆 / 实验与 PR 材料 / 模型二进制 / 内部生成脚本
+# ============================================================
+
+# ---- 第三方仓库克隆（他人仓库，不入库）----
+/ultralytics_yolov8/
+/rknn_model_zoo/
+/手眼标定、内参测定/aruco_ros/
+/手眼标定、内参测定/easy_handeye/
+/手眼标定、内参测定/easy_handeye2/
+/手眼标定、内参测定/ros2_aruco/
+/yolov8n/rknn_model_zoo/
+/ultralytics_rknn/ultralytics_yolov8/
+
+# ---- 手眼标定目录：仅保留自撰教程文章，排除代码与标定素材 ----
+/手眼标定、内参测定/畸变/calibration_images/
+/手眼标定、内参测定/畸变/__pycache__/
+/手眼标定、内参测定/畸变/*.py
+/手眼标定、内参测定/畸变/*.json
+/手眼标定、内参测定/畸变/requirements.txt
+/手眼标定、内参测定/畸变/README_GUI.md
+/手眼标定、内参测定/畸变/.claude/
+
+# ---- 实验与 PR 材料（本次不发布）----
+/coco_benchmark/
+/coco_benchmark_结果_9头vs6头/
+/yolov8n/
+/ultralytics_rknn/
+/ultralytics_pr/
+
+# ---- 模型二进制与大文件（兜底）----
+*.onnx
+*.rknn
+*.engine
+*.pt
+*.weights
+*.npz
+
+# ---- 渲染归档 / 抓取数据 / 草稿 ----
+*.html
+*.docx
+/新建 文本文档.txt
+/llms_full.txt
+/models_list.txt
+
+# ---- 内部生成脚本（不入库）----
+/expand_article.py
+/append_chapter6_content.py
+
+# ---- 系统 / 编辑器 ----
+.DS_Store
+Thumbs.db
