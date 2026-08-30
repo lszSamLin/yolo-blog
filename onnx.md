@@ -2,8 +2,8 @@
 
 > **系列定位**：本文是「部署格式专题」之一 —— 跨框架交换格式，几乎所有转换链路（RKNN / TensorRT / OpenVINO）的起点。内容为 Ultralytics 官方英文文档完整归档，与中文实操文章互补。总目录见 [README 导读](README.md)。
 >
-> - 中文实操路线：[Yolo模型的转换与rknn-toolkit相关工具链的使用](Yolo模型的转换与rknn-toolkit相关工具链的使用.md)
-> - 关联阅读：[yolo模型推理与部署详解](yolo模型推理与部署详解.md) · [模型量化深度解析](模型量化深度解析.md)
+> - 中文实操路线：[Yolo模型的转换与rknn-toolkit相关工具链的使用](YOLO模型的转换与rknn-toolkit相关工具链的使用.md)
+> - 关联阅读：[yolo模型推理与部署详解](YOLO模型推理与部署详解.md) · [模型量化深度解析](模型量化深度解析.md)
 
 ---
 
@@ -180,4 +180,4 @@ results = onnx_model(&quot;https://ultralytics.com/images/bus.jpg&quot;)</code><
 
 ---
 
-> **📌 系列导航**：[📖 返回导读目录](README.md) · [中文实操：Yolo模型的转换与rknn-toolkit相关工具链的使用 →](Yolo模型的转换与rknn-toolkit相关工具链的使用.md)
+> **📌 系列导航**：[📖 返回导读目录](README.md) · [中文实操：Yolo模型的转换与rknn-toolkit相关工具链的使用 →](YOLO模型的转换与rknn-toolkit相关工具链的使用.md)

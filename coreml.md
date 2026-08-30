@@ -2,7 +2,7 @@
 
 > **系列定位**：本文是「部署格式专题」之一 —— Apple 生态（iOS / macOS / Neural Engine）。内容为 Ultralytics 官方英文文档完整归档，与中文实操文章互补。总目录见 [README 导读](README.md)。
 >
-> - 中文实操路线：[yolo模型推理与部署详解](yolo模型推理与部署详解.md)
+> - 中文实操路线：[yolo模型推理与部署详解](YOLO模型推理与部署详解.md)
 > - 关联阅读：[模型量化深度解析](模型量化深度解析.md) · [onnx.md](onnx.md)（转换链路起点）
 
 ---
@@ -118,4 +118,4 @@ app models. The export produces a <code>yolo26n.mlpackage</code> ML Program read
 
 ---
 
-> **📌 系列导航**：[📖 返回导读目录](README.md) · [中文实操：yolo模型推理与部署详解 →](yolo模型推理与部署详解.md)
+> **📌 系列导航**：[📖 返回导读目录](README.md) · [中文实操：yolo模型推理与部署详解 →](YOLO模型推理与部署详解.md)

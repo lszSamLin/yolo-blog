@@ -6519,4 +6519,4 @@ yolo-inference-deployment/
 
 ---
 
-> **📌 系列导航**：[← 上一篇：模型在npu的cpp部署](模型在npu的cpp部署.md) · [📖 导读目录](README.md) · [下一篇：yolo模型实战项目完整指南 →](yolo模型实战项目完整指南.md)
+> **📌 系列导航**：[← 上一篇：模型在npu的cpp部署](模型在npu的cpp部署.md) · [📖 导读目录](README.md) · [下一篇：yolo模型实战项目完整指南 →](YOLO模型实战项目完整指南.md)

@@ -1959,4 +1959,4 @@ export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 
 ---
 
-> **📌 系列导航**：[← 上一篇：Yolo模型的转换与rknn-toolkit相关工具链的使用](Yolo模型的转换与rknn-toolkit相关工具链的使用.md) · [📖 导读目录](README.md) · [下一篇：模型在npu的cpp部署 →](模型在npu的cpp部署.md)
+> **📌 系列导航**：[← 上一篇：Yolo模型的转换与rknn-toolkit相关工具链的使用](YOLO模型的转换与rknn-toolkit相关工具链的使用.md) · [📖 导读目录](README.md) · [下一篇：模型在npu的cpp部署 →](模型在npu的cpp部署.md)

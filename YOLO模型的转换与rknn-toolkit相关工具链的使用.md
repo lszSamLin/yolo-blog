@@ -564,4 +564,4 @@ YOLO 模型转换到 RKNN 的关键步骤：
 
 ---
 
-> **📌 系列导航**：[← 上一篇：模型量化深度解析](模型量化深度解析.md) · [📖 导读目录](README.md) · [下一篇：yolo模型在npu的python部署 →](yolo模型在npu的python部署.md)
+> **📌 系列导航**：[← 上一篇：模型量化深度解析](模型量化深度解析.md) · [📖 导读目录](README.md) · [下一篇：yolo模型在npu的python部署 →](YOLO模型在npu的python部署.md)

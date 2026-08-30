@@ -4583,4 +4583,4 @@ C++ 部署 YOLO 到 Rockchip NPU 涉及多个关键环节，本文系统性地�
 
 ---
 
-> **📌 系列导航**：[← 上一篇：yolo模型在npu的python部署](yolo模型在npu的python部署.md) · [📖 导读目录](README.md) · [下一篇：yolo模型推理与部署详解 →](yolo模型推理与部署详解.md)
+> **📌 系列导航**：[← 上一篇：yolo模型在npu的python部署](YOLO模型在npu的python部署.md) · [📖 导读目录](README.md) · [下一篇：yolo模型推理与部署详解 →](YOLO模型推理与部署详解.md)
