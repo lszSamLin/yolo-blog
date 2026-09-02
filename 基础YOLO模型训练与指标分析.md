@@ -24,14 +24,11 @@ YOLO（You Only Look Once）系列是目前工业界和学术界应用最广泛�
 2. 双击运行安装程序，一路"Next"，**建议勾选** "Add Miniconda3 to my PATH environment variable"（安装完成后生效）
 3. 打开 **Anaconda Prompt**（或 PowerShell），验证安装：
 
-```bash
 conda --version
 
-```
 
 #### Linux (Ubuntu / CentOS)
 
-```bash
 # 下载 Miniconda 安装脚本
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
@@ -41,11 +38,9 @@ conda init bash
 source ~/.bashrc   # 或重新打开终端，用于重新加载配置
 conda --version
 
-```
 
 #### macOS
 
-```bash
 # 通过 Homebrew 安装（推荐）
 brew install --cask miniconda
 
@@ -55,11 +50,9 @@ sudo installer -pkg Miniconda3-latest-MacOSX-arm64.pkg -target /
 
 conda --version
 
-```
 
 #### 配置镜像（加速下载，国内推荐）
 
-```bash
 # 配置清华镜像源
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
@@ -69,13 +62,11 @@ conda config --set show_channel_urls yes
 # 查看配置
 conda config --show channels
 
-```
 
 ### 1.1 建立 Conda 虚拟环境
 
 使用 conda 环境隔离依赖是避免环境冲突的最佳实践。以下流程适用于 Windows / Linux / macOS。
 
-```bash
 # 步骤1：创建虚拟环境（指定 Python 版本）
 conda create -n yolo python=3.10 -y
 conda activate yolo
@@ -84,29 +75,25 @@ conda activate yolo
 conda env list          # 查看所有环境
 python --version        # 确认 Python 版本 >= 3.9
 
-```
 
 ### 1.2 查看 NVIDIA 驱动版本，确定支持的 CUDA 版本
 
 在安装 PyTorch 和 CUDA 之前，**必须先确认本机 NVIDIA 驱动支持的最高 CUDA 版本**，否则安装的 CUDA 包无法工作。
 
-```bash
 # ── Windows ──
 nvidia-smi
 
 # ── Linux / macOS ──
 nvidia-smi
 
-```
 
 输出示例（关注右上角）：
 
-```
 +-----------------------------------------------------------------------------+
+
 | NVIDIA-SMI 550.54.02    Driver Version: 550.54.02    CUDA Version: 12.5     |
 |-------------------------------+----------------------+----------------------+
 
-```
 
 **驱动版本与 CUDA 版本的对应关系**：
 
@@ -128,7 +115,6 @@ nvidia-smi
 
 #### 方式A：通过 conda 安装（推荐，不依赖系统 CUDA）
 
-```bash
 conda activate yolo
 
 # CUDA 12.1（推荐，需驱动 >= 550.xx）
@@ -137,7 +123,6 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 # CUDA 11.8（旧驱动适用，需驱动 >= 470.57.01）
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
 
-```
 
 > PS : **为什么不需要单独装 CUDA Toolkit？**
 > conda 安装时会自动拉取 `pytorch-cuda=xx.x` 依赖包，其中内置 CUDA Runtime 库（`cublas`、`cudart`、`curand` 等），PyTorch 运行时会直接调用这些库，不需要系统级 CUDA Toolkit。
@@ -145,16 +130,13 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvi
 
 #### 方式B：pip 安装（适合已配置好 CUDA 驱动的场景）
 
-```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 # 或 cu118
 # pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
-```
 
 #### 最后验证 GPU 可用性
 
-```bash
 python -c "
 import torch
 print(f'PyTorch:  {torch.__version__}')
@@ -165,25 +147,21 @@ if torch.cuda.is_available():
     print(f'Memory:   {torch.cuda.get_device_properties(0).total_mem / 1e9:.1f} GB')
 "
 
-```
 
 #### 安装 cuDNN
 
 cuDNN 通常随 PyTorch 自动安装，确认方式如下：
 
-```python
 import torch
 print(torch.backends.cudnn.enabled)   # 应输出 True
 print(torch.backends.cudnn.version())  # 输出 cuDNN 版本（如 8902 表示 8.9.2）
 
-```
 
 若需要**手动安装独立 cuDNN**（用于非 PyTorch 框架或调试）：
 
 1. 前往 [NVIDIA cuDNN 下载页](https://developer.nvidia.com/cudnn) 下载对应 CUDA 版本的包
 2. 按系统解压并复制文件：
 
-   ```bash
    # ── Windows ──
    # 假设 CUDA 安装在 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1
    # conda 环境内则使用 %CONDA_PREFIX%
@@ -210,11 +188,9 @@ print(torch.backends.cudnn.version())  # 输出 cuDNN 版本（如 8902 表示 8
    unzip cudnn-macos-x64-*.zip -d $CONDA_PREFIX/
    # 验证
    python -c "import torch; print(f'cuDNN: {torch.backends.cudnn.version()}')"
-   ```
 
 ### 1.4 安装 Ultralytics
 
-```bash
 # 基础安装（含 PyTorch 依赖）
 pip install ultralytics
 
@@ -225,13 +201,11 @@ pip install ultralytics[all]
 python -c "from ultralytics import YOLO; print(YOLO.__module__)"
 python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
 
-```
 
 推荐使用 **Python 3.9+**，CUDA **11.8** 或 **12.x**（GPU 训练时）。Ultralytics 官方推荐 PyTorch 版本为 `>=1.8.0`。
 
 ### 1.5 验证安装与 GPU 可用性
 
-```python
 from ultralytics import YOLO
 import torch
 
@@ -246,16 +220,13 @@ else:
 model = YOLO("yolov8n.pt")
 results = model.predict("test_image.jpg", conf=0.25, show=True)
 
-```
 
 ### 1.6 验证训练环境
 
-```python
 # 检查训练所需的所有依赖
 from ultralytics.utils import checks
 checks.check_requirements()  # 验证所有依赖已安装
 
-```
 
 ### 1.7 YOLOv8 环境配置
 
@@ -274,7 +245,6 @@ YOLOv8 是 Ultralytics 推出的主流目标检测框架，提供了完整的训
 
 #### 安装 YOLOv8 支持
 
-```bash
 # 方式1：安装最新版 ultralytics（推荐）
 pip install --upgrade ultralytics
 
@@ -284,11 +254,9 @@ pip install git+https://github.com/ultralytics/ultralytics.git
 # 方式3：使用 conda（适合生产环境）
 conda install -c conda-forge ultralytics
 
-```
 
 #### 验证 YOLOv8 可用性
 
-```python
 from ultralytics import YOLO
 import torch
 
@@ -314,7 +282,6 @@ if torch.cuda.is_available():
 else:
     print("⚠ 仅使用 CPU（YOLOv8 训练速度较慢）")
 
-```
 
 #### YOLOv8 已知兼容性问题
 
@@ -363,7 +330,6 @@ else:
 
 #### 性价比决策树
 
-```
 GPU 选型决策树：
 ──────────────────────────────────────────────────────────────
                     训练需求
@@ -386,7 +352,6 @@ GPU 选型决策树：
                                   或 H100×4
 ──────────────────────────────────────────────────────────────
 
-```
 
 ---
 
@@ -408,7 +373,6 @@ GPU 选型决策树：
 
 #### Lambda Labs 快速上手
 
-```bash
 # 1. 注册并选择实例（推荐 RTX 4090 4× 或 A100 80GB）
 # 2. 通过 SSH 连接实例
 ssh -i ~/.ssh/lambda_key user@your-instance-ip
@@ -430,7 +394,6 @@ mount /dev/sdb1 /data
 # 6. 开始训练
 yolo detect train data=/data/data.yaml epochs=100 batch=32 device=0
 
-```
 
 #### 成本优化技巧
 
@@ -454,7 +417,6 @@ yolo detect train data=/data/data.yaml epochs=100 batch=32 device=0
 
 #### 基础 Dockerfile
 
-```dockerfile
 # 使用 NVIDIA CUDA 基础镜像
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
@@ -487,11 +449,9 @@ COPY . /workspace
 # 默认命令
 CMD ["bash"]
 
-```
 
 #### 构建与运行
 
-```bash
 # 构建镜像
 docker build -t yolo-train:latest .
 
@@ -505,11 +465,9 @@ docker run --gpus all \
 # 在容器内验证
 python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
 
-```
 
 #### Docker Compose 多服务编排
 
-```yaml
 # docker-compose.yml
 version: '3.8'
 services:
@@ -543,15 +501,12 @@ services:
       - ./runs:/tf_logs
     command: --logdir /tf_logs --port 6006 --bind_all
 
-```
 
-```bash
 # 启动完整开发环境
 docker compose up -d
 # 查看 TensorBoard
 open http://localhost:6007
 
-```
 
 #### 常见问题排查
 
@@ -602,7 +557,6 @@ Docker + GPU 常见问题：
 
 #### CPU 训练配置示例
 
-```python
 """
 CPU-only YOLO 训练配置
 """
@@ -632,7 +586,6 @@ results = model.train(
 # YOLOv8n @ imgsz=320, batch=4, CPU: ~5-10 min/epoch
 # 50 epochs ≈ 4-8 小时
 
-```
 
 #### CPU 训练的性能基准
 
@@ -711,7 +664,6 @@ NVIDIA 驱动版本与 CUDA 运行时兼容性：
 
 #### 多版本 CUDA 管理（Advanced）
 
-```bash
 # 方式1：通过 conda 管理（推荐，不依赖系统 CUDA）
 conda install pytorch-cuda=12.1 -c nvidia  # 安装 CUDA Runtime
 conda install pytorch-cuda=11.8 -c nvidia  # 切回旧版本
@@ -725,7 +677,6 @@ export CUDA_HOME=/usr/local/cuda-12.1
 export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 
-```
 
 ---
 
@@ -758,7 +709,6 @@ export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 
 **CPU 训练命令示例**：
 
-```python
 model = YOLO("yolov8n.pt")
 model.train(
     data="data.yaml",
@@ -771,11 +721,9 @@ model.train(
     close_mosaic=10,    # 关闭 Mosaic 增强
 )
 
-```
 
 #### GPU 性能基准测试
 
-```python
 """
 GPU 基准测试脚本：测试不同操作在不同 GPU 上的性能
 """
@@ -891,7 +839,6 @@ if __name__ == "__main__":
     else:
         print("No GPU found, skipping GPU benchmarks")
 
-```
 
 #### CPU-only 训练优化
 
@@ -908,7 +855,6 @@ CPU 训练优化策略：
 | 使用 n/s 模型 | 3–5× | 快速实验 | 精度受限 |
 | 减少 epochs | — | 快速验证 | 可能欠拟合 |
 
-```python
 # CPU 训练优化配置
 model = YOLO("yolov8n.pt")
 model.train(
@@ -934,7 +880,6 @@ import intel_extension_for_pytorch as ipex
 model = YOLO("yolov8n.pt")
 model.model = ipex.optimize(model.model.eval(), dtype=torch.float32)
 
-```
 
 #### 不同硬件平台的训练时间对比
 
@@ -951,7 +896,6 @@ YOLOv8s @ imgsz=640, COCO val, 100 epochs 训练时间对比：
 
 #### 内存使用分析
 
-```python
 """
 GPU 显存分析方法：实时监控训练过程中的显存使用
 """
@@ -1001,11 +945,9 @@ def analyze_memory_usage(model, device):
 # model = YOLO("yolov8s.pt")
 # analyze_memory_usage(model, 'cuda:0')
 
-```
 
 #### I/O 瓶颈分析
 
-```python
 """
 I/O 瓶颈诊断工具：分析数据加载是否是训练瓶颈
 """
@@ -1056,7 +998,6 @@ def diagnose_io_bottleneck(model, dataloader, device):
 # dataloader = model.train_dataloader()
 # diagnose_io_bottleneck(model.model, dataloader, 'cuda:0')
 
-```
 
 ---
 
@@ -1066,7 +1007,6 @@ def diagnose_io_bottleneck(model, dataloader, device):
 
 Ultralytics 采用简洁的目录结构，与大多数标注工具（LabelImg、Roboflow、CVAT）的输出兼容：
 
-```
 dataset/                              # 数据集根目录
 ├── data.yaml                         # 数据集配置文件（必需）
 ├── images/
@@ -1085,13 +1025,11 @@ dataset/                              # 数据集根目录
         ├── 101.txt
         └── ...
 
-```
 
 **重要**：`images/` 和 `labels/` 目录下的文件**必须一一对应**，文件名相同（扩展名不同）。
 
 ### 2.2 data.yaml 配置文件详解
 
-```yaml
 # ===== 路径配置 =====
 path: ./dataset                      # 数据集根目录（绝对或相对路径）
 train: images/train                  # 训练集图片相对路径（相对于path）
@@ -1112,16 +1050,13 @@ names:                               # 类别名称字典（0-indexed）
 # splits: [train, val, test]         # 数据集分割列表（可选）
 # download: https://...              # 数据集下载URL（首次自动下载）
 
-```
 
 ### 2.3 YOLO 标注格式详解
 
 每个 `.txt` 文件对应一张图片，每行一个目标：
 
-```
 <class_id> <x_center> <y_center> <width> <height>
 
-```
 
 **关键规则**：
 - 所有值均为**归一化**（相对于图片宽高），范围 **[0, 1]**
@@ -1130,14 +1065,12 @@ names:                               # 类别名称字典（0-indexed）
 
 **示例**：标注一张 640×480 图片中的第 0 类目标，边界框左上角(200, 100)，右下角(400, 300)：
 
-```
 # 计算归一化坐标
 x_center = (200 + 400) / 2 / 640 = 0.46875
 y_center = (100 + 300) / 2 / 480 = 0.41667
 width    = (400 - 200) / 640 = 0.31250
 height   = (300 - 100) / 480 = 0.41667
 
-```
 
 输出：`0 0.46875 0.41667 0.31250 0.41667`
 
@@ -1149,7 +1082,6 @@ height   = (300 - 100) / 480 = 0.41667
 
 **Windows**
 
-```bash
 # 方式1：pip 安装（推荐，最简单）
 pip install labelimg
 
@@ -1159,11 +1091,9 @@ cd labelImg
 pip install -r requirements/requirements-windows-python3.txt
 make qt5py3
 
-```
 
 **Linux (Ubuntu / Debian / CentOS 等)**
 
-```bash
 # 方式1：pip 安装（推荐）
 pip install labelimg
 
@@ -1182,11 +1112,9 @@ cd labelImg
 pip install -r requirements/requirements-linux-python3.txt
 make qt5py3
 
-```
 
 **macOS**
 
-```bash
 # 方式1：Homebrew 安装（推荐）
 brew install labelimg
 
@@ -1200,7 +1128,6 @@ cd labelImg
 pip install -r requirements/requirements-mac-python3.txt
 make qt5py3
 
-```
 
 > **注意**：如果 macOS 上 `brew install labelimg` 报错，可先运行 `brew update` 并 `brew doctor` 检查环境。
 
@@ -1247,7 +1174,6 @@ make qt5py3
 
 **Pascal VOC (.xml)**：
 
-````xml
 &lt;annotation&gt;
   &lt;object&gt;
     &lt;name&gt;person&lt;/name&gt;
@@ -1258,20 +1184,16 @@ make qt5py3
   &lt;/object&gt;
 &lt;/annotation&gt;
 
-````
 
 **COCO (.json)**：
 
-````json
 {"images": [...], "annotations": [...], "categories": [...]}
 
-````
 
 #### COCO 格式 → YOLO 格式转换
 
 Ultralytics 内置了 COCO 转换工具：
 
-```python
 from ultralytics.data.converter import convert_coco
 
 # 基本转换
@@ -1279,11 +1201,9 @@ convert_coco(dataset_dir, use_segments=False, use_keypoints=False)
 # use_segments=True  → 同时输出分割掩码（用于实例分割模型）
 # use_keypoints=True → 同时输出关键点（用于姿态估计模型）
 
-```
 
 #### Pascal VOC 格式 → YOLO 格式转换
 
-```python
 import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -1334,11 +1254,9 @@ def voc_to_yolo(voc_dir, img_size, output_dir):
 # 使用
 voc_to_yolo("dataset/VOCdevkit", (640, 480), "dataset/labels")
 
-```
 
 #### COCO JSON 直接转换为 YOLO 目录结构
 
-```python
 import json
 import os
 from pathlib import Path
@@ -1405,7 +1323,6 @@ def coco_to_yolo(coco_json, output_dir, img_dir):
 # 使用
 coco_to_yolo("dataset/annotations.json", "dataset/labels", "dataset/images")
 
-```
 
 #### 使用 Roboflow 转换
 
@@ -1413,14 +1330,12 @@ coco_to_yolo("dataset/annotations.json", "dataset/labels", "dataset/images")
 
 **安装（适用于 Windows / Linux / macOS）**
 
-```bash
 # 方式1：pip 安装（推荐，跨平台通用）
 pip install roboflow
 
 # 方式2：conda 安装
 conda install -c conda-forge roboflow
 
-```
 
 > **提示**：Roboflow 的安装命令在所有三大操作系统上完全一致，pip/conda 均可跨平台使用。
 
@@ -1440,7 +1355,6 @@ conda install -c conda-forge roboflow
 
 最基础的划分方式，适用于**图片相互独立、数量充足**的场景。
 
-```python
 import random
 from pathlib import Path
 import shutil
@@ -1475,7 +1389,6 @@ for split, names in [('train', train_names), ('val', val_names), ('test', test_n
 
 print(f'训练集: {len(train_names)}  |  验证集: {len(val_names)}  |  测试集: {len(test_names)}')
 
-```
 
 **适用场景**：图片之间无关联（不同场景、不同时间拍摄、不同来源），类别分布相对均匀。
 
@@ -1485,7 +1398,6 @@ print(f'训练集: {len(train_names)}  |  验证集: {len(val_names)}  |  测试
 
 在随机打乱的基础上，**保证每个子集内各类别的比例与全集一致**。防止某个类别只在训练集出现而验证集缺失。
 
-```python
 from sklearn.model_selection import StratifiedShuffleSplit
 import os
 
@@ -1518,7 +1430,6 @@ train_names = [names[i] for i in train_idx]
 val_names = [names[i] for i in val_idx]
 test_names = [names[i] for i in test_idx]
 
-```
 
 > **为什么用元组作为分层标签？** 一张图片可能有多个类别，Python 会将元组 `(0, 2)` 视为一个可哈希的整体，确保该样本只落入某一类标签组合的桶中，不会出现"类别 A 只在训练集、类别 B 只在测试集"的分布漂移。
 
@@ -1532,7 +1443,6 @@ test_names = [names[i] for i in test_idx]
 
 正确做法：**以视频片段为单位**，整个片段只归入一个子集。
 
-```python
 import json
 from pathlib import Path
 import shutil
@@ -1569,7 +1479,6 @@ def split_by_source(images_dir, labels_dir, ratio=0.8):
 
     return train_names, val_names, test_names
 
-```
 
 **适用场景**：视频数据、同场景多帧采集、时序连续数据。
 
@@ -1581,7 +1490,6 @@ def split_by_source(images_dir, labels_dir, ratio=0.8):
 
 尾部抽帧的核心思想：**将数据按时间顺序切分，取前 N% 作为训练集，后 M% 作为测试集**，模拟"用过去的经验预测未来"的真实部署场景。
 
-```python
 from pathlib import Path
 import shutil
 
@@ -1610,7 +1518,6 @@ def tail_frame_split(images_dir, labels_dir, train_ratio=0.7, val_ratio=0.15, te
 
     print(f'训练: {len(train_files)} | 验证: {len(val_files)} | 测试: {len(test_files)}')
 
-```
 
 **适用场景**：监控视频帧序列、工业自动化流水线（同一产品连续拍摄）、气象/传感器时序数据。
 
@@ -1638,7 +1545,6 @@ def tail_frame_split(images_dir, labels_dir, train_ratio=0.7, val_ratio=0.15, te
 
 ###### 检测数据泄露的方法
 
-```python
 # 方法1：检查文件名重叠（最基础）
 train_names = set(p.stem for p in (images_dir / 'train').glob('*'))
 val_names = set(p.stem for p in (images_dir / 'val').glob('*'))
@@ -1661,7 +1567,6 @@ leak_sources = [s for s, dist in source_distribution.items()
                 if sum(1 for v in dist.values() if v > 0) > 1]
 print(f'存在跨集泄露的源: {len(leak_sources)} 个')
 
-```
 
 ---
 
@@ -1701,10 +1606,8 @@ HSV（Hue 色调 / Saturation 饱和度 / Value 亮度）增强在 HSV 色彩空
 
 ###### 旋转（`degrees`）
 
-```yaml
 degrees: 0.0    # 默认值，±0°（不旋转）
 
-```
 
 - 取值范围 `[−degrees, +degrees]`，随机均匀采样
 - 正值表示逆时针旋转，负值表示顺时针旋转
@@ -1717,10 +1620,8 @@ degrees: 0.0    # 默认值，±0°（不旋转）
 
 ###### 平移（`translate`）
 
-```yaml
 translate: 0.1    # 默认值
 
-```
 
 - 表示图片在水平和垂直方向最多平移的比例，`0.1` = 最多移动图片宽/高的 10%
 - 实际位移量 = `translate × imgsz`，例如 `imgsz=640` 时最多移动 `64px`
@@ -1733,10 +1634,8 @@ translate: 0.1    # 默认值
 
 ###### 缩放（`scale`）
 
-```yaml
 scale: 0.5    # 默认值
 
-```
 
 - 缩放范围 `[max(1-scale, 0), 1+scale]`，即默认 `[0.5, 1.5]`
 - 模拟目标与摄像头距离变化带来的尺寸变化
@@ -1750,10 +1649,8 @@ scale: 0.5    # 默认值
 
 ###### 剪切（`shear`）
 
-```yaml
 shear: 0.0    # 默认值
 
-```
 
 - 仿射剪切变换，模拟视角倾斜
 - 取值范围 `±shear` 度
@@ -1765,10 +1662,8 @@ shear: 0.0    # 默认值
 
 ###### 透视变换（`perspective`）
 
-```yaml
 perspective: 0.0    # 默认值
 
-```
 
 - 随机透视变换，模拟摄像头视角变化（近大远小）
 - 取值范围 `[0, perspective]`，值越大透视畸变越明显
@@ -1781,11 +1676,9 @@ perspective: 0.0    # 默认值
 
 ###### 翻转（`fliplr` / `flipud`）
 
-```yaml
 fliplr: 0.5    # 左右翻转概率 50%
 flipud: 0.0    # 上下翻转概率 0%（默认关闭）
 
-```
 
 - `fliplr`：以 50% 概率对图片做水平翻转（默认启用）
 - `flipud`：以指定概率做垂直翻转（默认关闭）
@@ -1800,11 +1693,9 @@ flipud: 0.0    # 上下翻转概率 0%（默认关闭）
 
 ###### Mosaic 增强（`mosaic`）
 
-```yaml
 mosaic: 1.0    # 默认值，每轮都启用
 close_mosaic: 10   # 最后10轮关闭
 
-```
 
 - **原理**：将 4 张随机图片拼接成一张大图（2×2 网格），拼接线处的目标会被裁剪、平移、缩放，相当于同时引入了多种几何变换
 - **作用**：
@@ -1821,10 +1712,8 @@ close_mosaic: 10   # 最后10轮关闭
 
 ###### MixUp 增强（`mixup`）
 
-```yaml
 mixup: 0.0    # 默认关闭
 
-```
 
 - **原理**：随机选取两张图片，按随机比例加权融合：`融合图 = λ × 图A + (1-λ) × 图B`，对应标签也按相同比例融合
 - **作用**：鼓励模型学习线性决策边界，增强对模糊/遮挡目标的鲁棒性
@@ -1837,10 +1726,8 @@ mixup: 0.0    # 默认关闭
 
 ###### Copy-Paste 增强（`copy_paste`）
 
-```yaml
 copy_paste: 0.0    # 默认关闭
 
-```
 
 - **原理**：从训练集中随机裁剪一个目标（含标注），粘贴到另一张随机图片的随机位置，生成一张新的训练图片
 - **作用**：
@@ -1886,7 +1773,6 @@ copy_paste: 0.0    # 默认关闭
 
 #### 课程学习原理
 
-```
 课程学习在目标检测中的应用:
 ══════════════════════════════════════════════════════════════════════════
 
@@ -1906,11 +1792,9 @@ copy_paste: 0.0    # 默认关闭
   · 中等: 目标尺寸 16×16 ~ 48×48, 轻微遮挡
   · 困难: 目标尺寸 < 16×16, 严重遮挡/模糊
 
-```
 
 #### 课程学习实现
 
-```python
 """
 YOLO 课程学习实现
 """
@@ -2023,7 +1907,6 @@ def train_with_curriculum(model_path, data_yaml, epochs=100):
         print(f"阶段 {epoch_start}-{epoch_end}: "
               f"最小目标尺寸 ≥ {stage['min_size']}px")
 
-```
 
 #### 课程学习的性能对比
 
@@ -2042,7 +1925,6 @@ def train_with_curriculum(model_path, data_yaml, epochs=100):
 
 ### 2.8 数据集验证
 
-```python
 from ultralytics import YOLO
 from ultralytics.data import load_dataset
 
@@ -2060,7 +1942,6 @@ for i, item in enumerate(dataset):
     img, labels = item
     print(f"图片 {i}: 形状={img.shape}, 标注数={len(labels)}")
 
-```
 
 ### 2.9 YOLOv8 多任务数据集格式
 
@@ -2080,7 +1961,6 @@ YOLOv8 支持 7 种任务类型，每种任务的数据集格式略有不同。�
 
 #### 1. 检测任务（Detect）— 与 YOLOv8 兼容
 
-```
 dataset/
 ├── data.yaml
 ├── images/
@@ -2093,17 +1973,14 @@ dataset/
 # img001.txt 格式（每行一个目标）：
 <class_id> <x_center> <y_center> <width> <height>
 
-```
 
 #### 2. 分割任务（Segment）
 
 分割任务的标注使用多边形顶点坐标（与检测格式相同，但 `points` 列数量可变）：
 
-```
 # YOLO Segmentation 格式（label.txt）
 <class_id> <x_center> <y_center> <width> <height> <num_points> <p1x> <p1y> <p2x> <p2y> ...
 
-```
 
 > **注意**：YOLOv8 分割格式已足够支持 YOLOv8 的分割任务。如需像素级 mask，可额外提供 `.png` 掩码文件，Ultralytics 会自动处理。
 
@@ -2111,19 +1988,16 @@ dataset/
 
 姿态任务在检测框基础上增加关键点坐标：
 
-```
 # YOLO Pose 格式（label.txt）
 <class_id> <x_center> <y_center> <width> <height> <num_keypoints> <k1x> <k1y> <k1visible> <k2x> <k2y> <k2visible> ...
 
 # <k_visible>: 0=不可见, 1=隐藏(在图中但被遮挡), 2=可见
 
-```
 
 #### 4. 分类任务（Classify）
 
 分类任务最简单，只需图片目录和类别文件：
 
-```
 dataset/
 ├── data.yaml
 ├── images/
@@ -2141,32 +2015,26 @@ dataset/
     └── val/
         └── ...
 
-```
 
-```yaml
 # data.yaml for classify
 task: classify
 nc: 2
 names: ["cat", "dog"]
 
-```
 
 #### 5. 定向框任务（OBB）
 
 OBB（Oriented Bounding Box）使用 5 个参数表示旋转矩形：
 
-```
 # YOLO OBB 格式（label.txt）
 <class_id> <x_center> <y_center> <width> <height> <angle>
 # angle: 旋转角度（弧度），范围 [-π/2, π/2]
 
-```
 
 #### 6. 深度估计任务（Depth）
 
 深度估计需要 RGB 图像和对应的深度图配对：
 
-```
 dataset/
 ├── data.yaml
 ├── rgb/
@@ -2187,22 +2055,18 @@ dataset/
     └── val/
         └── ...
 
-```
 
-```yaml
 # data.yaml for depth
 task: depth
 rgb_path: ./rgb
 depth_path: ./depth
 nc: 0                          # 无类别（纯深度估计）
 
-```
 
 #### 7. 语义分割任务（Semantic Segmentation）
 
 语义分割使用像素级标签图，每个像素值表示类别 ID：
 
-```
 dataset/
 ├── data.yaml
 ├── images/
@@ -2212,7 +2076,6 @@ dataset/
     ├── train/img001.png        # 语义掩码（单通道，像素值=类别ID）
     └── val/img001.png
 
-```
 
 > **掩码编码规则**：
 > - 单通道 PNG，每个像素值为类别索引（0=背景，1=类别0，2=类别1...）
@@ -2231,7 +2094,6 @@ dataset/
 
 #### 数据格式转换脚本
 
-```python
 """
 YOLOv8 多任务数据格式转换脚本
 支持 COCO/Pascal VOC 格式 → YOLOv8 多任务格式
@@ -2336,7 +2198,6 @@ nc: {num_classes}
 # coco_to_yolo_detect("coco_annotations.json", "./raw_images/", "./yolo_dataset/", ["person", "car"])
 # mask_png_to_yolo_segs("./masks/", "./images/", "./segs_dataset/", 3)
 
-```
 
 ---
 
@@ -2348,7 +2209,6 @@ nc: {num_classes}
 
 Mosaic 增强是 YOLO 系列的标志性技术，通过随机拼接 4 张图像创造训练样本。
 
-```
 Mosaic 增强的数学原理:
 ══════════════════════════════════════════════════════════════
 
@@ -2383,9 +2243,7 @@ Mosaic 的数学效果:
   · 背景多样性增加（4 张图像的背景混合）
   · 目标密度增加（4 倍）
 
-```
 
-```python
 """
 Mosaic 增强的完整实现
 """
@@ -2544,13 +2402,11 @@ class CutMixAugmentation:
 
         return img1, mixed_labels
 
-```
 
 #### 2.7.2 Copy-Paste 增强
 
 Copy-Paste 增强将一张图像中的目标随机粘贴到另一张图像中，特别适用于增加小目标数量和改善类别不平衡。
 
-```
 Copy-Paste 增强原理:
 ══════════════════════════════════════════════════════════════
 
@@ -2582,9 +2438,7 @@ Step 4: 更新标注
 标注变化:
   B_new = B_dst ∪ Transform(B_src_target)
 
-```
 
-```python
 """
 Copy-Paste 增强实现
 """
@@ -2687,13 +2541,11 @@ class CopyPasteAugmentation:
 
         return dst_img, new_labels
 
-```
 
 #### 2.7.3 Albumentations 集成
 
 Albumentations 是专为图像增强设计的 Python 库，支持丰富的变换操作。
 
-```python
 """
 Albumentations 集成到 YOLO 训练流程
 """
@@ -2764,13 +2616,11 @@ advanced_transform = A.Compose([
 # transformed_image = transformed['image']
 # transformed_bboxes = transformed['bboxes']
 
-```
 
 #### 2.7.4 AutoAugment 用于目标检测
 
 AutoAugment 通过强化学习自动搜索最优增强策略。
 
-```python
 """
 AutoAugment for Object Detection
 """
@@ -2801,13 +2651,11 @@ def create_autoaug_pipeline():
 # pipeline = create_autoaug_pipeline()
 # result = pipeline(image=img, bboxes=bboxes, class_labels=classes)
 
-```
 
 #### 2.7.5 课程学习（Curriculum Learning）
 
 课程学习按照从简单到复杂的顺序训练模型，类似于人类学习的模式。
 
-```
 课程学习在目标检测中的应用:
 ══════════════════════════════════════════════════════════════
 
@@ -2836,9 +2684,7 @@ def create_autoaug_pipeline():
   P(sample ∼ easy) ∝ exp(-β × d(x, y))
   其中 β 是课程温度参数，控制难度分布的"尖锐程度"
 
-```
 
-```python
 """
 课程学习实现：根据样本难度动态调整训练策略
 """
@@ -2918,7 +2764,6 @@ class CurriculumLearning:
 #     print(f"Epoch {epoch}: phase={phase}, aug={aug_strength:.2f}, "
 #           f"mosaic={mosaic_prob:.2f}, lr_mult={lr_mult:.2f}")
 
-```
 
 #### 2.7.6 自监督预训练用于目标检测
 
@@ -3000,7 +2845,6 @@ def fine_tune_with_mae(model_path, data_yaml, epochs=100):
     )
     return results
 
-```
 
 ---
 
@@ -3014,7 +2858,6 @@ def fine_tune_with_mae(model_path, data_yaml, epochs=100):
 
 #### 文件名一致性检查
 
-```python
 from pathlib import Path
 import os
 
@@ -3045,11 +2888,9 @@ def check_image_label_consistency(images_dir, labels_dir):
 
     return len(missing_labels) == 0 and len(missing_images) == 0
 
-```
 
 #### 标注坐标有效性检查
 
-```python
 import cv2
 import numpy as np
 
@@ -3104,11 +2945,9 @@ def validate_annotations(labels_dir, images_dir):
 
     return len(issues) == 0
 
-```
 
 #### 图片质量检查
 
-```python
 def check_image_quality(images_dir, min_size=32, max_exposure=250):
     """
     检查图片的基本质量指标
@@ -3140,7 +2979,6 @@ def check_image_quality(images_dir, min_size=32, max_exposure=250):
         print("✓ 所有图片质量检查通过")
     return len(problems) == 0
 
-```
 
 ---
 
@@ -3150,7 +2988,6 @@ def check_image_quality(images_dir, min_size=32, max_exposure=250):
 
 #### 统计每类目标的出现频次
 
-```python
 import collections
 from pathlib import Path
 
@@ -3191,11 +3028,9 @@ def analyze_class_distribution(labels_dir):
 
     return class_counts, class_images
 
-```
 
 #### 可视化类别分布
 
-```python
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -3223,7 +3058,6 @@ def plot_class_distribution(class_counts, output_path="class_distribution.png"):
     plt.close()
     print(f"图表已保存: {output_path}")
 
-```
 
 #### 类别不均衡的判定标准
 
@@ -3244,7 +3078,6 @@ def plot_class_distribution(class_counts, output_path="class_distribution.png"):
 
 #### 自动化标注质量检测
 
-```python
 def detect_annotation_issues(labels_dir, images_dir):
     """
     综合检测常见的标注质量问题
@@ -3301,11 +3134,9 @@ def detect_annotation_issues(labels_dir, images_dir):
 
     return issues
 
-```
 
 #### 可视化标注检查结果
 
-```python
 def visualize_annotation_check(images_dir, labels_dir, output_dir="annotation_checks", n_samples=10):
     """
     随机抽取若干图片，可视化其标注框，人工核查标注质量
@@ -3349,7 +3180,6 @@ def visualize_annotation_check(images_dir, labels_dir, output_dir="annotation_ch
     print(f"✓ 已生成 {len(sampled)} 张标注可视化图至 {out_path}/")
     print("  请人工检查：边界框是否紧密贴合目标、类别是否正确、有无漏标")
 
-```
 
 ---
 
@@ -3357,7 +3187,6 @@ def visualize_annotation_check(images_dir, labels_dir, output_dir="annotation_ch
 
 在正式训练之前，可以通过小批量快速训练（fraction 参数）观察增强效果，确保增强策略合理。
 
-```python
 from ultralytics import YOLO
 
 # 快速预检：用10%数据训练5轮，观察增强效果和指标趋势
@@ -3376,7 +3205,6 @@ model.train(
 # 2. 5轮内 mAP 是否快速上升（表明数据可学）
 # 3. Loss 是否稳定下降（无异常震荡）
 
-```
 
 **增强效果检查清单**：
 
@@ -3402,7 +3230,6 @@ model.train(
 | **损失函数加权** | 训练阶段调整 | 增大少数类在 `cls` 损失中的权重 |
 | **数据收集** | 最根本的解决方案 | 针对性补充少数类数据 |
 
-```python
 # 示例：使用 copy_paste 增强少数类
 model = YOLO("yolov8n.pt")
 model.train(
@@ -3412,7 +3239,6 @@ model.train(
     mosaic=1.0,        # 配合 Mosaic 使用效果更佳
 )
 
-```
 
 ---
 
@@ -3433,7 +3259,6 @@ model.train(
 | **标注一致性** | 多人标注同一图片的重合率 | > 85% | < 70% 说明标注标准不统一 |
 | **小目标占比** | 面积 < 32×32 的目标 / 总目标 | < 30% | > 50% 建议增大 imgsz 或裁剪策略 |
 
-```python
 import numpy as np
 from pathlib import Path
 import cv2
@@ -3504,7 +3329,6 @@ def compute_dataset_quality_metrics(images_dir, labels_dir):
             print(f"  {k}: {v}")
     return metrics
 
-```
 
 ### 2.18 主动学习实战案例
 
@@ -3512,7 +3336,6 @@ def compute_dataset_quality_metrics(images_dir, labels_dir):
 
 #### 不确定性采样（Uncertainty Sampling）
 
-```python
 import torch
 from ultralytics import YOLO
 import numpy as np
@@ -3557,11 +3380,9 @@ selected_images = uncertainty_sampling(
 )
 # 对 selected_images 进行人工标注后，加入训练集重新训练
 
-```
 
 #### 多样性采样（Diversity Sampling）
 
-```python
 def diversity_sampling(model, unlabeled_dir, n_samples=50, embedding_dim=256):
     """
     基于特征空间多样性的采样策略
@@ -3602,7 +3423,6 @@ def diversity_sampling(model, unlabeled_dir, n_samples=50, embedding_dim=256):
     print(f"多样性采样完成，从 {len(img_paths)} 个候选中选择 {len(selected)} 个")
     return selected
 
-```
 
 #### 主动学习迭代流程
 
@@ -3631,7 +3451,6 @@ def diversity_sampling(model, unlabeled_dir, n_samples=50, embedding_dim=256):
 
 在 HSV 色彩空间中，色调（H）、饱和度（S）、明度（V）三个通道相互正交，分别对应颜色的不同物理属性：
 
-```
 H（色调）：0°~360°，表示颜色的种类（红/绿/蓝等）
           扰动 H：模拟白平衡漂移、色温变化
           公式：H' = H + ΔH, 其中 ΔH ~ U(-hsv_h, hsv_h)
@@ -3644,7 +3463,6 @@ V（明度）：0~1，表示亮度
           扰动 V：模拟阴影、过曝、夜间场景
           公式：V' = V × (1 + Δv), 其中 Δv ~ U(-hsv_v, hsv_v)
 
-```
 
 > **为什么不在 RGB 空间直接扰动？** RGB 三个通道高度耦合，改变 R 会影响颜色种类和亮度。HSV 空间将颜色信息与亮度信息分离，更符合人类对光照变化的感知模型。
 
@@ -3663,7 +3481,6 @@ V（明度）：0~1，表示亮度
 
 Mosaic 增强的本质是**四样本混合**，其效果可分解为：
 
-```
 合成图片 P = α × I₁ + β × I₂ + γ × I₃ + δ × I₄
 其中 α+β+γ+δ = 1（实际中每个象限取整张图片，系数为1或0）
 
@@ -3673,13 +3490,11 @@ Mosaic 增强的本质是**四样本混合**，其效果可分解为：
 由于一次前向同时回归约 4 倍数量的目标，小 batch 下也能获得
 更充分的监督信号（这正是 Mosaic 有助于稳定训练的原因之一）。
 
-```
 
 > **为什么 Mosaic 对小目标特别有效？** Mosaic 拼接时，原本在单张图片中很小的目标，在拼接到大图上后相对面积增大，使得检测头能接收到更强的梯度信号。同时，拼接引入的裁剪和位移相当于同时应用了平移和缩放增强。
 
 #### MixUp 增强的正则化效果
 
-```
 MixUp 公式：
   输入混合：x̃ = λxᵢ + (1-λ)xⱼ
   标签混合：ỹ = λyᵢ + (1-λ)yⱼ
@@ -3695,7 +3510,6 @@ MixUp 公式：
   上界：||f(x) - f(x')|| ≤ L × ||x - x'||
   其中 L 为模型的 Lipschitz 常数，MixUp 训练使 L 更小
 
-```
 
 ---
 
@@ -3707,7 +3521,6 @@ MixUp 公式：
 
 DOTA 数据集使用 8 参数格式（x1,y1,x2,y2,x3,y3,x4,y4）表示旋转矩形：
 
-```python
 import json
 import numpy as np
 from pathlib import Path
@@ -3778,13 +3591,11 @@ import cv2
 # dota_to_yolo_obb("dota_annotations.json", "./DOTA/images/", "./yolo_obb_dataset/",
 #                  ["plane", "ship", "storage tank", "baseball diamond", ...])
 
-```
 
 #### KITTI → YOLO
 
 KITTI 使用 2D 边界框（左上角+右下角坐标）：
 
-```python
 def kitti_to_yolo(kitti_dir, output_dir, names):
     """
     KITTI 格式 → YOLO 格式转换
@@ -3837,11 +3648,9 @@ def kitti_to_yolo(kitti_dir, output_dir, names):
 
     print(f"✓ KITTI → YOLO 转换完成")
 
-```
 
 #### YOLO → COCO 格式（反向转换）
 
-```python
 def yolo_to_coco(labels_dir, images_dir, output_json, names):
     """
     YOLO 格式 → COCO 格式反向转换
@@ -3899,7 +3708,6 @@ def yolo_to_coco(labels_dir, images_dir, output_json, names):
         json.dump(coco_data, f, indent=2)
     print(f"✓ YOLO → COCO 转换完成，共 {len(coco_data['annotations'])} 个标注")
 
-```
 
 ---
 
@@ -3909,7 +3717,6 @@ def yolo_to_coco(labels_dir, images_dir, output_json, names):
 
 #### 加权采样（Weighted Sampling）
 
-```python
 from torch.utils.data import Sampler
 import numpy as np
 
@@ -3954,9 +3761,7 @@ class BalancedSampler(Sampler):
     def __len__(self):
         return self.num_samples
 
-```
 
-```python
 # 使用加权采样
 from ultralytics import YOLO
 
@@ -3970,18 +3775,14 @@ model.train(
     # 通过修改数据集加载器实现加权（进阶用法）
 )
 
-```
 
 #### Focal Loss 应对类别不平衡
 
-```yaml
 # 在 data.yaml 中配置类别权重
 # 注意：Ultralytics 不直接支持 class_weights，
 # 但可以通过修改模型代码中的 loss 计算逻辑实现
 
-```
 
-```python
 # 手动实现类别加权 Focal Loss
 import torch
 import torch.nn as nn
@@ -4009,7 +3810,6 @@ class ClassWeightedFocalLoss(nn.Module):
         focal_weight = weight * (1 - pred) ** self.gamma
         return (focal_weight * bce).mean()
 
-```
 
 #### 数据层面的平衡策略
 
@@ -4031,7 +3831,6 @@ class ClassWeightedFocalLoss(nn.Module):
 
 #### 基于物理引擎的合成
 
-```python
 """
 使用 Blender Python API 生成合成训练数据
 需要安装 Blender 并启用 Python 脚本支持
@@ -4091,11 +3890,9 @@ def create_material():
     mat.diffuse_color = (random.random(), random.random(), random.random(), 1)
     return mat
 
-```
 
 #### 使用 AI 生成合成数据
 
-```python
 """
 使用 Stable Diffusion + ControlNet 生成合成目标检测数据
 """
@@ -4126,7 +3923,6 @@ def generate_synthetic_data(
     print(f"✓ 合成数据已保存至 {output_dir}")
     print("  注意：合成数据的标注需要额外工具（如 SAM + 人工校验）")
 
-```
 
 #### 仿真平台生成
 
@@ -4147,7 +3943,6 @@ def generate_synthetic_data(
 
 #### 安装与初始化
 
-```bash
 # 安装 DVC
 pip install dvc
 
@@ -4157,11 +3952,9 @@ dvc init
 # 创建数据目录结构
 mkdir -p data/raw data/processed data/exports
 
-```
 
 #### DVC 配置 data.yaml
 
-```yaml
 # dvc.yaml - 定义数据处理流水线
 stages:
   download:
@@ -4193,11 +3986,9 @@ stages:
       - data/exports/metrics.json:
           cache: false
 
-```
 
 #### 典型使用流程
 
-```bash
 # 追踪数据变化
 dvc add data/raw/dataset_v1.tar.gz
 git add data/raw/dataset_v1.tar.gz.dvc data/raw/.gitignore
@@ -4217,16 +4008,13 @@ dvc push
 # 在另一台机器上拉取
 dvc pull
 
-```
 
 #### DVC + Git 协同工作流
 
 **DVC + Git 协同工作流**：
 
-```
 Git(代码) ──commit──▶ DVC(数据) ──add──▶ 处理流水线 ──run──▶ 训练实验 ──track
 
-```
 
 | 阶段 | 工具 | 命令 | 说明 |
 |------|------|------|------|
@@ -4246,7 +4034,6 @@ Git(代码) ──commit──▶ DVC(数据) ──add──▶ 处理流水线
 
 ### 3.1 快速训练（最小配置）
 
-```python
 from ultralytics import YOLO
 
 # 加载预训练权重（迁移学习）
@@ -4264,18 +4051,15 @@ results = model.train(
     name="exp1",
 )
 
-```
 
 **等效命令行**：
 
-```bash
 # Python API
 yolo detect train data=data.yaml epochs=100 imgsz=640 batch=16 device=0
 
 # 或直接调用 yolo 命令行
 yolo detect train --data data.yaml --epochs 100 --imgsz 640 --batch 16
 
-```
 
 ### 3.2 完整训练参数（基于官方文档）
 
@@ -4296,7 +4080,6 @@ yolo detect train --data data.yaml --epochs 100 --imgsz 640 --batch 16
 
 > 以下是完整的参数列表（含较少使用的参数），可作为查阅参考：
 
-```python
 model.train(
     # ═══════════════════════════════════════════════════════════
     # 数据相关
@@ -4370,11 +4153,9 @@ model.train(
     exist_ok=False,         # True=允许覆盖已有实验目录
 )
 
-```
 
 ### 3.3 从断点恢复训练（续训微调）
 
-```python
 # 方式1：使用 resume 参数
 model = YOLO("runs/detect/exp/weights/last.pt")
 model.train(
@@ -4386,11 +4167,9 @@ model.train(
 model = YOLO("runs/detect/exp/weights/last.pt")
 model.train(data="data.yaml", epochs=200)  # 在已有基础上继续200轮
 
-```
 
 ### 3.4 多 GPU 训练
 
-```python
 # 方式1：指定多张GPU（DDP自动分配）
 model.train(device="0,1", batch=32)  # 2卡，每张卡batch=16
 
@@ -4400,15 +4179,12 @@ model.train(device="0,1,2,3")
 # 方式3：多GPU + 自动batch
 model.train(device=[0, 1, 2, 3], batch=-1)
 
-```
 
 **DDP（Distributed Data Parallel）工作原理**：
 
-```
 主进程（GPU 0）: 广播模型 → 分配数据 → 收集梯度 → 更新参数
 子进程（GPU 1-N）: 接收模型 → 处理数据 → 发送梯度 → 等待更新
 
-```
 
 ### 3.5 YOLOv8 训练配方详解
 
@@ -4478,13 +4254,13 @@ model.train(
     close_mosaic_boost=1.5 # mosaic关闭时的学习率boost
 )
 
-```
 
 #### 5. 数据增强配置
 
 YOLOv8 的数据增强管线：
 
 YOLOv8 数据增强配置：
+
 | 增强操作 | 默认值 | 参数 | 说明 |
 | --- | --- | --- | --- |
 | Mosaic | 1.0 | close_mosaic=10 | 前90%训练开启，最后10轮关闭 |
@@ -4495,6 +4271,7 @@ YOLOv8 数据增强配置：
 | RandAugment | 关闭 | - | 未启用 |
 
 end2end=False（传统模式）：
+
 | 模型输出 | → | NMS后处理 | → | 最终检测结果 |
 | --- | --- | --- | --- | --- |
 - （模型输出大量候选框，NMS 去重）
@@ -4517,6 +4294,7 @@ end2end=False（传统模式）：
 YOLOv8 使用 Task-Aligned Assigner 进行智能正负样本分配，综合考虑定位质量和分类质量：
 
 Task-Aligned Assigner 核心思想：
+
 | 传统分配：基于 IoU 阈值（正样本 IoU > 0.5） |
 | --- |
 | Task-Aligned 分配：IoU + 分类质量感知 |
@@ -4526,7 +4304,6 @@ Task-Aligned Assigner 核心思想：
 
 #### 8. 完整训练命令示例
 
-```bash
 # ═══════════════════════════════════════════════════════════════
 # YOLOv8 完整训练命令（推荐配置）
 # ═══════════════════════════════════════════════════════════════
@@ -4620,7 +4397,6 @@ yolo detect train \
 # name          : 实验名称
 # verbose       : 详细输出模式
 
-```
 
 ---
 
@@ -4632,26 +4408,20 @@ yolo detect train \
 
 **Warmup 阶段（epoch 0 ~ warmup_epochs）**：
 
-```
 lr(epoch) = lr0 × (epoch / warmup_epochs)
 
-```
 
 作用：学习率从 0 线性上升到 lr0，避免训练初期梯度爆炸。
 
 **Cosine Decay 阶段（epoch warmup_epochs ~ epochs）**：
 
-```
 lr(epoch) = lrf×lr0 + (lr0 - lrf×lr0) × 0.5 × (1 + cos(π × (epoch - warmup) / (epochs - warmup)))
 
-```
 
 简化为：
 
-```
 lr(epoch) = lrf×lr0 + lr0×(1 - lrf) × 0.5 × (1 + cos(π × progress))
 
-```
 
 其中 `progress ∈ [0, 1]` 为训练进度。
 
@@ -4662,7 +4432,6 @@ lr(epoch) = lrf×lr0 + lr0×(1 - lrf) × 0.5 × (1 + cos(π × progress))
 
 #### 线性缩放规则（Linear Scaling Rule）
 
-```
 等效学习率 = lr0 × (batch / nbs)
 其中 nbs（名义批次大小）默认为 64
 
@@ -4672,11 +4441,9 @@ lr(epoch) = lrf×lr0 + lr0×(1 - lrf) × 0.5 × (1 + cos(π × progress))
 这意味着：当 batch 增大时，lr0 应相应增大以保持等效学习率不变。
 反过来说，小 batch 需要降低 lr0 以防止训练不稳定。
 
-```
 
 #### Momentum 公式（SGD with Momentum）
 
-```
 v_t = momentum × v_{t-1} + gradient_t
 θ_t = θ_{t-1} - lr × v_t
 
@@ -4687,11 +4454,9 @@ v_t = momentum × v_{t-1} + gradient_t
   - 有利于穿越平坦区域，但可能在最优解附近振荡
   - 0.937 是 YOLO 系列的经验最优值（源自 YOLOv3/v5 的经验）
 
-```
 
 #### Weight Decay（L2 正则化）
 
-```
 梯度更新中加入 L2 正则项：
 gradient_total = gradient_data + weight_decay × θ
 
@@ -4700,11 +4465,9 @@ weight_decay=0.0005 的效果：
   - 促使参数趋向零，降低模型复杂度
   - 与 Dropout 不同，Weight Decay 是全局的、连续的约束
 
-```
 
 #### Label Smoothing 公式
 
-```
 标准交叉熵：L = -log(p_target)
 Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 
@@ -4715,7 +4478,6 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
   - ε=0.1：soft label，目标类别概率 0.9，其他类别各 0.01/(C-1)
   - 降低模型置信度，缓解过拟合，改善校准（calibration）
 
-```
 
 ---
 
@@ -4736,7 +4498,6 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 
 #### Cosine with Warmup 完整推导
 
-```
 阶段一：Warmup（epoch 0 → warmup_epochs）
   lr(epoch) = lr0 × (epoch / warmup_epochs)
   示例（warmup_epochs=3, lr0=0.01）：
@@ -4753,11 +4514,9 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
     epoch 51: lr = 0.00505（中间点，cos(π/2)=0）
     epoch 100: lr = 0.0001（lrf×lr0 = 0.01×0.01）
 
-```
 
 #### OneCycle 调度策略
 
-```python
 # OneCycle 策略说明（Ultralytics 通过 scheduler="onecycle" 启用）
 #
 # 三个阶段：
@@ -4773,7 +4532,6 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 # 优势：训练速度快 2~3 倍，适合快速迭代
 # 劣势：对超参数更敏感，需要更精细的调优
 
-```
 
 ---
 
@@ -4783,7 +4541,6 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 
 #### 梯度爆炸的原理
 
-```
 梯度爆炸的原因：
 ──────────────────────────────────────────────────────────────
 在深层网络中，反向传播通过链式法则逐层传递梯度：
@@ -4797,11 +4554,9 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 后果：参数更新步长过大 → 训练发散 → Loss 变为 NaN
 ──────────────────────────────────────────────────────────────
 
-```
 
 #### 梯度裁剪方法
 
-```python
 # 方法1：按值裁剪（最常用）
 torch.nn.utils.clip_grad_value_(model.parameters(), clip_value=1.0)
 # 将所有梯度的绝对值裁剪到 [-clip_value, clip_value]
@@ -4811,7 +4566,6 @@ torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 # 如果梯度的 L2 范数 > max_norm，则等比例缩放梯度
 # new_gradient = gradient × (max_norm / gradient_norm)
 
-```
 
 **Ultralytics 框架中的梯度裁剪**：
 
@@ -4824,7 +4578,6 @@ torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 | 3 | 启用 AMP 混合精度 | AMP 自动进行 loss scaling，等效于梯度缩放保护 |
 | 4 | 自定义训练循环 | 在每个训练步后手动调用 `clip_grad_norm_` |
 
-```python
 # 自定义训练循环中的梯度裁剪（进阶用法）
 from ultralytics import YOLO
 import torch
@@ -4841,7 +4594,6 @@ for epoch in range(100):
     clip_grad_norm_(model.model.parameters(), max_norm=1.0)  # 裁剪梯度
     model.val()  # 验证
 
-```
 
 #### 梯度裁剪的重要性总结
 
@@ -4860,7 +4612,6 @@ for epoch in range(100):
 
 #### 混合精度训练深度分析
 
-```
 FP16 与 FP32 精度对比:
 ══════════════════════════════════════════════════════════════
 
@@ -4889,11 +4640,9 @@ FP8 (八位浮点, 新兴):
   · Loss Scaling: 防止 FP16 下溢
 ══════════════════════════════════════════════════════════════
 
-```
 
 #### 梯度累积策略
 
-```
 梯度累积 (Gradient Accumulation) 详解:
 ══════════════════════════════════════════════════════════════
 
@@ -4946,7 +4695,6 @@ FP8 (八位浮点, 新兴):
           optimizer.zero_grad()
 ══════════════════════════════════════════════════════════════
 
-```
 
 ### 3.10 分布式训练策略详解
 
@@ -4964,11 +4712,9 @@ FP8 (八位浮点, 新兴):
      torch.amp.autocast('cuda', dtype=torch.float16)
      自动决定哪些操作使用 FP16，哪些保留 FP32
 
-```
 
 #### 性能与精度影响
 
-```
 
 混合精度训练效果：
 
@@ -4979,11 +4725,9 @@ FP8 (八位浮点, 新兴):
 | 最终 mAP | 基准 | 0 差异（通常） | 无损失 |
 | 训练稳定性 | 基准 | 需 GradScaler | 可能需调参 |
 
-```
 
 #### BF16 vs FP16 对比
 
-```
 
 BF16（Bfloat16）vs FP16（Float16）：
 
@@ -4999,10 +4743,8 @@ Ultralytics 默认选择：
   - 支持 BF16 的 GPU → 使用 BF16（更稳定）
   - 不支持 BF16 的 GPU → 使用 FP16 + GradScaler
 
-```
 #### 手动启用混合精度
 
-```python
 from ultralytics import YOLO
 import torch
 
@@ -5031,7 +4773,6 @@ for epoch in range(epochs):
     scaler.update()  # 自动调整缩放因子
     optimizer.zero_grad()
 
-```
 
 ---
 
@@ -5043,7 +4784,6 @@ for epoch in range(epochs):
 
 SGD（Stochastic Gradient Descent）是最基础的优化器，加上动量项后能有效加速收敛并减少震荡。
 
-```
 SGD with Momentum 更新公式:
 ══════════════════════════════════════════════════════════════
 
@@ -5068,9 +4808,7 @@ v_t = μ × v_{t-1} + ∇L(θ_{t-1})
   · 梯度方向变化时 → 动量部分抵消 → 减少震荡
   · 鞍点处 → 动量帮助"冲过去"
 
-```
 
-```python
 """
 SGD with Momentum 的完整实现与可视化
 """
@@ -5099,11 +4837,9 @@ optimizer_no_wd = torch.optim.SGD(
     weight_decay=0.0,
 )
 
-```
 
 #### 3.12.2 Adam / AdamW 与 SGD 的对比
 
-```
 Adam 优化器公式:
 ══════════════════════════════════════════════════════════════
 
@@ -5126,9 +4862,7 @@ Adam 优化器公式:
   ε = 1e-8（数值稳定性）
   g_t = 当前梯度
 
-```
 
-```
 SGD vs AdamW 对比:
 ══════════════════════════════════════════════════════════════
 
@@ -5148,9 +4882,7 @@ SGD vs AdamW 对比:
   · 但 AdamW（解耦 weight decay）改善了对策
   · 目标检测领域普遍偏好 SGD（YOLO 系列默认 SGD）
 
-```
 
-```python
 """
 YOLO 默认的优化器配置
 """
@@ -5178,11 +4910,9 @@ model.train(
 # "Adam" - Adam 优化器
 # "AdamW" - Adam with decoupled weight decay
 
-```
 
 **AdamW 何时优于 SGD**：
 
-```
 AdamW 优于 SGD 的场景:
 ══════════════════════════════════════════════════════════════
 场景                              原因
@@ -5200,11 +4930,9 @@ AdamW 优于 SGD 的场景:
 | 显存受限（AdamW | 需 | 2x |
 | 追求 | SOTA | 精度 |
 
-```
 
 #### 3.12.3 学习率 Warmup 策略
 
-```
 Warmup 的数学原理:
 ══════════════════════════════════════════════════════════════
 
@@ -5227,9 +4955,7 @@ Warmup 的作用:
   · 预训练权重被快速破坏 → 迁移学习效果下降
   · 训练初期 loss 曲线不稳定
 
-```
 
-```python
 """
 OneCycle 学习率调度
 """
@@ -5250,11 +4976,9 @@ scheduler = OneCycleLR(
     final_div_factor=100.0,# 最终 lr = max_lr / final_div_factor
 )
 
-```
 
 #### 3.12.4 混合精度训练深入剖析
 
-```
 混合精度训练（Mixed Precision Training）原理:
 ══════════════════════════════════════════════════════════════
 
@@ -5282,9 +5006,7 @@ BF16 vs FP16:
   4. 参数更新: 使用 FP32 master weights 更新参数
   5. 梯度缩放: 反向缩放后更新 FP16 权重
 
-```
 
-```python
 """
 混合精度训练配置示例
 """
@@ -5322,13 +5044,11 @@ for epoch in range(100):
     scaler.step(optimizer)
     scaler.update()
 
-```
 
 #### 3.12.6 混合精度训练深度剖析
 
 混合精度训练（Mixed Precision Training）是加速 GPU 训练同时减少显存占用的核心技术。PyTorch 通过 AMP（Automatic Mixed Precision）提供了完善的混合精度训练支持。
 
-```
 混合精度训练的原理:
 ══════════════════════════════════════════════════════════════════════════
 
@@ -5358,11 +5078,9 @@ BF16 (Bfloat16):
   · Loss Scaling: 防止 FP16 下溢
 ══════════════════════════════════════════════════════════════════════════
 
-```
 
 **FP16 vs BF16 详细对比**：
 
-```
 ┌──────────────────────────────────────────────────────────────────────┐
 │  FP16 vs BF16 对比                                                   │
 ├──────────────────┬───────────────────┼───────────────────────────────┤
@@ -5380,11 +5098,9 @@ BF16 (Bfloat16):
 │  推荐: A100/H100 使用 BF16，旧 GPU 使用 FP16                         │
 └──────────────────────────────────────────────────────────────────────┘
 
-```
 
 **Loss Scaling 机制**：
 
-```
 为什么需要 Loss Scaling？
 
 问题: FP16 的精度有限，当梯度值很小时会下溢为 0
@@ -5403,9 +5119,7 @@ BF16 (Bfloat16):
   · 如果梯度下溢（inf/nan），scale /= 2
   · 自适应调整，无需手动调参
 
-```
 
-```python
 """
 混合精度训练完整实现
 """
@@ -5480,11 +5194,9 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
 
-```
 
 **混合精度训练性能基准**：
 
-```
 ┌──────────────────────────────────────────────────────────────────────┐
 │  混合精度训练性能对比 (YOLOv8s, COCO, T4 GPU)                       │
 ├──────────────────────────────────────────────────────────────────────┤
@@ -5502,13 +5214,11 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
   · A100/H100 推荐使用 BF16
   · 旧 GPU (V100/T4) 使用 FP16
 
-```
 
 ---
 
 ### 3.12 梯度累积策略
 
-```
 梯度累积（Gradient Accumulation）原理:
 ══════════════════════════════════════════════════════════════
 
@@ -5533,9 +5243,7 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
   · 显存占用仅为大 batch 的 1/(B/b)
   · 但训练速度略慢（多次前向传播）
 
-```
 
-```python
 """
 梯度累积的实际配置
 """
@@ -5565,11 +5273,9 @@ for epoch in range(100):
         optimizer.step()
         optimizer.zero_grad()
 
-```
 
 **梯度累积与多 GPU 的关系**：
 
-```
 多 GPU + 梯度累积的等效 batch 计算:
 ══════════════════════════════════════════════════════════════
 
@@ -5587,7 +5293,6 @@ for epoch in range(100):
 重要: 梯度累积不改变等效 batch 对学习率的影响
   因为梯度已经在多个小 batch 上平均了
 
-```
 
 ---
 
@@ -5597,7 +5302,6 @@ for epoch in range(100):
 
 #### 自动化权重搜索
 
-```python
 import numpy as np
 from ultralytics import YOLO
 
@@ -5641,11 +5345,9 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
     print(f"\n最佳权重: {best_weights}, 最佳 mAP50-95: {best_map:.4f}")
     return best_weights
 
-```
 
 #### 基于损失曲线的自适应调优
 
-```
 损失权重调优决策流程：
 | 观察 | train_loss | 和 | val_loss | 的比例关系： |
 
@@ -5662,7 +5364,6 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
 | 3. | 如果 | mAP50 | 高但 | mAP50-95 |
 | 4. | 每轮调整后进行验证，记录 | mAP50-95 | 变化 |
 
-```
 
 ---
 
@@ -5676,7 +5377,6 @@ CIoU（Complete IoU）Loss 是目前目标检测中最常用的边界框回归�
 
 #### 从 IoU 到 CIoU 的演进
 
-```
 ┌─────────────────────────────────────────────────────────────┐
 │  IoU Loss（基础版）                                          │
 │  L_IoU = 1 - IoU = 1 - |A∩B|/|A∪B|                         │
@@ -5703,7 +5403,6 @@ CIoU（Complete IoU）Loss 是目前目标检测中最常用的边界框回归�
 │  - α: 权重系数，α = v / ((1-IoU) + v)                        │
 └─────────────────────────────────────────────────────────────┘
 
-```
 
 **CIoU 的三个优化目标**：
 
@@ -5723,7 +5422,6 @@ YOLOv8 的分类损失实际采用 **BCE（二元交叉熵）**；Varifocal Loss
 
 #### 传统 Focal Loss 的问题
 
-```
 传统 Focal Loss：
   FL(p) = -α × (1-p)^γ × log(p)
 
@@ -5732,11 +5430,9 @@ YOLOv8 的分类损失实际采用 **BCE（二元交叉熵）**；Varifocal Loss
   - 忽略了预测框质量（IoU）与分类置信度的关系
   - 高质量预测框（IoU 高）和粗糙预测框（IoU 低）可能被同等对待
 
-```
 
 #### Varifocal Loss 的设计思想
 
-```
 Varifocal Loss：
   VF(p, v) = -v × (1-p)^γ × log(p) - (1-v) × p^γ × log(1-p)
 
@@ -5752,7 +5448,6 @@ Varifocal Loss：
   - 高质量框获得更高的分类学习权重
   - 低质量框被自动抑制，避免干扰学习
 
-```
 
 **Varifocal Loss vs Focal Loss 对比**：
 
@@ -5773,7 +5468,6 @@ DFL 是 YOLOv8 引入的一个创新损失函数，用于边界框分布建模�
 
 #### DFL 的核心思想
 
-```
 传统方法（直接回归）：
   输出层：4 个值 [tx, ty, tw, th] → 直接对应边界框坐标
   问题：
@@ -5791,11 +5485,9 @@ DFL 方法（分布建模）：
   - 能够表达不确定性
   - 梯度更稳定
 
-```
 
 #### DFL 的数学表达
 
-```
 假设预测框的左边界 x_left 有 16 个 bin（0~15）：
 
   输出层：[p0, p1, p2, ..., p15]  （16 个概率值，softmax 后）
@@ -5810,11 +5502,9 @@ DFL 方法（分布建模）：
   推理时：
     x_left = Σᵢ pᵢ × i  （分布的期望值）
 
-```
 
 #### 三种 Loss 的相互作用
 
-```
 ┌────────────────────────────────────────────────────────────────┐
 │                    总损失 = box_loss + cls_loss + dfl_loss      │
 │                        (带权重：box=7.5, cls=0.5, dfl=1.5)      │
@@ -5831,7 +5521,6 @@ DFL 方法（分布建模）：
 │  (Varifocal)     │  决定目标的类别     │  单类别场景下权重可降低  │
 └──────────────────┴───────────────────┴─────────────────────────┘
 
-```
 
 **权重调优指南**：
 
@@ -5855,7 +5544,6 @@ DFL 方法（分布建模）：
 
 #### 学习率对训练的影响
 
-```
 学习率过高：
   现象：Loss 曲线剧烈震荡，无法收敛
   原因：梯度更新步长过大，参数在最优解附近反复跳跃
@@ -5871,7 +5559,6 @@ DFL 方法（分布建模）：
   原因：梯度更新步长过小，参数更新效率低下
   解决：增大 lr0，增大 lrf（减小衰减幅度）
 
-```
 
 #### 学习率调度策略对比
 
@@ -5892,7 +5579,6 @@ Batch Size 决定了每次参数更新所使用的样本数量，对训练稳定
 
 #### Batch Size 与学习率的关系
 
-```
 线性缩放规则（Linear Scaling Rule）：
   当 batch size 增大 N 倍时，学习率也应近似增大 N 倍
 
@@ -5904,7 +5590,6 @@ Batch Size 决定了每次参数更新所使用的样本数量，对训练稳定
   实际学习率缩放因子 = batch / nbs = 16/64 = 0.25
   等效学习率 = 0.01 × 0.25 = 0.0025
 
-```
 
 #### 不同 Batch Size 的表现对比
 
@@ -5926,7 +5611,6 @@ Mosaic 增强是 YOLO 系列的核心创新之一，但并非整个训练过程�
 
 #### Mosaic 的训练阶段作用
 
-```
 训练初期（epoch 0 → epochs-close_mosaic）:
   ├─ Mosaic 开启：4 张图片拼接，丰富背景和尺度变化
   ├─ 相当于增大了有效 batch size（1 张合成图 ≈ 4 张独立图）
@@ -5939,7 +5623,6 @@ Mosaic 增强是 YOLO 系列的核心创新之一，但并非整个训练过程�
   ├─ 学习率已衰减到较低水平，参数微调
   └─ 本实验：最后 10 轮关闭 Mosaic
 
-```
 
 #### 关闭 Mosaic 的时机选择
 
@@ -5960,7 +5643,6 @@ Mosaic 增强是 YOLO 系列的核心创新之一，但并非整个训练过程�
 
 #### 早停机制工作原理
 
-```
 monitor = "metrics/mAP50-95(B)"  （默认监控指标）
 mode = "max"                      （越大越好）
 patience = 100                    （等待轮数）
@@ -5974,11 +5656,9 @@ patience = 100                    （等待轮数）
        如果 patience 计数器 = 0：
          触发早停，保存 best.pt，结束训练
 
-```
 
 #### 本实验的早停行为
 
-```
 最佳 mAP50-95：93.93%（epoch 113）
 最终 epoch：153
 实际训练轮数：153 - 113 = 40 轮（早停等待期）
@@ -5990,7 +5670,6 @@ patience 设置：100
   - 但由于 patience=100，训练没有提前停止
   - 说明设置了一个相对宽松的 patience，让模型充分训练
 
-```
 
 > **调优建议**：
 > - `patience` 设置过小（如 10~20）：可能过早停止，模型未充分训练
@@ -6004,7 +5683,6 @@ patience 设置：100
 
 综合以上四个维度，训练稳定性的诊断流程如下：
 
-```
                     训练启动
                        │
               ┌────────┴────────┐
@@ -6030,7 +5708,6 @@ patience 设置：100
         检查过拟合风险
          (train/val gap)
 
-```
 
 **本实验结论**：从 `results.csv` 数据看，train/val box_loss gap 在最佳 epoch（113）仅为 -0.047，最终 epoch（153）为 +0.021，差距极小，训练稳定性优秀，无过拟合迹象。
 
@@ -6040,7 +5717,6 @@ YOLOv8 在损失函数设计上做了多项重要改动，这些改动直接影�
 
 #### 主要变化概览
 
-```
 YOLOv8 → YOLOv8 损失函数变化：
 | 损失类型 | YOLOv8 | YOLOv8 | 变化 |
 
@@ -6050,14 +5726,13 @@ YOLOv8 → YOLOv8 损失函数变化：
 | DFL | Loss | DFL（必需） | 移除 |
 | (分布焦点损失) | 改用L1直接回归 | ★ |
 
-```
 
 #### DFL 的移除与 L1 距离回归
 
 DFL（Distribution Focal Loss）在 YOLOv8 中用于对边界框的四个偏移量进行分布建模，将离散的概率分布转换为连续的坐标预测。YOLOv8 移除了 DFL，改用更简洁的 L1 距离损失直接回归边界框偏移：
 
-```
 DFL 的作用（YOLOv8）：
+
 | 1. | 将边界框偏移预测从"单值"改为"概率分布"
 | --- | --- |
 | 2. | 通过 |
@@ -6070,7 +5745,6 @@ DFL 的作用（YOLOv8）：
 | 4. | 优点：计算更简单，参数更少，收敛更快
 | 5. | 缺点：移除了 |
 
-```
 
 **为什么移除 DFL？**
 - 实验表明，L1 回归在大多数场景下已能达到与 DFL 相当的定位精度
@@ -6089,7 +5763,6 @@ YOLOv8 标准损失权重配置：
 
 YOLOv8 的训练过程中，损失权重会随训练进度动态变化：
 
-```
 Progressive Loss 权重演化：
 | 训练阶段 | box权重 | cls权重 | 说明 |
 
@@ -6100,9 +5773,7 @@ Progressive Loss 权重演化：
 | Late期(60-90%) | 最高 | 较低 | 精细化定位 |
 | Final期(90-100%)稳定 | 最低 | 微调阶段 |
 
-```
 
-```python
 # close_mosaic 参数用于训练后期行为调整
 model.train(
     data="data.yaml",
@@ -6112,14 +5783,13 @@ model.train(
     close_mosaic_boost=1.5, # mosaic关闭时的学习率boost
 )
 
-```
 
 #### 标签分配对损失计算的影响（YOLOv8 Task-Aligned）
 
 Task-Aligned Assigner 不仅影响标签分配，还直接影响损失计算：
 
-```
 Task-Aligned 对损失计算的影响：
+
 | 影响方面 | 说明 |
 | --- | --- |
 | 正样本定义 | 对小目标降低 IoU 阈值，增加正样本数量 → box_loss 的正样本更多，训练信号更强 |
@@ -6135,7 +5805,6 @@ Task-Aligned 对损失计算的影响：
 
 除了检测任务，YOLOv8 还为分割、姿态、OBB 等任务定义了专门的损失函数：
 
-```
 
 YOLOv8 多任务损失函数：
 
@@ -6152,7 +5821,6 @@ YOLOv8 多任务损失函数：
 
 | SemSeg | - | - | Seg | L1 | + | Dice |
 
-```
 
 > **Segment 任务的 Mask 损失**：使用 L1 + Dice 组合，L1 保证像素级精度，Dice 保证边界对齐。
 >
@@ -6166,12 +5834,10 @@ YOLOv8 多任务损失函数：
 
 ### 6.1 训练阶段每轮输出
 
-```
 
    epoch   gpu_mem   box_loss   cls_loss   dfl_loss  Instances  Size
      100     4.2G     0.8543     0.1234     0.9876        342     640
 
-```
 
 **逐项解释**：
 
@@ -6191,7 +5857,6 @@ YOLOv8 多任务损失函数：
 
 以下是一次真实训练（YOLOv8n，**自行拍摄的单类别数据集**，153 轮）的早期与关键轮次输出：
 
-```
 
    epoch   gpu_mem   box_loss   cls_loss   dfl_loss  Instances  Size
        1     2.1G     1.0055     1.9296     0.9304       187     640
@@ -6206,7 +5871,6 @@ YOLOv8 多任务损失函数：
       ...
      153     2.1G     0.5342     0.2176     0.8287       187     640
 
-```
 
 > 注：以上数据来自本文附录中的实际训练实验。数据集为**自行拍摄的单类别目标**，GPU 显存占用约 2.1GB（YOLOv8n 模型，batch=16，imgsz=640），总训练时间约 12.7 分钟。
 
@@ -6216,22 +5880,18 @@ YOLOv8 多任务损失函数：
 
 训练结束后 Ultralytics 会输出如下表格：
 
-```
 
    Class  Images  Instances      P      R  mAP50  mAP50-95
       all     5000      12345   0.823   0.756   0.689    0.432
     person     5000       2345   0.891   0.834   0.798    0.523
        car     5000       1876   0.812   0.745   0.672    0.412
 
-```
 
 #### 4.2.1 Precision（精确率 / P）
 
-```
 
 公式：P = TP / (TP + FP)
 
-```
 
 **含义**：模型预测出来的目标中，有多少是真正正确的。
 
@@ -6250,11 +5910,9 @@ YOLOv8 多任务损失函数：
 
 #### 4.2.2 Recall（召回率 / R）
 
-```
 
 公式：R = TP / (TP + FN)
 
-```
 
 **含义**：真实存在的目标中，有多少被模型成功检测出来。
 
@@ -6272,7 +5930,6 @@ YOLOv8 多任务损失函数：
 
 在理解 mAP 之前，必须搞清楚 **IoU（Intersection over Union）**：
 
-```
 
 IoU = |预测框 ∩ 真实框| / |预测框 ∪ 真实框|
 
@@ -6286,7 +5943,6 @@ IoU = |预测框 ∩ 真实框| / |预测框 ∪ 真实框|
 IoU = 1.0  → 预测框与真实框完全重合（完美定位）
 IoU = 0.0  → 两框完全无交集（完全不重叠）
 
-```
 
 **IoU 阈值的意义**：
 - IoU > 0.5：预测框与真实框重叠超过一半，视为"定位可接受" → 该预测为 TP
@@ -6296,7 +5952,6 @@ IoU = 0.0  → 两框完全无交集（完全不重叠）
 
 #### 4.2.4 mAP50（平均精度 @ IoU=0.50）
 
-```
 
 计算流程：
   对每个类别（以"person"为例）：
@@ -6311,7 +5966,6 @@ IoU = 0.0  → 两框完全无交集（完全不重叠）
 
   mAP50 = 所有类别 AP 的算术平均值
 
-```
 
 > **什么是 GT（Ground Truth）？**
 > GT 指人工标注的"真实答案"——每张图片中每个目标的真实边界框和类别标签。
@@ -6330,7 +5984,6 @@ IoU = 0.0  → 两框完全无交集（完全不重叠）
 
 #### 4.2.5 mAP50-95（平均精度 @ IoU=0.50~0.95）
 
-```
 
 公式：
   mAP50-95 = mean(
@@ -6346,11 +5999,9 @@ IoU = 0.0  → 两框完全无交集（完全不重叠）
     mAP@IoU=0.95
   )
 
-```
 
 **与 mAP50 的直观区别**：
 
-```
 
 IoU=0.50（宽松）:  预测框只需与真实框重叠一半就算对
 IoU=0.75（严格）:  预测框必须与真实框高度吻合才算对
@@ -6358,7 +6009,6 @@ IoU=0.95（极严）:  预测框几乎要与真实框完全重合才算对
 
 mAP50-95 = 10个不同严格程度下的 mAP 取平均
 
-```
 
 **与 mAP50 的典型差距**：
 
@@ -6380,7 +6030,6 @@ mAP50-95 = 10个不同严格程度下的 mAP 取平均
 
 在比较两个 YOLO 模型时，仅看 mAP 数值差异是不够的。统计显著性检验可以帮助我们判断性能提升是否真正具有统计意义，而非随机波动。
 
-```
 
 为什么需要统计显著性检验？
 ══════════════════════════════════════════════════════════════════════════
@@ -6393,11 +6042,9 @@ mAP50-95 = 10个不同严格程度下的 mAP 取平均
   · 如果 p-value ≥ 0.05: 差异不显著，可能是随机波动
 ══════════════════════════════════════════════════════════════════════════
 
-```
 
 **配对 t 检验 (Paired t-test)**：
 
-```python
 """
 模型比较的统计显著性检验
 """
@@ -6486,11 +6133,9 @@ def interpret_results(result):
         effect = "大"
     print(f"效应量: {effect}")
 
-```
 
 **Bootstrap 置信区间**：
 
-```python
 """
 Bootstrap 方法计算 mAP 置信区间
 """
@@ -6525,11 +6170,9 @@ map_values = [0.449, 0.451, 0.448, 0.450, 0.449]
 ci_low, ci_high = bootstrap_ci(map_values)
 print(f"95% Bootstrap CI: [{ci_low:.3f}, {ci_high:.3f}]")
 
-```
 
 **模型比较报告生成**：
 
-```python
 """
 完整的模型比较报告
 """
@@ -6589,7 +6232,6 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
 
     return report_df
 
-```
 
 ---
 
@@ -6608,7 +6250,6 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
 
 **P-R-F1 三角关系速查**：
 
-```
          P 高 R 低（宁可错杀）       P 低 R 高（宁可漏不掉）
               ← 安全场景             → 筛查场景
               （如炸弹检测）          （如疫情初筛）
@@ -6617,7 +6258,6 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
                           ↑
                     conf ≈ 0.45~0.5
 
-```
 
 #### 4.2.7 指标异常信号与调优方向
 
@@ -6634,7 +6274,6 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
 
 **训练完成的评估决策流程**：
 
-```
                     训练完成
                        │
                 看 mAP50-95（核心指标）
@@ -6651,22 +6290,18 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
 增大 imgsz    增大 box   检查数据质量     换更大模型
 (640→1280)    权重(7.5→10)(标注是否准确)  (s→m→l)
 
-```
 
 ### 6.5 学习率曲线解析
 
 训练日志中会记录三个参数组的学习率：
 
-```
   LR/pg0:  bias 参数组的学习率（通常最高）
   LR/pg1:  权重参数组的学习率（中间值）
   LR/pg2:  BN 参数组的学习率（通常最低）
 
-```
 
 **学习率调度曲线（Ultralytics 默认）**：
 
-```
   lr
   ↑
 lr0│      ╭────── 线性上升（Warmup）
@@ -6687,11 +6322,9 @@ lr0×lrf│     ╲
    └──────────────────────────────────────────→ epochs
    0    warmup_epochs(3)              epochs(100)
 
-```
 
 **两个阶段的工作原理**：
 
-```
 Warmup 阶段（epoch 0 → warmup_epochs）
   lr = lr0 × (epoch / warmup_epochs)
   作用：学习率从 0 线性上升到 lr0，避免训练初期梯度爆炸，帮助模型稳定起步
@@ -6700,7 +6333,6 @@ Cosine Decay 阶段（epoch warmup_epochs → epochs）
   lr = lrf + (1 - lrf) × 0.5 × (1 + cos(π × (epoch - warmup_epochs) / (epochs - warmup_epochs)))
   作用：学习率按余弦曲线平滑衰减到 lr0×lrf，后期微调参数，避免震荡
 
-```
 
 > **调优建议**：学习率是训练中最敏感的参数。Loss 曲线震荡 → 降低 lr0；Loss 下降极慢 → 增大 lr0。配合 `plots=True` 生成的 LR 曲线图可以直观看到学习率是否按计划衰减。
 ---
@@ -6709,7 +6341,6 @@ Cosine Decay 阶段（epoch warmup_epochs → epochs）
 
 训练完成后，Ultralytics 会在 `runs/detect/<实验名>/` 目录下保存所有训练数据和图表（完整目录结构见结果可视化部分）。以下代码用于读取和回放训练历史：
 
-```python
 from ultralytics import YOLO
 import pandas as pd
 
@@ -6725,7 +6356,6 @@ best_epoch = results_df["epoch"].iloc[results_df["metrics/mAP50-95(B)"].idxmax()
 best_map = results_df["metrics/mAP50-95(B)"].max()
 print(f"最佳epoch: {best_epoch}, 最佳mAP50-95: {best_map:.3f}")
 
-```
 
 ### 6.7 模型选择
 
@@ -6743,7 +6373,6 @@ print(f"最佳epoch: {best_epoch}, 最佳mAP50-95: {best_map:.3f}")
 
 #### 选择策略
 
-```python
 # 选择模型
 model = YOLO("yolov8n.pt")  # 边缘设备 / 实时性要求高
 model = YOLO("yolov8s.pt")  # 通用场景（推荐起点）
@@ -6755,11 +6384,9 @@ model = YOLO("yolov8x.pt")  # 追求极限精度
 #       参数后缀 .yaml = 模型结构定义（从头训练时使用）
 model = YOLO("yolov8s.yaml")  # 仅用于从头训练（不推荐小数据集使用）
 
-```
 
 #### 从头训练 vs 迁移学习
 
-```python
 # ═══════════════════════════════════════════════════════════
 # 迁移学习（推荐：99% 的场景）
 # ═══════════════════════════════════════════════════════════
@@ -6779,7 +6406,6 @@ model.train(data="my_data.yaml",
             epochs=300,             # 通常需要更多轮次
             lr0=0.01)               # 从头训练需要标准学习率
 
-```
 
 ---
 
@@ -6789,8 +6415,8 @@ PR 曲线（Precision-Recall Curve）是评估目标检测模型性能最核心�
 
 #### PR 曲线的构建过程
 
-```
 构建步骤：
+
 | 1. | 对验证集中每个目标，收集模型的所有预测框
 | --- | --- |
 | 2. | 按置信度从高到低排序预测框
@@ -6803,11 +6429,9 @@ PR 曲线（Precision-Recall Curve）是评估目标检测模型性能最核心�
 AP（Average Precision）= PR 曲线下面积
 mAP = 所有类别 AP 的均值
 
-```
 
 #### PR 曲线解读指南
 
-```
 健康 PR 曲线特征：
   ✓ 曲线整体靠近右上角（高 P 高 R）
   ✓ 在高 Recall 区域（R > 0.8）Precision 仍保持较高水平
@@ -6829,9 +6453,7 @@ PR 曲线 vs ROC 曲线：
   │ 关注重点    │ 正样本的查准查全     │ 正负样本的整体区分    │
   └─────────────┴──────────────────────┴──────────────────────┘
 
-```
 
-```python
 # 绘制自定义 PR 曲线
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6859,7 +6481,6 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
     plt.savefig('pr_curve.png', dpi=150)
     plt.show()
 
-```
 
 ---
 
@@ -6869,8 +6490,8 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 
 #### 混淆矩阵的构建
 
-```
 混淆矩阵构建流程：
+
 | 1. | 对验证集每张图片，获取模型的预测结果
 | --- | --- |
 | 2. | 对每个预测框，与 |
@@ -6884,11 +6505,9 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 | 实际为正 | │ |
 | 实际为负 | │ |
 
-```
 
 #### 混淆矩阵解读与改进方向
 
-```
 混淆矩阵模式分析：
 | TP | 高 | FP | 低 | 模型表现优秀 | 保持当前配置 |
 
@@ -6901,9 +6520,7 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 | 对角线元素 | = | 正确分类数（TP） |
 | 非对角线元素 | = | 误分类数（可看出哪些类别容易混淆） |
 
-```
 
-```python
 # 生成并分析混淆矩阵
 from ultralytics import YOLO
 import seaborn as sns
@@ -6932,7 +6549,6 @@ plt.title('Normalized Confusion Matrix')
 plt.tight_layout()
 plt.savefig('confusion_matrix_custom.png', dpi=150)
 
-```
 
 ---
 
@@ -6942,8 +6558,8 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 
 #### 逐类别指标解读
 
-```
 逐类别分析维度：
+
 | 指标 | 含义 | 诊断价值 |
 | --- | --- | --- |
 | P（精确率） | 预测正确的比例 | 识别误报问题 |
@@ -6956,11 +6572,9 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 | P | 低 | R |
 | P | 高 | R |
 
-```
 
 #### 类别性能分层策略
 
-```
 根据逐类别指标调整策略：
 | 类别层级 | 判断标准 | 应对策略 |
 
@@ -6975,7 +6589,6 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 | - | 增强 | Mosaic（close_mosaic=0 |
 | - | 增大 | scale |
 
-```
 
 ---
 
@@ -6985,7 +6598,6 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 
 #### 最优阈值搜索
 
-```python
 def find_optimal_threshold(model, data_yaml, metric="F1"):
     """
     在验证集上搜索最优置信度阈值
@@ -7046,12 +6658,11 @@ optimal_conf = find_optimal_threshold(
     metric="F1"
 )
 
-```
 
 #### 场景化阈值选择
 
-```
 不同场景的阈值选择策略：
+
 | 场景 | 目标阈值 | 推荐 | conf | 推荐 | iou |
 | --- | --- | --- | --- | --- |
 | 安全检测（烟火） | 零误报 | 0.6~0.8 | 0.45 |
@@ -7060,7 +6671,6 @@ optimal_conf = find_optimal_threshold(
 | 通用检测 | 平衡 | P/R | 0.25~0.45 | 0.45 |
 | 实时视频流 | 低延迟优先 | 0.3~0.5 | 0.5~0.7 |
 
-```
 
 ---
 
@@ -7070,8 +6680,8 @@ optimal_conf = find_optimal_threshold(
 
 #### 不平衡场景下的评估指标
 
-```
 不平衡数据集评估指标：
+
 | 指标 | 公式 | 适用场景 |
 | --- | --- | --- |
 | mAP50-95（标准） | 所有类别 | AP |
@@ -7083,9 +6693,7 @@ optimal_conf = find_optimal_threshold(
 | detection_rate | TP | / |
 **更强调漏检代价**
 
-```
 
-```python
 def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
     """
     计算不平衡数据集的评估指标
@@ -7107,7 +6715,6 @@ def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
 
     return {"rare_class_map": rare_map, "common_class_map": common_map}
 
-```
 
 ---
 
@@ -7117,8 +6724,8 @@ def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
 
 #### 4.12.1 为什么需要统计显著性检验
 
-```
 常见误区:
+
 | 实验结果 | 统计结论
 | --- | --- |
 | 模型A: | mAP |
@@ -7132,11 +6739,9 @@ def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
       单次评估的 mAP 本身就有置信区间。
       0.4% 的差距可能完全在随机波动范围内。
 
-```
 
 #### 4.12.2 Bootstrap 置信区间
 
-```python
 """
 Bootstrap 方法计算 mAP 的置信区间
 """
@@ -7202,11 +6807,9 @@ def compute_mAP(detections, ground_truth):
 # print(f"mAP: {results['mAP']:.4f}")
 # print(f"95% CI: [{results['CI_95'][0]:.4f}, {results['CI_95'][1]:.4f}]")
 
-```
 
 #### 4.12.3 配对 t 检验（Paired t-test）
 
-```python
 """
 配对 t 检验：比较两个模型在相同验证集上的 mAP
 """
@@ -7267,11 +6870,9 @@ t_stat, p_value, conclusion, effect_size = paired_ttest_model_comparison(
 print(f"t = {t_stat:.3f}, p = {p_value:.4f}, Cohen's d = {effect_size:.3f}")
 print(f"结论: {conclusion}")
 
-```
 
 #### 4.12.4 McNemar 检验用于检测比较
 
-```python
 """
 McNemar 检验：比较两个检测模型在样本级的一致性
 """
@@ -7338,15 +6939,14 @@ def mcnemar_test_detection(model_a_dets, model_b_dets, ground_truth, iou_thresho
         'conclusion': '显著差异' if p_value < 0.05 else '无显著差异'
     }
 
-```
 
 #### 4.12.5 统计检验总结与解读
 
-```
 统计检验方法选择指南:
 ══════════════════════════════════════════════════════════════
 
 检验方法              适用场景                前提条件
+
 | Bootstrap | CI | 单次评估的 | mAP | 无需正态分布 |
 | --- | --- | --- | --- | --- |
 **置信区间估计**
@@ -7358,9 +6958,7 @@ def mcnemar_test_detection(model_a_dets, model_b_dets, ground_truth, iou_thresho
 | （非参数替代 | t | 检验） |
 | permutation | 检验 | 小样本、任意分布 | 无前提条件 |
 
-```
 
-```python
 """
 完整的模型对比统计检验流程
 """
@@ -7440,7 +7038,6 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
     else:
         print("  两个模型性能无显著差异，建议选择更轻量的模型")
 
-```
 
 > **解读 p 值的常见误区**：
 > - p < 0.05 并不意味着"模型 A 比 B 好 95% 的概率"，而是"如果两个模型实际相同，观察到当前差异或更大差异的概率小于 5%"
@@ -7455,7 +7052,6 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
 
 在比较两个 YOLO 模型时，简单的 mAP 差异并不足以说明哪个模型更好。 statistical significance testing 可以判断差异是否显著。
 
-```
 统计显著性检验方法:
 ══════════════════════════════════════════════════════════════
 
@@ -7518,6 +7114,7 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
   print(f"显著: {result['significant']}")
 ══════════════════════════════════════════════════════════════
 ---
+
 | 维度 | mAP50-95 | AOP@0.5:0.95 |
 | --- | --- | --- |
 | 变化维度 | IoU | 阈值变化（0.5→0.95） |
@@ -7527,6 +7124,7 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
 #### YOLOv8 新增指标表
 
 YOLOv8 完整评估指标体系：
+
 | 指标 | 含义 | 与 | YOLOv8 | 对比 |
 | --- | --- | --- | --- | --- |
 | mAP50-95 | 标准 | AP | 均值 | 基准指标 |
@@ -7543,7 +7141,6 @@ YOLOv8 完整评估指标体系：
 
 #### 核心指标：Train/Val Gap
 
-```
 
 过拟合程度 = val_loss - train_loss（或 val_metric - train_metric）
 
@@ -7560,11 +7157,9 @@ YOLOv8 完整评估指标体系：
   - train_loss 持续下降，val_loss 开始上升
   - 必须采取措施
 
-```
 
 #### 本实验的过拟合分析
 
-```
 
 从 results.csv 数据分析 train/val gap：
 
@@ -7583,11 +7178,9 @@ Epoch  │ train_box │ val_box │ gap   │ train_cls │ val_cls │ gap   �
   - 整体来看，gap 始终在 ±0.05 以内，**无明显过拟合**
   - epoch 113 之后 mAP50-95 从 93.93% 略降至 91.13%，印证了轻微过拟合
 
-```
 
 #### 过拟合检测的自动化方法
 
-```python
 import pandas as pd
 
 def detect_overfitting(csv_path, gap_threshold=0.05):
@@ -7628,7 +7221,6 @@ def detect_overfitting(csv_path, gap_threshold=0.05):
 # 使用
 detect_overfitting("results.csv")
 
-```
 
 ---
 
@@ -7645,7 +7237,6 @@ detect_overfitting("results.csv")
 
 **标签平滑的适用场景**：
 
-```yaml
 # 建议在以下场景启用标签平滑
 label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 
@@ -7658,7 +7249,6 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
   - 单类别检测（本实验场景）
   - 类别之间存在包含关系（如"动物"包含"猫"）
 
-```
 
 ---
 
@@ -7668,7 +7258,6 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 
 #### 各项增强的贡献评估
 
-```
 本实验增强配置：
   mosaic=1.0, mixup=0.0, copy_paste=0.0
   fliplr=0.5, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4
@@ -7687,7 +7276,6 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
   │ Copy-Paste      │ ✗ (0.0)      │ 低：单类别无需补充         │
   └─────────────────┴──────────────┴──────────────────────────┘
 
-```
 
 #### 增强强度与过拟合的关系
 
@@ -7704,7 +7292,6 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 
 ### 7.4 早停 vs 手动停止
 
-```
 ┌──────────────────────────────────────────────────────────────────┐
 │                    早停 vs 手动停止 对比                          │
 ├──────────────┬─────────────────────┬─────────────────────────────┤
@@ -7716,11 +7303,9 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 │ 推荐 patience│ 50~100             │ -                           │
 └──────────────┴─────────────────────┴─────────────────────────────┘
 
-```
 
 **推荐策略**：
 
-```python
 # 策略1：保守训练（推荐生产环境）
 model.train(
     epochs=200,        # 设置较大的 epochs 上界
@@ -7740,7 +7325,6 @@ model.train(
 # 使用 TensorBoard 监控，观察到 mAP 开始下降时手动停止
 # 或定期检查 results.csv 中的 mAP 趋势
 
-```
 
 > **本实验最佳实践**：使用 `patience=100`，最终训练 153 轮。最佳权重在 epoch 113（mAP50-95=93.93%），最终 epoch（153）的 mAP 略有下降至 91.13%。建议在部署时使用 `best.pt` 而非 `last.pt`。
 
@@ -7750,7 +7334,6 @@ YOLOv8 的微调策略与 YOLOv8 有显著不同，主要体现在优化器选�
 
 #### 微调前准备
 
-```python
 from ultralytics import YOLO
 
 # 加载 YOLOv8 预训练模型
@@ -7760,11 +7343,9 @@ model = YOLO("yolov8n.pt")  # 或 yolov8s/m/l/x.pt
 model.model.summary()
 # 关注：参数量、模型架构
 
-```
 
 #### 小数据集微调（<1000 张图片）
 
-```python
 # ── 小数据集微调配置（推荐）─
 model.train(
     data="small_dataset.yaml",
@@ -7785,7 +7366,6 @@ model.train(
     amp=True,
 )
 
-```
 
 **小数据集微调关键原则**：
 小数据集 (< 1000 张) 微调原则：
@@ -7803,7 +7383,6 @@ model.train(
 
 #### 大数据集微调（>50000 张图片）
 
-```python
 # ── 大数据集微调配置（推荐）─
 model.train(
     data="large_dataset.yaml",
@@ -7824,7 +7403,6 @@ model.train(
     amp=True,
 )
 
-```
 
 #### 领域特定图像微调
 
@@ -7860,7 +7438,6 @@ model.train(
 
 #### SGD vs AdamW 选择决策
 
-```
 优化器选择决策树：
 ──────────────────────────────────────────────────────────────
                     开始微调
@@ -7893,11 +7470,9 @@ AdamW 适用场景：
   ✓ 需要更精细的学习率控制
 ──────────────────────────────────────────────────────────────
 
-```
 
 #### 冻结策略（Transfer Learning）
 
-```python
 # 策略1：冻结 Backbone，只训练检测头（推荐小数据集）
 for name, param in model.model.model.named_parameters():
     if "detect" not in name and "backbone" in name:
@@ -7929,7 +7504,6 @@ model.train(
     epochs=300,
 )
 
-```
 
 冻结策略选择指南：
 
@@ -7945,7 +7519,6 @@ model.train(
 
 ### 8.1 训练输出目录结构
 
-```
 runs/detect/exp1/
 ├── weights/
 │   ├── best.pt          # mAP50-95 最高的权重 ⭐
@@ -7963,11 +7536,9 @@ runs/detect/exp1/
 ├── train_batch0.jpg           # 训练批次可视化（含增强效果）
 └── args.yaml                  # 本次训练的完整参数记录
 
-```
 
 ### 8.2 results.png 图表解读
 
-```
 results.png 包含以下子图：
 ┌─────────────────────────────────────────┐
 │  Box Loss        │  cls Loss           │
@@ -7986,11 +7557,9 @@ results.png 包含以下子图：
   ✗ Loss 上升 / mAP 下降 → 过拟合或学习率过高
   ✗ Loss 不下降 → 学习率过低或数据问题
 
-```
 
 ### 8.3 查看历史训练结果
 
-```python
 from ultralytics import YOLO
 import pandas as pd
 
@@ -8006,7 +7575,6 @@ best_epoch = results_df["epoch"].iloc[results_df["metrics/mAP50-95(B)"].idxmax()
 best_map = results_df["metrics/mAP50-95(B)"].max()
 print(f"最佳epoch: {best_epoch}, 最佳mAP50-95: {best_map:.3f}")
 
-```
 
 ### 8.4 实际训练结果解读
 
@@ -8114,7 +7682,6 @@ print(f"最佳epoch: {best_epoch}, 最佳mAP50-95: {best_map:.3f}")
 
 Plotly 可以创建交互式图表，支持缩放、悬停、导出等功能，比静态图表更适合分析。
 
-```python
 """
 使用 Plotly 创建交互式 YOLO 训练可视化
 """
@@ -8177,9 +7744,7 @@ def create_interactive_training_dashboard(results_csv):
     fig.write_html("training_dashboard.html")
     fig.show()
 
-```
 
-```python
 """
 交互式 Grad-CAM 可视化
 """
@@ -8220,7 +7785,6 @@ Plotly 交互式图表优势:
   · 支持动画和交互
 ══════════════════════════════════════════════════════════════
 
-```
 
 ### 8.6 交互式可视化进阶
 
@@ -8228,7 +7792,6 @@ Plotly 交互式图表优势:
 
 #### 5.6.1 Plotly 交互式训练曲线
 
-```python
 """
 使用 Plotly 创建交互式训练曲线
 """
@@ -8309,11 +7872,9 @@ def plot_confusion_matrix_interactive(cm, class_names):
     fig.write_html("confusion_matrix.html")
     fig.show()
 
-```
 
 #### 5.6.2 Streamlit 训练监控仪表盘
 
-```python
 """
 使用 Streamlit 构建实时训练监控仪表盘
 """
@@ -8385,11 +7946,9 @@ if st.checkbox("启用自动刷新"):
         time.sleep(refresh_rate)
         st.rerun()
 
-```
 
 #### 5.6.3 Matplotlib vs Plotly 对比
 
-```
 可视化库对比:
 ══════════════════════════════════════════════════════════════
 特性              Matplotlib              Plotly
@@ -8409,7 +7968,6 @@ Jupyter 内嵌      直接显示                需要 %plotly 扩展
   · 快速分析 → Matplotlib（简单快捷）
   · 网页展示 → Plotly（嵌入 HTML）
 
-```
 
 ---
 
@@ -8417,7 +7975,6 @@ Jupyter 内嵌      直接显示                需要 %plotly 扩展
 
 Grad-CAM（Gradient-weighted Class Activation Mapping）通过梯度信息定位模型关注的图像区域，帮助理解模型的"注意力"分布。
 
-```python
 import cv2
 import numpy as np
 import torch
@@ -8506,11 +8063,9 @@ def grad_cam(model, image_path, class_id=None):
     print(f"✓ Grad-CAM 热力图已保存: gradcam_{Path(image_path).stem}.jpg")
     return overlay
 
-```
 
 #### Attention 可视化
 
-```python
 def visualize_attention(model, image_path, layer_idx=12):
     """
     可视化 Transformer 式注意力图（适用于 YOLOv8 的注意力模块）
@@ -8550,11 +8105,9 @@ def visualize_attention(model, image_path, layer_idx=12):
         plt.savefig('attention_maps.png', dpi=150)
         print("✓ 注意力图已保存: attention_maps.png")
 
-```
 
 #### 误差分析可视化
 
-```python
 def error_analysis_visualization(model, data_yaml, output_dir="error_analysis"):
     """
     系统性分析模型的检测错误，可视化 FP/FN 案例
@@ -8599,11 +8152,9 @@ def error_analysis_visualization(model, data_yaml, output_dir="error_analysis"):
         # 保存
         cv2.imwrite(f"{output_dir}/pred_{i:04d}.jpg", img)
 
-```
 
 #### 特征嵌入可视化（t-SNE / PCA）
 
-```python
 def visualize_embeddings(model, data_yaml, n_samples=500, method="tsne"):
     """
     将模型中间层特征降维可视化，观察类别分离度
@@ -8656,13 +8207,11 @@ def visualize_embeddings(model, data_yaml, n_samples=500, method="tsne"):
     plt.savefig(f'{method}_embedding.png', dpi=150)
     print(f"✓ {method.upper()} 可视化已保存: {method}_embedding.png")
 
-```
 
 #### 5.5 交互式可视化（Plotly）
 
 Plotly 是一个强大的交互式可视化库，可以创建可缩放、可悬停的图表，非常适合训练过程的实时监控和结果展示。
 
-```python
 """
 使用 Plotly 创建交互式训练可视化
 """
@@ -8796,11 +8345,9 @@ class YOLOPlotlyMonitor:
             self.fig.write_html(filename)
             print(f"✓ 图表已保存: {filename}")
 
-```
 
 **交互式训练监控示例**：
 
-```python
 """
 实时训练监控面板
 """
@@ -8851,11 +8398,9 @@ def create_live_dashboard(results_history):
 # fig.show()  # Jupyter 中自动刷新
 # fig.update_layout(annotations=[...])  # 更新数据
 
-```
 
 **Plotly 与 TensorBoard 对比**：
 
-```
 ┌──────────────────────────────────────────────────────────────────────┐
 │  Plotly vs TensorBoard 对比                                          │
 ├──────────────────┬────────────────────┬─────────────────────────────┤
@@ -8872,7 +8417,6 @@ def create_live_dashboard(results_history):
 │  推荐: TensorBoard 用于训练监控, Plotly 用于结果展示和报告           │
 └──────────────────────────────────────────────────────────────────────┘
 
-```
 
 ---
 
@@ -8910,7 +8454,6 @@ TensorBoard 高级技巧：
 
 ### 9.1 损失曲线分析
 
-```
 场景1: 过拟合
   现象: train_loss 持续下降，val_loss 开始上升
   诊断: gap 逐渐增大
@@ -8944,11 +8487,9 @@ TensorBoard 高级技巧：
     1. 增大 lr0 (0.001 → 0.01)
     2. 增大 lrf (0.01 → 0.1，减少衰减幅度)
 
-```
 
 ### 9.2 硬件相关问题
 
-```
 问题1: CUDA OOM (显存不足)
   解决:
     model.train(batch=8)      # 减小batch
@@ -8973,7 +8514,6 @@ TensorBoard 高级技巧：
     · 确认 all_reduce 操作正常
     · 使用 torch.distributed.barrier() 同步
 
-```
 
 ---
 
@@ -9020,7 +8560,6 @@ TensorBoard 高级技巧：
 
 #### 常见分布式训练问题
 
-```
 分布式训练问题排查清单:
 ══════════════════════════════════════════════════════════════════════════
 
@@ -9057,11 +8596,9 @@ TensorBoard 高级技巧：
     · 或使用 Ultralytics 自动缩放 (device=[0,1,2,3])
 ══════════════════════════════════════════════════════════════════════════
 
-```
 
 #### 分布式训练调试工具
 
-```python
 """
 分布式训练调试工具
 """
@@ -9166,11 +8703,9 @@ world_size = torch.cuda.device_count()
 mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
 """
 
-```
 
 #### 分布式训练性能分析
 
-```
 分布式训练性能分析:
 ══════════════════════════════════════════════════════════════════════════
 
@@ -9197,7 +8732,6 @@ mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
    推荐使用 4-8 GPU，效率最高
 ══════════════════════════════════════════════════════════════════════════
 
-```
 
 ---
 
@@ -9217,7 +8751,6 @@ GPU 监控工具：
 
 | PyTorch | 内置 | torch.cuda.memory_stats() |
 
-```python
 # 训练过程中实时监控 GPU 状态
 import torch
 import time
@@ -9246,7 +8779,6 @@ def monitor_gpu_stats(interval=5):
                   f"最大分配: {max_alloc:.1f}GB")
         time.sleep(interval)
 
-```
 
 #### GPU 利用率低的原因与解决
 
@@ -9273,7 +8805,6 @@ GPU 利用率低的原因分析：
 
 #### 数据管道瓶颈检测
 
-```python
 def diagnose_data_pipeline(model, data_yaml):
     """
     诊断数据管道性能瓶颈
@@ -9305,7 +8836,6 @@ def diagnose_data_pipeline(model, data_yaml):
     else:
         print("\n✓ 数据加载性能良好")
 
-```
 
 #### 常见问题排查
 
@@ -9328,7 +8858,6 @@ def diagnose_data_pipeline(model, data_yaml):
 
 #### 显存泄漏检测
 
-```python
 def detect_memory_leak(model, data_yaml, num_epochs=10):
     """
     检测训练过程中的显存泄漏
@@ -9355,7 +8884,6 @@ def detect_memory_leak(model, data_yaml, num_epochs=10):
     else:
         print("\n✓ 未发现明显显存泄漏")
 
-```
 
 显存泄漏常见原因：
 
@@ -9375,7 +8903,6 @@ def detect_memory_leak(model, data_yaml, num_epochs=10):
 
 #### 6.8.1 NCCL 通信问题排查
 
-```
 NCCL（NVIDIA Collective Communications Library）常见问题:
 ════════════════════════════════════════════════════════════════════
 问题                        原因                    解决方案
@@ -9393,9 +8920,7 @@ CUDA error                显存不足或               nvidia-smi
                           计算错误                 torch.cuda.memory.summary()
 ════════════════════════════════════════════════════════════════════
 
-```
 
-```python
 """
 分布式训练调试工具
 """
@@ -9446,11 +8971,9 @@ def diagnose_distributed_training(model, dataloader):
             if rank == 0:
                 print(f"  {name}: grad_norm={grad_norm:.6f}")
 
-```
 
 #### 6.8.2 学习率与 Batch Size 的分布式缩放
 
-```
 分布式训练的学习率缩放规则:
 ══════════════════════════════════════════════════════════════
 
@@ -9474,11 +8997,9 @@ def diagnose_distributed_training(model, dataloader):
   但实际建议 lr0 = 0.02（0.5× 线性缩放，更稳定）
 ══════════════════════════════════════════════════════════════
 
-```
 
 #### 6.8.3 分布式训练调试清单
 
-```
 分布式训练调试检查清单:
 ══════════════════════════════════════════════════════════════
 [ ] 1. 确认所有 GPU 可见: nvidia-smi 在每卡上运行
@@ -9493,9 +9014,7 @@ def diagnose_distributed_training(model, dataloader):
 [ ] 10. 保存 best.pt: 仅在 rank 0 上保存
 ══════════════════════════════════════════════════════════════
 
-```
 
-```python
 """
 分布式训练调试完整代码
 """
@@ -9555,11 +9074,9 @@ def run_distributed():
         join=True
     )
 
-```
 
 #### 6.8.4 调试工具推荐
 
-```
 分布式训练调试工具:
 ══════════════════════════════════════════════════════════════
 工具                  用途                      安装
@@ -9572,7 +9089,6 @@ nvidia-smi dmon     实时监控 GPU 指标         系统内置
 gpustat             轻量 GPU 状态监控         pip install gpustat
 ══════════════════════════════════════════════════════════════
 
-```
 
 ---
 
@@ -9580,7 +9096,6 @@ gpustat             轻量 GPU 状态监控         pip install gpustat
 
 #### 分布式训练调试进阶技巧
 
-```
 分布式训练调试进阶技巧:
 ══════════════════════════════════════════════════════════════
 
@@ -9625,7 +9140,6 @@ gpustat             轻量 GPU 状态监控         pip install gpustat
   · iperf3  # 测试网络带宽
 ══════════════════════════════════════════════════════════════
 
-```
 
 ---
 
@@ -9635,7 +9149,6 @@ gpustat             轻量 GPU 状态监控         pip install gpustat
 
 ### 10.1 完整训练流程
 
-```python
 from ultralytics import YOLO
 import shutil
 
@@ -9669,13 +9182,11 @@ def train_yolo(data_yaml, model_size="s", epochs=100, imgsz=640):
 # 使用
 model = train_yolo("data.yaml", model_size="s", epochs=100)
 
-```
 
 ### 10.2 使用 TensorBoard 监控
 
 TensorBoard 提供**实时刷新、多维对比、交互缩放**的能力，适合长时间训练或多实验对比。
 
-```python
 # Python API 中直接启用
 model.train(data="data.yaml", epochs=100, project="runs/train",
             name="exp1", tb_callback=True)
@@ -9683,7 +9194,6 @@ model.train(data="data.yaml", epochs=100, project="runs/train",
 # 命令行
 # yolo detect train data=data.yaml epochs=100 tb_callback=True
 
-```
 
 启动后访问 `http://localhost:6007`，关键面板：
 
@@ -9702,7 +9212,6 @@ MLflow 是最流行的深度学习实验追踪平台之一，支持记录超参�
 
 #### 集成方式
 
-```python
 import mlflow
 from ultralytics import YOLO
 
@@ -9744,11 +9253,9 @@ with mlflow.start_run() as run:
     # 保存模型 artifact
     mlflow.pytorch.log_model(model.module, "model")
 
-```
 
 #### MLflow 界面解读
 
-```
 启动 MLflow UI：
   mlflow ui --port 5000
 
@@ -9766,7 +9273,6 @@ with mlflow.start_run() as run:
   对比功能：勾选多个 Run，在 Parameters/Metrics 面板
   中直接对比不同超参数组合的效果
 
-```
 
 ---
 
@@ -9776,7 +9282,6 @@ W&B 是另一个流行的实验追踪工具，提供实时可视化、团队协�
 
 #### 启用方式
 
-```python
 from ultralytics import YOLO
 
 # 方式1：Python API 中直接启用
@@ -9796,11 +9301,9 @@ model.train(
 # export WANDB_API_KEY=your_key
 # yolo detect train data=data.yaml epochs=100
 
-```
 
 #### W&B 面板功能
 
-```
 W&B Dashboard 提供的核心功能：
 
 ┌────────────────────────────────────────────────────────────┐
@@ -9817,7 +9320,6 @@ W&B Dashboard 提供的核心功能：
   模型表：记录每个 Run 的最佳模型 artifact
   离线模式：无网络时本地记录，有网络时自动同步
 
-```
 
 ---
 
@@ -9825,7 +9327,6 @@ W&B Dashboard 提供的核心功能：
 
 除了 Ultralytics 内置的 TensorBoard 支持，还可以添加自定义回调函数来记录额外信息。
 
-```python
 from ultralytics import YOLO
 from ultralytics.engine.validator import BaseValidator
 from ultralytics.utils.torch_utils import de_parallel
@@ -9875,7 +9376,6 @@ model.train(
     callbacks={"on_train_end": [CustomTensorBoardCallback()]},
 )
 
-```
 
 ---
 
@@ -9883,7 +9383,6 @@ model.train(
 
 随着实验迭代，模型版本管理变得日益重要。以下是一种实用的版本管理策略：
 
-```
 模型版本管理目录结构：
 models/
 ├── v001_yolov8n_baseline/         # 基线模型（默认参数）
@@ -9910,9 +9409,7 @@ models/
   - 选择 metrics.json 中 mAP50-95 最高的版本
   - 或使用自动追踪工具（MLflow/W&B）进行版本对比
 
-```
 
-```python
 import json
 from pathlib import Path
 from datetime import datetime
@@ -9952,7 +9449,6 @@ def save_experiment_record(model, args, metrics, version_dir):
 # 使用
 # save_experiment_record(model, args, {"mAP50-95": 0.939}, "models/v001")
 
-```
 
 ### 10.7 YOLOv8 实验追踪最佳实践
 
@@ -9960,7 +9456,6 @@ YOLOv8 引入了新的训练特性和指标，实验追踪需要关注一些额�
 
 #### YOLOv8 特有追踪指标
 
-```
 YOLOv8 实验追踪重点关注：
 | 指标类型 | 说明 | 追踪方式 |
 
@@ -9976,13 +9471,11 @@ YOLOv8 实验追踪重点关注：
 | TaskAligned | 分配统计 | 正样本分配数量 |
 | 比例 | task_aligned/ | 前缀 |
 
-```
 
 #### AOP（Average Optimal Predictions）指标详解
 
 AOP 是衡量模型在最优置信度阈值下的平均预测质量指标，反映模型在置信度校准方面的表现：
 
-```
 AOP 计算方法：
 | 1. | 对每个置信度阈值 | t | ∈ | [0, | 1]，计算该阈值下的 | AP |
 
@@ -9996,9 +9489,7 @@ AOP 计算方法：
 | 敏感度 | 对框质量敏感 | 对置信度校准敏感 |
 | 适用场景 | 模型对比 | 部署调参 |
 
-```
 
-```python
 # 在 Ultralytics 中查看 AOP 指标
 from ultralytics import YOLO
 
@@ -10009,11 +9500,9 @@ results = model.val(data="data.yaml")
 print(f"AOP@0.5:    {results.box.aop@0.5:.4f}")
 print(f"AOP@0.5:0.95:{results.box.aop@0.5_0.95:.4f}")
 
-```
 
 #### 对比 end2end=False vs end2end=False
 
-```
 end2end 模式对比追踪：
 | 维度 | end2end=False | end2end=False |
 
@@ -10025,9 +9514,7 @@ end2end 模式对比追踪：
 | 大目标mAP | 基准 | 相当 |
 | 部署便利度 | 需NMS | plugin |
 
-```
 
-```python
 # 同时追踪两种模式的实验
 experiments = [
     {"name": "yolov8_nohw", "end2end": False, "epochs": 300},
@@ -10046,11 +9533,9 @@ for exp in experiments:
     # 记录结果到对比表
     print(f"{exp['name']}: end2end={exp['end2end']}")
 
-```
 
 #### 追踪不同优化器收敛 vs 传统优化器
 
-```python
 # 对比 SGD 和 AdamW 的收敛行为
 import torch
 from ultralytics import YOLO
@@ -10079,11 +9564,9 @@ results_adamw = model_adamw.train(
 print(f"SGD 最佳epoch: {results_sgd.epochs.trained}")
 print(f"AdamW 最佳epoch: {results_adamw.epochs.trained}")
 
-```
 
 #### W&B / MLflow 与 YOLOv8 集成
 
-```python
 # W&B 集成（推荐）
 import wandb
 from ultralytics import YOLO
@@ -10120,9 +9603,7 @@ wandb.log({
 })
 wandb.finish()
 
-```
 
-```
 YOLOv8 实验追踪检查清单：
 | □ | 记录 | end2end | 模式（True/False） |
 
@@ -10134,7 +9615,6 @@ YOLOv8 实验追踪检查清单：
 | □ | 记录 | TaskAligned | 分配统计（日志中） |
 | □ | 使用 | W&B | 或 |
 
-```
 
 ---
 
@@ -10144,7 +9624,6 @@ YOLOv8 实验追踪检查清单：
 
 #### 实验命名规范
 
-```
 推荐命名格式：
   {模型}_{日期}_{实验目的}_{关键参数}
 
@@ -10154,11 +9633,9 @@ YOLOv8 实验追踪检查清单：
   yolo8m_20250117_1280px            # 增大分辨率
   yolov8n_20250118_end2end          # YOLOv8 端到端模式
 
-```
 
 #### 实验元数据管理
 
-```python
 import json
 import yaml
 from pathlib import Path
@@ -10222,9 +9699,7 @@ class ExperimentManager:
                 print(f"  {r['name']:30s} mAP50-95: {r.get('mAP50-95', 'N/A')}")
             print("-" * 60)
 
-```
 
-```python
 # 使用示例
 em = ExperimentManager("my_project/experiments")
 
@@ -10239,7 +9714,6 @@ em.register_experiment(
     model_path=Path("runs/detect/exp1/weights/best.pt")
 )
 
-```
 
 ---
 
@@ -10249,7 +9723,6 @@ em.register_experiment(
 
 #### GitHub Actions 集成
 
-```yaml
 # .github/workflows/train.yml
 name: YOLO Training
 
@@ -10294,11 +9767,9 @@ jobs:
         run: |
           echo "训练完成，结果已上传"
 
-```
 
 #### 自动化训练 Pipeline
 
-```python
 """
 自动化训练 Pipeline
 """
@@ -10358,7 +9829,6 @@ def run_training_pipeline(data_yaml, experiment_name):
     print("✓ 训练 Pipeline 完成")
     return True
 
-```
 
 ---
 
@@ -10368,7 +9838,6 @@ def run_training_pipeline(data_yaml, experiment_name):
 
 #### 随机种子设置
 
-```python
 import random
 import numpy as np
 import torch
@@ -10392,9 +9861,7 @@ def set_reproducibility(seed=42):
 
 set_reproducibility(42)
 
-```
 
-```python
 # Ultralytics 内置的 seed 参数
 model = YOLO("yolov8n.pt")
 model.train(
@@ -10403,12 +9870,11 @@ model.train(
     seed=42,  # 设置随机种子
 )
 
-```
 
 #### 可复现性检查清单
 
-```
 可复现性检查清单：
+
 | □ | 固定随机种子（seed=42）
 | --- | --- |
 | □ | 固定 |
@@ -10421,7 +9887,6 @@ model.train(
 | □ | 固定数据加载顺序（persistent_workers=False）
 | □ | 记录训练开始和结束时间
 
-```
 
 ---
 
@@ -10431,7 +9896,6 @@ model.train(
 
 #### 7.12.1 MLflow 实验自动化
 
-```python
 """
 使用 MLflow 进行 YOLO 实验的自动化追踪
 """
@@ -10536,11 +10000,9 @@ def hyperparameter_search(data_yaml):
             print(f"  Run {run.info.run_id}: "
                   f"mAP50-95={run.data.metrics.get('metrics/mAP50-95(B)', 'N/A')}")
 
-```
 
 #### 7.12.2 模型注册工作流
 
-```
 模型注册工作流:
 ══════════════════════════════════════════════════════════════
 
@@ -10560,9 +10022,7 @@ def hyperparameter_search(data_yaml):
                   (MLflow Model Registry)
 ══════════════════════════════════════════════════════════════
 
-```
 
-```python
 """
 MLflow 模型注册完整流程
 """
@@ -10611,11 +10071,9 @@ def deploy_to_production(model_name, version, endpoint_name):
 # transition_model_stage("yolo-defect-detection", mv.version, "Production")
 # deploy_to_production("yolo-defect-detection", mv.version, "defect-detection-api")
 
-```
 
 #### 7.12.3 GitHub Actions 自动化训练流水线
 
-```yaml
 # .github/workflows/yolo-training.yml
 name: YOLO Model Training Pipeline
 
@@ -10663,11 +10121,9 @@ jobs:
             --experiment-name yolo-training \
             --entry-point train
 
-```
 
 #### 7.12.4 超参数自动搜索
 
-```python
 """
 使用 Optuna 进行超参数自动搜索
 """
@@ -10723,7 +10179,6 @@ def run_hyperparameter_search(n_trials=30):
     optuna.visualization.plot_optimization_history(study)
     optuna.visualization.plot_param_importances(study)
 
-```
 
 ---
 
@@ -10731,7 +10186,6 @@ def run_hyperparameter_search(n_trials=30):
 
 #### 模型注册与自动化实验
 
-```
 模型注册表设计:
 ══════════════════════════════════════════════════════════════
 
@@ -10778,11 +10232,9 @@ def run_hyperparameter_search(n_trials=30):
   }
 ══════════════════════════════════════════════════════════════
 
-```
 
 #### 实验自动化
 
-```
 实验自动化流水线:
 ══════════════════════════════════════════════════════════════
 
@@ -10865,7 +10317,6 @@ def run_hyperparameter_search(n_trials=30):
 
 #### 统一的环境配置
 
-```dockerfile
 # Dockerfile 确保团队环境一致
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
@@ -10885,9 +10336,7 @@ RUN pip install --no-cache-dir \
 
 WORKDIR /workspace
 
-```
 
-```bash
 # 团队共享的 requirements 文件
 # requirements.txt
 torch==2.4.0
@@ -10897,7 +10346,6 @@ wandb==0.17.0
 numpy==1.26.4
 pandas==2.2.2
 
-```
 
 #### 实验共享规范
 
@@ -10938,7 +10386,6 @@ pandas==2.2.2
 
 #### 基础推理示例
 
-```python
 from ultralytics import YOLO
 import cv2
 
@@ -10986,11 +10433,9 @@ results = model.predict(
     stream=False,
 )
 
-```
 
 #### 实现代码
 
-```python
 from ultralytics import YOLO
 import cv2
 import time
@@ -11067,12 +10512,11 @@ detector = RealtimeDetector("runs/detect/exp1/weights/best.pt")
 detector.process_video(0)  # 0 = 摄像头
 # detector.process_video("video.mp4")  # 视频文件
 
-```
 
 #### 流式推理性能优化
 
-```
 流式推理优化技巧：
+
 | 技巧 | 效果 | 实现方式 |
 | --- | --- | --- |
 | 使用 | end2end=False | 去除NMS开销 |
@@ -11082,9 +10526,7 @@ detector.process_video(0)  # 0 = 摄像头
 | 使用 | TensorRT | 引擎 |
 | 多线程流水线 | 隐藏预处理延迟 | 生产者-消费者模式 |
 
-```
 
-```python
 # 多线程流水线示例
 from threading import Thread
 from queue import Queue
@@ -11133,7 +10575,6 @@ class PipelineDetector:
         t.join()
         cap.release()
 
-```
 
 ---
 
@@ -11143,7 +10584,6 @@ class PipelineDetector:
 
 #### 传统 NMS vs 向量化 NMS
 
-```
 传统 NMS（逐元素比较）：
   for i in range(len(boxes)):
       for j in range(i+1, len(boxes)):
@@ -11159,11 +10599,9 @@ class PipelineDetector:
 
   时间复杂度：O(n²) 但常数极小（SIMD + 并行）
 
-```
 
 #### Ultralytics 的 NMS 优化
 
-```python
 from ultralytics.utils.ops import non_max_suppression
 
 # Ultralytics 内置的 NMS 已高度优化：
@@ -11176,7 +10614,6 @@ from ultralytics.utils.ops import non_max_suppression
 results = model.predict(source="image.jpg", conf=0.25, iou=0.45)
 # conf 阈值越高，输入 NMS 的框越少，速度越快
 
-```
 
 #### NMS 参数调优
 
@@ -11197,7 +10634,6 @@ TensorRT 是 NVIDIA 的高性能深度学习推理引擎，可将 PyTorch 模型
 
 #### 导出流程
 
-```python
 from ultralytics import YOLO
 
 # Step 1: 加载模型
@@ -11216,7 +10652,6 @@ model.export(format="engine", half=True, imgsz=640)
 # 方法2：命令行
 yolo export model=best.pt format=engine half=True imgsz=640 simplify=True
 
-```
 
 #### TensorRT 精度模式对比
 
@@ -11234,7 +10669,6 @@ ONNX（Open Neural Network Exchange）是模型交换的标准格式，支持跨
 
 #### ONNX 优化选项
 
-```python
 # 基础 ONNX 导出
 model.export(format="onnx", opset=12)
 
@@ -11248,11 +10682,9 @@ model.export(
     imgsz=640,           # 输入尺寸
 )
 
-```
 
 #### ONNX-Simplifier 的作用
 
-```
 原始 ONNX 模型：
   节点数：~500
   包含大量可优化的常量折叠和冗余操作
@@ -11264,7 +10696,6 @@ ONNX-Simplifier 优化后：
   - Conv+BatchNorm 融合：减少算子数量
   - 结果：推理速度提升 10%~20%
 
-```
 
 ---
 
@@ -11274,7 +10705,6 @@ INT8 量化是将 FP32/FP16 模型转换为 8 位整数精度，在边缘设备�
 
 #### 校准数据集准备
 
-```python
 # INT8 量化需要校准数据集（100~500 张代表性图片）
 # 校准目的是确定各层激活值的分布范围（min/max）
 
@@ -11287,11 +10717,9 @@ calibration_images = [
 # - 不同目标大小
 # - 不同背景复杂度
 
-```
 
 #### INT8 量化流程
 
-```python
 from ultralytics import YOLO
 
 # Step 1: 先导出 FP16 ONNX（作为量化基准）
@@ -11312,7 +10740,6 @@ model_fp16 = YOLO("best_fp16.engine")
 results_fp16 = model_fp16.val(data="data.yaml")
 print(f"FP16 mAP50-95: {results_fp16.box.map:.3f}")
 
-```
 
 #### 量化效果预估
 
@@ -11328,7 +10755,6 @@ print(f"FP16 mAP50-95: {results_fp16.box.map:.3f}")
 
 #### YOLOv8 end2end 推理优化
 
-```
 YOLOv8 end2end=False 推理优化:
 ══════════════════════════════════════════════════════════════
 
@@ -11365,7 +10791,6 @@ YOLOv8 end2end=False 推理优化:
   └────────────────┴───────────┴───────────┴──────────┘
 ══════════════════════════════════════════════════════════════
 
-```
 
 ### 11.7 模型编译优化（torch.compile / TVM）
 
@@ -11383,7 +10808,6 @@ YOLOv8 end2end=False 推理优化:
 
 #### 导出策略对比
 
-```python
 from ultralytics import YOLO
 
 model = YOLO("yolov8n.pt")
@@ -11407,7 +10831,6 @@ model.export(format="engine", end2end=False, half=True, imgsz=640)
 # 建议使用 end2end=False 或更新 OpenVINO 至 2024+
 model.export(format="openvino", end2end=False)
 
-```
 
 #### TensorRT 优化差异
 
@@ -11426,7 +10849,6 @@ YOLOv8 TensorRT 优化注意事项：
 
 #### ONNX 模型简化技巧
 
-```python
 from ultralytics import YOLO
 from onnxsim import simplify
 
@@ -11454,7 +10876,6 @@ onnx.save(model_simplified, "yolov8n_simplified.onnx")
 # 2. 移除所有 NMS 相关节点后，simplifier 更容易优化
 # 3. 使用 opset=17+ 以获得最佳兼容性
 
-```
 
 #### CPU 推理优化（YOLOv8 优势）
 
@@ -11479,7 +10900,6 @@ CPU 推理性能对比：
 
 | 5. | end2end=False | 时 | CPU | 推理更快（无 | NMS | 计算） |
 
-```python
 # CPU 推理优化示例
 from ultralytics import YOLO
 
@@ -11500,7 +10920,6 @@ results = model.predict(
     half=True,         # FP16（OpenVINO 支持）
 )
 
-```
 
 #### 批量推理策略
 
@@ -11577,7 +10996,6 @@ YOLOv8 内存优化：
 
 #### torch.compile（PyTorch 2.0+）
 
-```python
 from ultralytics import YOLO
 import torch
 
@@ -11608,7 +11026,6 @@ model = YOLO("runs/detect/exp1/weights/best.pt")
 model.model = torch.compile(model.model)
 results = model.predict("test.jpg")
 
-```
 
 torch.compile 效果：
 
@@ -11620,7 +11037,6 @@ torch.compile 效果：
 
 #### TVM 编译优化
 
-```python
 """
 使用 Apache TVM 编译 YOLO 模型
 TVM 通过自动算子融合、内存优化和目标平台代码生成实现加速
@@ -11651,7 +11067,6 @@ with tvm.transform.PassContext(opt_level=3):
 library.save("yolov8n.tvm.so")
 print("✓ TVM 编译完成")
 
-```
 
 TVM vs torch.compile 对比：
 
@@ -11672,7 +11087,6 @@ TVM vs torch.compile 对比：
 
 #### DIoU-NMS（更精准的去重）
 
-```python
 import torch
 
 def diou_nms(boxes, scores, iou_threshold=0.45):
@@ -11728,11 +11142,9 @@ def diou_nms(boxes, scores, iou_threshold=0.45):
 
     return order.tolist()
 
-```
 
 #### 软 NMS（Soft NMS）
 
-```python
 def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
     """
     软 NMS：不直接抑制重叠框，而是降低其置信度
@@ -11777,7 +11189,6 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
     _, order = scores.sort(0, descending=True)
     return order.tolist()
 
-```
 
 后处理方法对比：
 
@@ -11795,7 +11206,6 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
 
 #### 边缘 AI 专用优化
 
-```
 边缘 AI 优化策略:
 ══════════════════════════════════════════════════════════════
 
@@ -11850,7 +11260,6 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
   └─────────────────┴──────────┴──────────┴──────────┘
 ══════════════════════════════════════════════════════════════
 
-```
 
 ### 11.10 边缘 AI 专用优化
 
@@ -11858,7 +11267,6 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
 
 #### 8.10.1 各边缘平台部署方案
 
-```
 边缘 AI 平台对比:
 ════════════════════════════════════════════════════════════════════
 平台              算力(TOPS)    功耗(W)     推理格式        适用场景
@@ -11872,11 +11280,9 @@ Apple A17 Pro    35 TOPS NP    3-8         CoreML          iPhone
 Google TPU (Edge) 15 TOPS     5-10        TFLite          智能摄像头
 ════════════════════════════════════════════════════════════════════
 
-```
 
 #### 8.10.2 TensorFlow Lite Edge TPU 部署
 
-```python
 """
 TensorFlow Lite + Edge TPU 部署流程
 """
@@ -11913,11 +11319,9 @@ interpreter.invoke()
 # 后处理
 detections = interpreter.get_tensor(output_details[0]['index'])
 
-```
 
 #### 8.10.3 ARM NN 部署（Raspberry Pi）
 
-```python
 """
 ARM NN 在 Raspberry Pi 上的部署
 """
@@ -11955,11 +11359,9 @@ input_tensors = ann.CreateTensorBuffers(runtime, network)
 ann.InsertTensorBindings(runtime, network, input_tensors, output_tensors)
 runtime.EnqueueRequests(network, [request])
 
-```
 
 #### 8.10.4 NVIDIA TensorRT for Jetson
 
-```python
 """
 Jetson 系列设备的 TensorRT 优化
 """
@@ -12046,11 +11448,9 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
     fps = 1000 / avg_ms
     print(f"Jetson TensorRT inference: {avg_ms:.2f} ms ({fps:.1f} FPS)")
 
-```
 
 #### 8.10.5 模型压缩技术汇总
 
-```
 边缘 AI 模型压缩技术:
 ══════════════════════════════════════════════════════════════
 技术                加速比      精度损失      实现难度      适用场景
@@ -12068,11 +11468,9 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
   · 资源受限（1-10W 功耗）: FP16 量化 + 小尺寸输入
   · 资源充足（> 10W 功耗）: 原模型 + FP16 量化
 
-```
 
 #### 8.10.6 边缘 vs 云端推理对比
 
-```
 边缘推理 vs 云端推理对比:
 ══════════════════════════════════════════════════════════════
 维度              边缘推理                  云端推理
@@ -12092,7 +11490,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
   · 混合方案: 边缘检测 + 云端复核（边缘快速过滤，云端精细验证）
 ══════════════════════════════════════════════════════════════
 
-```
 
 ---
 
@@ -12152,7 +11549,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 
 **常见问题决策树**：
 
-```
                     训练遇到问题？
                          │
               ┌──────────┴──────────┐
@@ -12182,7 +11578,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
               增大 data    调整超参
               增强强度
 
-```
 
 - [Ultralytics Train Mode](https://docs.ultralytics.com/modes/train/)
 - [Ultralytics Models](https://docs.ultralytics.com/models/)
@@ -12191,7 +11586,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 
 以下汇总了 YOLO 训练中最高频的错误及其避免方法。
 
-```
 YOLO 训练常见错误与避免方法：
 | 错误类别 | 常见错误 | 后果 | 避免方法 |
 
@@ -12224,7 +11618,6 @@ YOLO 训练常见错误与避免方法：
 **`simplify=True`**
 | 部署类 | 混淆 | best.pt | 和 |
 
-```
 
 ---
 
@@ -12234,8 +11627,8 @@ YOLO 系列自 2016 年诞生以来，已经历了近 10 年的快速演进。�
 
 #### 架构演进趋势
 
-```
 YOLO 架构演进方向：
+
 | 方向 | 说明 | 代表工作 |
 | --- | --- | --- |
 | 端到端推理 | 移除 | NMS，模型直接输出 |
@@ -12249,12 +11642,11 @@ YOLO 架构演进方向：
 | 轻量化 | 更小模型保持高性能 | YOLOv10/YOLOv8 |
 | （边缘设备部署） | nano | 版本持续优化 |
 
-```
 
 #### 应用领域扩展
 
-```
 YOLO 应用领域扩展：
+
 | 领域 | 应用案例 | 技术挑战 |
 | --- | --- | --- |
 | 自动驾驶 | 车辆/行人/交通标志检测 | 实时性、安全性 |
@@ -12269,12 +11661,11 @@ YOLO 应用领域扩展：
 | 遥感 | 船舶/飞机/建筑物检测 | 小目标密集、 |
 **多角度**
 
-```
 
 #### 技术趋势展望
 
-```
 未来 3~5 年技术趋势：
+
 | 趋势 | 说明
 | --- | --- |
 | 1. | 端到端检测普及 |
@@ -12284,7 +11675,6 @@ YOLO 应用领域扩展：
 | 5. | 自动超参调优 |
 | 6. | 可解释性增强 |
 
-```
 
 ---
 
