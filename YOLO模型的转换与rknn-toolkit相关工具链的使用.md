@@ -6,7 +6,6 @@
 
 > **参考来源**：[RKNN-Toolkit2 GitHub](https://github.com/airockchip/rknn-toolkit2) | [RKNN-Toolkit2 Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/02_rknn_user_guide/01_toolkit_user_guide.md)
 
----
 
 ## 一、RKNN-Toolkit2 概述
 
@@ -48,7 +47,6 @@ RKNN-Toolkit2 包含:
 
 ```
 
----
 
 ## 二、环境配置
 
@@ -132,7 +130,6 @@ check_npu_status()
 
 ```
 
----
 
 ## 三、YOLO 模型导出为 ONNX
 
@@ -220,7 +217,6 @@ print(f"Ultralytics 推理结果数量: {len(ultralytics_result[0].boxes)}")
 
 ```
 
----
 
 ## 四、ONNX 转换为 RKNN
 
@@ -393,7 +389,6 @@ INT8 (.rknn)   ~12MB        ~2-3x        ~0.5-1%
 
 ```
 
----
 
 ## 五、开发板端推理部署
 
@@ -460,7 +455,6 @@ print(f"推理速度: {fps:.1f} FPS")
 
 ```
 
----
 
 ## 六、常见问题与解决
 
@@ -538,7 +532,6 @@ print(f"推理速度: {fps:.1f} FPS")
 
 ```
 
----
 
 ## 总结
 
@@ -556,12 +549,10 @@ YOLO 模型转换到 RKNN 的关键步骤：
 - 转换失败时优先检查算子支持情况
 - 推理前务必对比 PC 端和开发板端的输出结果
 
----
 
 *参考资料：*
 - *[RKNN-Toolkit2 GitHub](https://github.com/airockchip/rknn-toolkit2)*
 - *[RKNN-Toolkit2 User Guide](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/02_rknn_user_guide/01_toolkit_user_guide.md)*
 
----
 
 > **📌 系列导航**：[← 上一篇：模型量化深度解析](模型量化深度解析.md) · [📖 导读目录](README.md) · [下一篇：yolo模型在npu的python部署 →](YOLO模型在npu的python部署.md)

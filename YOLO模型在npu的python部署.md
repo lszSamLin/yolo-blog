@@ -6,7 +6,6 @@ Rockchip NPU（Neural Processing Unit）是瑞芯微芯片内置的神经网络�
 
 > **参考来源**：[RKNN-Toolkit2 Python API](https://github.com/airockchip/rknn-toolkit2) | [Rockchip NPU Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/03_rknn_runtime/)
 
----
 
 ## 一、硬件平台选择
 
@@ -80,7 +79,6 @@ Rockchip NPU（Neural Processing Unit）是瑞芯微芯片内置的神经网络�
 - **散热**：RK3588 高性能模式下需要主动散热（散热风扇）
 - **电源**：建议使用 5V/3A 以上的稳定电源，避免 NPU 高负载时电压不稳
 
----
 
 ## 二、环境配置
 
@@ -290,7 +288,6 @@ python3 -c "import rknn"
 
 ```
 
----
 
 ## 三、Python 推理部署
 
@@ -1210,7 +1207,6 @@ for model_path, name in models:
 
 ```
 
----
 
 ## 四、性能优化技巧
 
@@ -1639,7 +1635,6 @@ class MemoryOptimizedDetector:
 
 ```
 
----
 
 ## 五、常见问题
 
@@ -1924,7 +1919,6 @@ export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 
 ```
 
----
 
 ## 总结
 
@@ -1949,7 +1943,6 @@ export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 
 通过合理选型、规范配置和针对性优化，YOLO 模型在 Rockchip NPU 上可以达到实时推理性能，满足边缘 AI 应用的实际需求。
 
----
 
 *参考资料：*
 - *[RKNN-Toolkit2 Python API](https://github.com/airockchip/rknn-toolkit2)*
@@ -1957,6 +1950,5 @@ export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 - *[Rockchip NPU Driver Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/02_rknn_toolkit2_installation/)*
 - *[Ultralytics YOLO Documentation](https://docs.ultralytics.com/)*
 
----
 
 > **📌 系列导航**：[← 上一篇：Yolo模型的转换与rknn-toolkit相关工具链的使用](YOLO模型的转换与rknn-toolkit相关工具链的使用.md) · [📖 导读目录](README.md) · [下一篇：模型在npu的cpp部署 →](模型在npu的cpp部署.md)

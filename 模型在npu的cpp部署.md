@@ -6,7 +6,6 @@
 
 > **参考来源**：[RKNN C++ API Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/03_rknn_runtime/02_rknn_runtime_api.md)
 
----
 
 ## 一、RKNN C++ API 概述
 
@@ -160,7 +159,6 @@ rknn_query(ctx, RKNN_QUERY_PERF_RUN, &perf, sizeof(perf));
 
 ```
 
----
 
 ## 二、环境配置
 
@@ -318,7 +316,6 @@ make -j$(nproc)
 
 ```
 
----
 
 ## 三、C++ 推理实现
 
@@ -3033,11 +3030,11 @@ Rockchip NPU 支持多种内存类型，每种类型有不同的访问特性和�
 
 ```
 DMA_BUF（Direct Memory Access Buffer）
-├── 物理连续内存，由 Linux 内核分配
-├── 支持 CPU 通过 mmap 映射到用户空间
-├── NPU 可直接通过 DMA 通道访问
-├── 适合大尺寸张量（输入/输出缓冲）
-└── 创建: rknn_create_mem_attr with mem_type=RKNN_MEM_TYPE_DMA_BUF
+ 物理连续内存，由 Linux 内核分配
+ 支持 CPU 通过 mmap 映射到用户空间
+ NPU 可直接通过 DMA 通道访问
+ 适合大尺寸张量（输入/输出缓冲）
+ 创建: rknn_create_mem_attr with mem_type=RKNN_MEM_TYPE_DMA_BUF
 
 ```
 
@@ -3067,11 +3064,11 @@ rknn_destroy_mem(ctx, mem);
 
 ```
 PHYSICAL（物理内存）
-├── 页锁定内存（page-locked），不可被 swap
-├── CPU 和 NPU 均可通过物理地址访问
-├── 适合需要 CPU 直接写入的场景
-├── 创建: rknn_create_mem_attr with mem_type=RKNN_MEM_TYPE_PHYSICAL
-└── 注意：物理内存总量受限（通常 128MB-256MB）
+ 页锁定内存（page-locked），不可被 swap
+ CPU 和 NPU 均可通过物理地址访问
+ 适合需要 CPU 直接写入的场景
+ 创建: rknn_create_mem_attr with mem_type=RKNN_MEM_TYPE_PHYSICAL
+ 注意：物理内存总量受限（通常 128MB-256MB）
 
 ```
 
@@ -3079,25 +3076,22 @@ PHYSICAL（物理内存）
 
 ```
 CPU_accessible（CPU 可访问内存）
-├── 系统 RAM 中的普通内存
-├── RKNN 运行时自动拷贝到 NPU（pass_through=0）
-├── 最简单但延迟最高（多一次拷贝）
-└── 适合小模型或对延迟不敏感的场景
+ 系统 RAM 中的普通内存
+ RKNN 运行时自动拷贝到 NPU（pass_through=0）
+ 最简单但延迟最高（多一次拷贝）
+ 适合小模型或对延迟不敏感的场景
 
 ```
 
 #### 内存类型选择指南
 
 ```
-┌─────────────────┬──────────────┬──────────────┬─────────────────┐
-│     特性        │  DMA_BUF     │  PHYSICAL    │ CPU_accessible  │
-├─────────────────┼──────────────┼──────────────┼─────────────────┤
-│ 分配速度        │  慢 (ms级)   │  中等        │  快 (us级)      │
-│ CPU 访问延迟    │  中          │  快          │  最快           │
-│ NPU DMA 访问    │  最优        │  优          │  需拷贝         │
-│ 内存开销        │  中          │  高 (锁定)   │  低             │
-│ 适用场景        │  零拷贝推理  │  高频推理    │  原型/调试      │
-└─────────────────┴──────────────┴──────────────┴─────────────────┘
+ 特性 DMA_BUF PHYSICAL CPU_accessible 
+ 分配速度 慢 (ms级) 中等 快 (us级) 
+ CPU 访问延迟 中 快 最快 
+ NPU DMA 访问 最优 优 需拷贝 
+ 内存开销 中 高 (锁定) 低 
+ 适用场景 零拷贝推理 高频推理 原型/调试 
 
 ```
 
@@ -3747,16 +3741,13 @@ make -j$(sysctl -n hw.ncpu)
 ### 12.3 静态链接 vs 动态链接权衡
 
 ```
-┌──────────────┬─────────────────────┬─────────────────────┐
-│    特性       │   动态链接           │   静态链接           │
-├──────────────┼─────────────────────┼─────────────────────┤
-│ 二进制体积    │ 小 (1-5MB)          │ 大 (10-30MB)        │
-│ 部署复杂度    │ 需确保目标机有 .so   │ 单文件即运行         │
-│ 更新灵活性    │ 可单独升级 .so       │ 需重新编译           │
-│ 启动速度      │ 稍慢 (动态链接解析)  │ 稍快                 │
-│ 内存占用      │ 共享 .so 节省内存    │ 每个进程独立拷贝     │
-│ 适用场景      │ 开发/测试/多应用共享 │ 交付/嵌入式/单应用   │
-└──────────────┴─────────────────────┴─────────────────────┘
+ 特性 动态链接 静态链接 
+ 二进制体积 小 (1-5MB) 大 (10-30MB) 
+ 部署复杂度 需确保目标机有 .so 单文件即运行 
+ 更新灵活性 可单独升级 .so 需重新编译 
+ 启动速度 稍慢 (动态链接解析) 稍快 
+ 内存占用 共享 .so 节省内存 每个进程独立拷贝 
+ 适用场景 开发/测试/多应用共享 交付/嵌入式/单应用 
 
 ```
 
@@ -4294,41 +4285,41 @@ public:
 
 ```
 yolo-npu-deploy/
-├── CMakeLists.txt                    # 主构建配置
-├── toolchain-aarch64.cmake          # 交叉编译工具链
-├── config.yaml                       # 配置文件
-├── src/
-│   ├── main.cpp                      # 入口
-│   ├── yolo_detector.h               # 检测器头文件
-│   ├── yolo_detector.cpp             # 检测器实现
-│   ├── inference_engine.h            # 引擎抽象接口
-│   ├── rknn_engine.h                 # RKNN 后端
-│   ├── rknn_engine.cpp
-│   ├── onnx_engine.h                 # ONNX 后端
-│   ├── onnx_engine.cpp
-│   ├── health_check.h                # HTTP 健康检查
-│   ├── prometheus_metrics.h          # Prometheus 指标
-│   ├── config_manager.h              # 配置管理
-│   └── hot_reload.h                  # 热加载
-├── include/
-│   └── rknn_api.h                   # RKNN API 头文件
-├── lib/
-│   └── librknn_runtime.so           # RKNN 运行时库
-├── models/
-│   └── best.rknn                    # 转换后的模型
-├── data/
-│   └── coco.names                   # 类别名称
-├── scripts/
-│   │   ├── build.sh                  # 构建脚本
-│   │   ├── deploy.sh                 # 部署脚本
-│   │   ├── benchmark.sh              # 性能测试脚本
-│   │   └── integration_test.sh       # 集成测试脚本
-│   └── docker/
-│       └── Dockerfile.cross_compile  # Docker 交叉编译
-├── tests/
-│   ├── test_detector.cpp             # 单元测试
-│   └── test_postprocess.cpp          # 后处理测试
-└── README.md
+ CMakeLists.txt # 主构建配置
+ toolchain-aarch64.cmake # 交叉编译工具链
+ config.yaml # 配置文件
+ src/
+ main.cpp # 入口
+ yolo_detector.h # 检测器头文件
+ yolo_detector.cpp # 检测器实现
+ inference_engine.h # 引擎抽象接口
+ rknn_engine.h # RKNN 后端
+ rknn_engine.cpp
+ onnx_engine.h # ONNX 后端
+ onnx_engine.cpp
+ health_check.h # HTTP 健康检查
+ prometheus_metrics.h # Prometheus 指标
+ config_manager.h # 配置管理
+ hot_reload.h # 热加载
+ include/
+ rknn_api.h # RKNN API 头文件
+ lib/
+ librknn_runtime.so # RKNN 运行时库
+ models/
+ best.rknn # 转换后的模型
+ data/
+ coco.names # 类别名称
+ scripts/
+ build.sh # 构建脚本
+ deploy.sh # 部署脚本
+ benchmark.sh # 性能测试脚本
+ integration_test.sh # 集成测试脚本
+ docker/
+ Dockerfile.cross_compile # Docker 交叉编译
+ tests/
+ test_detector.cpp # 单元测试
+ test_postprocess.cpp # 后处理测试
+ README.md
 
 ```
 
