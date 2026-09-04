@@ -8890,6 +8890,7 @@ def create_live_dashboard(results_history):
 ### 8.8 TensorBoard 高级使用技巧
 
 TensorBoard 高级技巧：
+
 | 1. | 多实验对比
 
 | --- | --- |
@@ -8903,6 +8904,7 @@ TensorBoard 高级技巧：
 | writer.add_histogram("Weights/distribution", | weights, |
 | writer.add_image("augment/batch", | image_tensor, |
 `writer.close()`
+
 | 3. | 自定义图像记录
 
 | writer.add_image("predictions/val_batch", | prediction_image, |
