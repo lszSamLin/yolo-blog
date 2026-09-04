@@ -1,0 +1,2 @@
+# 强制所有 md 文件以 LF 提交（避免 Windows 自动转 CRLF）
+*.md text eol=lf

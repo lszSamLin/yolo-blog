@@ -5663,6 +5663,7 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
 | cls_loss | 已接近 | 0 | 但 | mAP |
 | dfl_loss | 不下降 | DFL | 失效 | 检查标注质量或移除 |
 **自适应调整策略：**
+
 | 1. | 先用默认权重训练 | 20 | 轮，观察各 | loss |
 | 2. | 如果 | box_loss | 占比 | > |
 | 3. | 如果 | mAP50 | 高但 | mAP50-95 |
@@ -6065,6 +6066,7 @@ DFL（Distribution Focal Loss）在 YOLOv8 中用于对边界框的四个偏移�
 
 ```
 DFL 的作用（YOLOv8）：
+
 | 1. | 将边界框偏移预测从"单值"改为"概率分布"
 | --- | --- |
 | 2. | 通过 |
@@ -10002,6 +10004,7 @@ AOP 计算方法：
 | 3. | AOP@0.5 | : | 关注高召回场景（低阈值） |
 | AOP@0.5:0.95: | 关注综合性能（与 | mAP50-95 | 类似） |
 **AOP vs mAP 对比：**
+
 | 维度 | mAP50-95 | AOP@0.5:0.95 |
 | 计算方式 | IoU | 阈值平均 | 置信度阈值平均 |
 | 敏感度 | 对框质量敏感 | 对置信度校准敏感 |
@@ -10422,6 +10425,7 @@ model.train(
 
 ```
 可复现性检查清单：
+
 | □ | 固定随机种子（seed=42）
 | --- | --- |
 | □ | 固定 |
@@ -10873,6 +10877,7 @@ def run_hyperparameter_search(n_trials=30):
 | feature/exp2 | 另一实验 | 从 | develop | 创建 |
 | hotfix/bug | 紧急修复 | 从 | main | 创建 |
 **规范：**
+
 | 1. | 每个实验对应一个分支，实验完成后合并到 | develop |
 | 2. | 验证通过的实验合并到 | main |
 | 3. | 使用 | Pull | Request | 进行代码审查 |
@@ -11540,6 +11545,7 @@ YOLOv8 批量推理优化：
 | half=True, | # | FP16 |
     )
     for result in
+
 | # | 处理每张图片的结果
 
 | boxes | = | result.boxes.xyxy.cpu().numpy() |
