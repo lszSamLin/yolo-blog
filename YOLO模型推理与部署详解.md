@@ -5060,16 +5060,16 @@ TVM 编译流程：
   ONNX 模型
       ▼
  TVM Frontend ← ONNX/TVM Relay 解析
- (解析阶段) 
+ (解析阶段)
            ▼
  Relay 优化 ← 算子融合、常量折叠、死代码消除
- (图优化阶段) 
+ (图优化阶段)
            ▼
  自动调优 ← AutoTVM / Ansor 搜索最优调度
- (调优阶段) 
+ (调优阶段)
            ▼
  Codegen ← 生成 LLVM/CUDA/Vulkan 代码
- (代码生成阶段) 
+ (代码生成阶段)
            ▼
   .so 动态库 / LLVM IR / CUDA Kernel
 
@@ -5148,13 +5148,13 @@ torch.compile 工作流程：
   Python 代码
       ▼
  TorchDynamo ← 捕获 Python 操作图
- (捕获阶段) 
+ (捕获阶段)
            ▼
  FX Graph ← 静态计算图
- (图表示) 
+ (图表示)
            ▼
  TorchInductor ← GPU 代码生成
- (代码生成) 
+ (代码生成)
            ▼
   优化后的 CUDA Kernel
 
@@ -5240,13 +5240,13 @@ XLA 编译流程：
   TensorFlow/JAX 代码
       ▼
  HLO 图构建 ← 高阶线性代数表示
- (HLO IR) 
+ (HLO IR)
            ▼
  HLO 优化 ← 算子融合、内存优化
- (HLO Optimizer) 
+ (HLO Optimizer)
            ▼
  Codegen ← 生成 GPU/TPU/CPU 代码
- (代码生成) 
+ (代码生成)
            ▼
   优化后的二进制代码
 
@@ -5295,18 +5295,18 @@ MLIR 编译层次：
 
   高层 (High-Level):
  TorchMLIR / MLIR-TF ← PyTorch/TF 算子
- (算子级表示) 
+ (算子级表示)
                  ▼
   中层 (Mid-Level):
  Linalg / Vector / Affine ← 通用计算原语
- (代数表示) 
+ (代数表示)
                  ▼
   低层 (Low-Level):
  LLVM IR / NVVM / SPIR-V ← 硬件特定 IR
- (硬件表示) 
+ (硬件表示)
                  ▼
   目标硬件:
- GPU (CUDA) CPU (AVX) TPU/NPU 
+ GPU (CUDA) CPU (AVX) TPU/NPU
 
 ```
 
@@ -5544,20 +5544,20 @@ iOS App             ¥0 (用户)    ¥0            ¥0           ★★★★★
 ### 8.4 常见部署陷阱与规避
 
 ```
- 部署常见问题 
- 问题 解决方案 
- 精度下降 检查预处理一致性，验证量化校准集 
- 确保训练和推理使用相同的预处理流程 
- 延迟不达标 分析延迟瓶颈（预处理/推理/后处理） 
- 考虑模型压缩、算子融合、批处理优化 
- 内存溢出 (OOM) 减小 batch size，使用 FP16/INT8 
- 检查预处理缓冲区是否过大 
- 并发性能差 启用动态批处理，增加 GPU 利用率 
- 考虑多实例部署，使用负载均衡 
- 部署环境差异 使用 Docker 容器化，固定依赖版本 
- 环境测试用 CI/CD 自动化验证 
- 模型更新困难 建立模型版本管理机制 
- 使用模型注册表 (MLflow Model Registry) 
+ 部署常见问题
+ 问题 解决方案
+ 精度下降 检查预处理一致性，验证量化校准集
+ 确保训练和推理使用相同的预处理流程
+ 延迟不达标 分析延迟瓶颈（预处理/推理/后处理）
+ 考虑模型压缩、算子融合、批处理优化
+ 内存溢出 (OOM) 减小 batch size，使用 FP16/INT8
+ 检查预处理缓冲区是否过大
+ 并发性能差 启用动态批处理，增加 GPU 利用率
+ 考虑多实例部署，使用负载均衡
+ 部署环境差异 使用 Docker 容器化，固定依赖版本
+ 环境测试用 CI/CD 自动化验证
+ 模型更新困难 建立模型版本管理机制
+ 使用模型注册表 (MLflow Model Registry)
 
 ```
 
@@ -5666,20 +5666,20 @@ iOS App             ¥0 (用户)    ¥0            ¥0           ★★★★★
 ### 8.4 常见部署陷阱与规避
 
 ```
- 部署常见问题 
- 问题 解决方案 
- 精度下降 检查预处理一致性，验证量化校准集 
- 确保训练和推理使用相同的预处理流程 
- 延迟不达标 分析延迟瓶颈（预处理/推理/后处理） 
- 考虑模型压缩、算子融合、批处理优化 
- 内存溢出 (OOM) 减小 batch size，使用 FP16/INT8 
- 检查预处理缓冲区是否过大 
- 并发性能差 启用动态批处理，增加 GPU 利用率 
- 考虑多实例部署，使用负载均衡 
- 部署环境差异 使用 Docker 容器化，固定依赖版本 
- 环境测试用 CI/CD 自动化验证 
- 模型更新困难 建立模型版本管理机制 
- 使用模型注册表 (MLflow Model Registry) 
+ 部署常见问题
+ 问题 解决方案
+ 精度下降 检查预处理一致性，验证量化校准集
+ 确保训练和推理使用相同的预处理流程
+ 延迟不达标 分析延迟瓶颈（预处理/推理/后处理）
+ 考虑模型压缩、算子融合、批处理优化
+ 内存溢出 (OOM) 减小 batch size，使用 FP16/INT8
+ 检查预处理缓冲区是否过大
+ 并发性能差 启用动态批处理，增加 GPU 利用率
+ 考虑多实例部署，使用负载均衡
+ 部署环境差异 使用 Docker 容器化，固定依赖版本
+ 环境测试用 CI/CD 自动化验证
+ 模型更新困难 建立模型版本管理机制
+ 使用模型注册表 (MLflow Model Registry)
 
 ```
 
@@ -5745,28 +5745,28 @@ import threading
 
 class MultiModelPipeline:
     """多模型流水线推理"""
-    
+
     def __init__(self):
         # 加载各模型
         self.det_model = YOLO("yolo26s.pt")
         self.seg_model = YOLO("yolo26s-seg.pt")
         self.pose_model = YOLO("yolo26s-pose.pt")
-        
+
         # 结果队列
         self.det_queue = queue.Queue()
         self.seg_queue = queue.Queue()
         self.final_queue = queue.Queue()
-    
+
     def detection_worker(self):
         """检测阶段"""
         while True:
             frame = self.det_queue.get()
             if frame is None:
                 break
-            
+
             # 只检测大于 32x32 像素的目标
             results = self.det_model(frame, conf=0.3, imgsz=640)
-            
+
             for result in results:
                 for box in result.boxes:
                     x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
@@ -5778,24 +5778,24 @@ class MultiModelPipeline:
                             'cls': int(box.cls),
                             'conf': float(box.conf)
                         })
-    
+
     def segmentation_worker(self):
         """分割阶段"""
         while True:
             item = self.seg_queue.get()
             if item is None:
                 break
-            
+
             frame = item['frame']
             bbox = item['bbox']
-            
+
             # 裁剪目标区域进行分割
             x1, y1, x2, y2 = bbox
             crop = frame[y1:y2, x1:x2]
-            
+
             # 只对裁剪区域进行分割
             results = self.seg_model(crop, conf=0.3, imgsz=320)
-            
+
             # 将结果映射回原图坐标
             for result in results:
                 for mask in result.masks:
@@ -5805,16 +5805,16 @@ class MultiModelPipeline:
                         'class': item['cls'],
                         'confidence': item['conf']
                     })
-    
+
     def run_pipeline(self, frame):
         """运行完整流水线"""
         self.det_queue.put(frame)
-        
+
         # 等待结果
         results = []
         while not self.final_queue.empty():
             results.append(self.final_queue.get())
-        
+
         return results
 
 ```
@@ -5829,49 +5829,49 @@ import numpy as np
 def adaptive_resolution(image, min_target_size=16):
     """
     根据目标大小自适应选择输入尺寸
-    
+
     Args:
         image: 输入图像
         min_target_size: 最小目标像素尺寸
-    
+
     Returns:
         imgsz: 推荐的输入尺寸
     """
     h, w = image.shape[:2]
-    
+
     # 估计目标大小（假设有先验信息）
     estimated_min_target = 32  # 像素
-    
+
     # 计算需要的分辨率
     # 假设目标在特征图上至少需要 min_target_size 像素
     # YOLO 的步长是 32
     required_resolution = max(640, estimated_min_target * 32)
-    
+
     # 根据图像宽高比调整
     aspect_ratio = w / h
     if aspect_ratio > 1:
         imgsz = int(required_resolution * aspect_ratio)
     else:
         imgsz = required_resolution
-    
+
     # 对齐到 32 的倍数
     imgsz = ((imgsz + 31) // 32) * 32
-    
+
     # 限制在合理范围
     imgsz = min(max(imgsz, 320), 1920)
-    
+
     return imgsz
 
 
 def smart_inference(model, image, conf=0.25):
     """智能推理：根据场景自动选择最优参数"""
     h, w = image.shape[:2]
-    
+
     # 检测目标密度
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(gray, 50, 150)
     density = np.count_nonzero(edges) / (h * w)
-    
+
     # 根据密度和图像大小选择策略
     if density > 0.1:  # 密集场景
         imgsz = 1280
@@ -5880,10 +5880,10 @@ def smart_inference(model, image, conf=0.25):
         imgsz = 640
     else:
         imgsz = adaptive_resolution(image)
-    
+
     # 推理
     results = model(image, imgsz=imgsz, conf=conf)
-    
+
     return results
 
 ```
@@ -5898,38 +5898,38 @@ import time
 
 class ModelCache:
     """模型推理结果缓存"""
-    
+
     def __init__(self, max_size=100):
         self.cache = {}
         self.max_size = max_size
         self.hit_count = 0
         self.miss_count = 0
-    
+
     def _get_cache_key(self, image_hash, model_hash, params):
         """生成缓存键"""
         key_data = f"{image_hash}_{model_hash}_{str(sorted(params.items()))}"
         return hashlib.md5(key_data.encode()).hexdigest()
-    
+
     def predict(self, model, image, cache_key, **kwargs):
         """带缓存的推理"""
         if cache_key in self.cache:
             self.hit_count += 1
             return self.cache[cache_key]
-        
+
         # 缓存未命中，执行推理
         results = model(image, **kwargs)
-        
+
         # 存入缓存
         if len(self.cache) >= self.max_size:
             # LRU 淘汰
             oldest_key = next(iter(self.cache))
             del self.cache[oldest_key]
-        
+
         self.cache[cache_key] = results
         self.miss_count += 1
-        
+
         return results
-    
+
     def stats(self):
         """缓存统计"""
         total = self.hit_count + self.miss_count
@@ -5954,13 +5954,13 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
-    
+
     # 计算帧哈希
     frame_hash = hashlib.md5(frame.tobytes()).hexdigest()
-    
+
     # 带缓存推理
     results = cache.predict(model, frame, frame_hash, conf=0.25)
-    
+
     # 显示统计
     print(f"Cache stats: {cache.stats()}")
 
@@ -5974,19 +5974,19 @@ import gc
 
 def optimize_gpu_memory():
     """优化 GPU 内存使用"""
-    
+
     # 1. 禁用梯度计算
     torch.set_grad_enabled(False)
-    
+
     # 2. 使用 inference_mode
     with torch.inference_mode():
         # 推理代码
         pass
-    
+
     # 3. 定期清理缓存
     gc.collect()
     torch.cuda.empty_cache()
-    
+
     # 4. 限制显存使用
     if torch.cuda.is_available():
         torch.cuda.set_per_process_memory_fraction(0.8)  # 使用 80% 显存
@@ -5996,23 +5996,23 @@ def batch_with_memory_limit(model, images, max_memory_mb=4000):
     """根据显存限制动态调整批大小"""
     if not torch.cuda.is_available():
         return model(images)
-    
+
     # 获取当前显存使用
     allocated = torch.cuda.memory_allocated() / 1024**2
     reserved = torch.cuda.memory_reserved() / 1024**2
     total = torch.cuda.get_device_properties(0).total_mem / 1024**2
-    
+
     # 计算可用显存
     available = total - allocated - reserved
     batch_size = max(1, int((max_memory_mb / 100) * available / 1000))
     batch_size = min(batch_size, 32)  # 最大批大小
-    
+
     results = []
     for i in range(0, len(images), batch_size):
         batch = images[i:i+batch_size]
         batch_results = model(batch)
         results.extend(batch_results)
-    
+
     return results
 
 ```
@@ -6031,12 +6031,12 @@ def worker_gpu(gpu_id, model_path, images, result_queue):
     model = YOLO(model_path)
     model.model.cuda(gpu_id)
     model.model.half()  # FP16
-    
+
     # 分配图像
     start_idx = gpu_id * len(images) // 4
     end_idx = (gpu_id + 1) * len(images) // 4
     local_images = images[start_idx:end_idx]
-    
+
     # 推理
     results = model(local_images, conf=0.25)
     result_queue.put((gpu_id, results))
@@ -6048,29 +6048,29 @@ def multi_gpu_inference(model_path, images, num_gpus=4):
         # 回退到单GPU
         model = YOLO(model_path)
         return model(images, conf=0.25)
-    
+
     result_queue = mp.Queue()
     processes = []
-    
+
     for i in range(num_gpus):
-        p = mp.Process(target=worker_gpu, 
+        p = mp.Process(target=worker_gpu,
                       args=(i, model_path, images, result_queue))
         p.start()
         processes.append(p)
-    
+
     # 等待所有进程完成
     for p in processes:
         p.join()
-    
+
     # 收集结果
     all_results = []
     while not result_queue.empty():
         gpu_id, results = result_queue.get()
         all_results.extend(results)
-    
+
     # 合并结果并排序
     all_results.sort(key=lambda x: x.boxes.conf[0] if len(x.boxes) > 0 else 0, reverse=True)
-    
+
     return all_results
 
 ```
@@ -6085,7 +6085,7 @@ from collections import deque
 
 class VideoStreamDetector:
     """优化视频流推理"""
-    
+
     def __init__(self, model_path, skip_frames=2, hot_region_ratio=0.3):
         self.model = YOLO(model_path)
         self.skip_frames = skip_frames
@@ -6093,44 +6093,44 @@ class VideoStreamDetector:
         self.frame_count = 0
         self.last_result = None
         self.motion_history = deque(maxlen=30)
-    
+
     def detect(self, frame):
         """带优化的检测"""
         self.frame_count += 1
-        
+
         # 每隔 N 帧进行完整推理
         if self.frame_count % self.skip_frames != 0:
             # 使用上一帧结果 + 光流追踪
             return self._track_prediction(frame)
-        
+
         # 完整推理
         result = self.model(frame, conf=0.25, imgsz=640)
         self.last_result = result
-        
+
         # 计算运动热区
         motion_heatmap = self._compute_motion_heatmap(frame)
         self.motion_history.append(motion_heatmap)
-        
+
         return result
-    
+
     def _track_prediction(self, frame):
         """光流追踪预测"""
         if self.last_result is None:
             return self.model(frame, conf=0.25)
-        
+
         # 获取上一帧的边界框
         prev_boxes = self.last_result[0].boxes.xyxy.cpu().numpy()
-        
+
         # 使用光流追踪边界框
         # ... 光流实现
-        
+
         # 简化版：直接使用上一帧结果（实际应使用光流）
         return self.last_result
-    
+
     def _compute_motion_heatmap(self, frame):
         """计算运动热区"""
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        
+
         if len(self.motion_history) > 0:
             prev_frame = self.motion_history[-1]
             # 计算帧差
@@ -6138,7 +6138,7 @@ class VideoStreamDetector:
             motion = cv2.GaussianBlur(motion, (21, 21), 0)
             return motion > 25
         return None
-    
+
     def get_stats(self):
         """获取推理统计"""
         return {
@@ -6157,97 +6157,97 @@ import numpy as np
 def fast_nms(boxes, scores, iou_threshold=0.45):
     """
     向量化 NMS 实现
-    
+
     Args:
         boxes: [N, 4] (x1, y1, x2, y2)
         scores: [N]
         iou_threshold: IoU 阈值
-    
+
     Returns:
         keep: 保留框的索引
     """
     # 按置信度排序
     order = np.argsort(scores)[::-1]
-    
+
     keep = []
     while order.size > 0:
         i = order[0]
         keep.append(i)
-        
+
         # 计算 IoU
         xx1 = np.maximum(boxes[i, 0], boxes[order[1:], 0])
         yy1 = np.maximum(boxes[i, 1], boxes[order[1:], 1])
         xx2 = np.minimum(boxes[i, 2], boxes[order[1:], 2])
         yy2 = np.minimum(boxes[i, 3], boxes[order[1:], 3])
-        
+
         w = np.maximum(0.0, xx2 - xx1)
         h = np.maximum(0.0, yy2 - yy1)
         inter = w * h
-        
+
         area_i = (boxes[i, 2] - boxes[i, 0]) * (boxes[i, 3] - boxes[i, 1])
         area_o = (boxes[order[1:], 2] - boxes[order[1:], 0]) * \
                  (boxes[order[1:], 3] - boxes[order[1:], 1])
-        
+
         iou = inter / (area_i + area_o - inter + 1e-6)
-        
+
         # 保留 IoU 小于阈值的框
         inds = np.where(iou <= iou_threshold)[0]
         order = order[inds + 1]
-    
+
     return np.array(keep)
 
 
 def fast_postprocess(outputs, img_size, orig_img_size, conf_thres=0.25, iou_thres=0.45):
     """
     快速后处理
-    
+
     Args:
         outputs: 模型输出 [1, 300, 6]
         img_size: 推理尺寸
         orig_img_size: 原始图像尺寸
         conf_thres: 置信度阈值
         iou_thres: IoU 阈值
-    
+
     Returns:
         detections: 检测结果的 numpy 数组
     """
     # 解包输出
     if isinstance(outputs, list):
         outputs = outputs[0]
-    
+
     # GPU 推理时移到 CPU
     if outputs.device.type != 'cpu':
         outputs = outputs.cpu().numpy()
-    
+
     # 过滤低置信度预测
     conf_mask = outputs[:, 4] > conf_thres
     outputs = outputs[conf_mask]
-    
+
     if len(outputs) == 0:
         return np.empty((0, 6))
-    
+
     # 坐标转换
     # 假设输出格式: [cx, cy, w, h, conf, class_id]
     # 需要将归一化坐标转换为像素坐标
     scale_x = orig_img_size[1] / img_size
     scale_y = orig_img_size[0] / img_size
-    
+
     x1 = (outputs[:, 0] - outputs[:, 2] / 2) * scale_x
     y1 = (outputs[:, 1] - outputs[:, 3] / 2) * scale_y
     x2 = (outputs[:, 0] + outputs[:, 2] / 2) * scale_x
     y2 = (outputs[:, 1] + outputs[:, 3] / 2) * scale_y
-    
+
     # 构建结果
     detections = np.column_stack([
         x1, y1, x2, y2,
         outputs[:, 4],
         outputs[:, 5].astype(int)
     ])
-    
+
     # NMS
     keep = fast_nms(detections[:, :4], detections[:, 4], iou_thres)
     detections = detections[keep]
-    
+
     return detections
 
 ```
@@ -6262,7 +6262,7 @@ from collections import deque
 
 class InferenceMonitor:
     """推理监控系统"""
-    
+
     def __init__(self, window_size=60):
         self.latency_history = deque(maxlen=window_size)
         self.throughput_history = deque(maxlen=window_size)
@@ -6270,7 +6270,7 @@ class InferenceMonitor:
         self.success_count = 0
         self.start_time = time.time()
         self.logger = logging.getLogger(__name__)
-    
+
     def record_inference(self, latency_ms, success=True):
         """记录推理结果"""
         self.latency_history.append(latency_ms)
@@ -6278,19 +6278,19 @@ class InferenceMonitor:
             self.success_count += 1
         else:
             self.error_count += 1
-    
+
     def get_stats(self):
         """获取统计信息"""
         if not self.latency_history:
             return {}
-        
+
         elapsed = time.time() - self.start_time
         avg_latency = np.mean(self.latency_history)
         p95_latency = np.percentile(self.latency_history, 95)
         p99_latency = np.percentile(self.latency_history, 99)
-        
+
         throughput = len(self.latency_history) / elapsed if elapsed > 0 else 0
-        
+
         return {
             'avg_latency_ms': avg_latency,
             'p95_latency_ms': p95_latency,
@@ -6299,21 +6299,21 @@ class InferenceMonitor:
             'error_rate': self.error_count / (self.success_count + self.error_count) if (self.success_count + self.error_count) > 0 else 0,
             'uptime_hours': elapsed / 3600
         }
-    
+
     def check_alerts(self, thresholds):
         """检查告警条件"""
         stats = self.get_stats()
         alerts = []
-        
+
         if stats.get('p95_latency_ms', 0) > thresholds.get('p95_latency_ms', 100):
             alerts.append(f"P95延迟过高: {stats['p95_latency_ms']:.1f}ms")
-        
+
         if stats.get('error_rate', 0) > thresholds.get('error_rate', 0.01):
             alerts.append(f"错误率过高: {stats['error_rate']:.2%}")
-        
+
         if stats.get('throughput_fps', 0) < thresholds.get('min_throughput_fps', 30):
             alerts.append(f"吞吐量不足: {stats['throughput_fps']:.1f} FPS")
-        
+
         return alerts
 
 ```

@@ -2127,8 +2127,8 @@ Backbone 是目标检测模型的"眼睛"，负责从原始图像中提取多层
 
 CSP网络:       Input → [Split]
  → [Conv → ResBlock × N] → [Concat] → Output
- → [直接跳连] 
-                    
+ → [直接跳连]
+
 优势: 梯度被分成两部分，一部分经过深度网络，一部分直接传递
       减少了计算冗余，同时保持了梯度流动的多样性
 
@@ -2225,12 +2225,12 @@ ELAN (N条路径):
 RepVGG 重参数化 (Reparameterization) 原理:
 
 训练阶段: 多路分支并行训练
- Input → → [3×3 Conv] → 
+ Input → → [3×3 Conv] →
  → [1×1 Conv] → → Add → SiLU →
- → [3×3 AvgPool]→ [1×1 Conv] 
+ → [3×3 AvgPool]→ [1×1 Conv]
 
 推理阶段: 重参数化合并为单路
- Input → [合并后的 3×3 Conv] → SiLU → Output 
+ Input → [合并后的 3×3 Conv] → SiLU → Output
 
   合并公式:
     W_merged = W_3x3 + W_1x1 + W_pool_padded
@@ -2243,16 +2243,16 @@ RepVGG 重参数化 (Reparameterization) 原理:
 **RepVGG vs CSP vs ELAN 对比**：
 
 ```
- Backbone 模块对比 
- 维度 CSP ELAN RepVGG 
- 结构 Split + 2条 Split + N条 多路分支 
- 路径 路径 + 重参数化 
- 梯度流 部分梯度流经 密集梯度流 多路并行梯度流 
- 深度网络 到所有层 训练时合并为单路 
- 推理效率 高 高 最高 (单路卷积) 
- 训练效率 中 高 (并行) 高 
- 代表版本 YOLOv4/v5 YOLOv7 YOLOv6/v10 
- 适用场景 通用检测 高性能检测 部署优化 
+ Backbone 模块对比
+ 维度 CSP ELAN RepVGG
+ 结构 Split + 2条 Split + N条 多路分支
+ 路径 路径 + 重参数化
+ 梯度流 部分梯度流经 密集梯度流 多路并行梯度流
+ 深度网络 到所有层 训练时合并为单路
+ 推理效率 高 高 最高 (单路卷积)
+ 训练效率 中 高 (并行) 高
+ 代表版本 YOLOv4/v5 YOLOv7 YOLOv6/v10
+ 适用场景 通用检测 高性能检测 部署优化
 
 ```
 
@@ -2318,21 +2318,21 @@ YOLO26 的 Backbone 在 YOLOv8/v11 的基础上进行了多项关键改进，核
 
 ```
 YOLOv8 各规模通道配置 (C2f 内部通道 c_ = c2 * 0.5):
- 规模 Stage1 Stage2 Stage3 Stage4 SPPF 
+ 规模 Stage1 Stage2 Stage3 Stage4 SPPF
  (C→C) (C→C) (C→C) (C→C) 输入→输出
- n 64→128 128→256 256→512 512→512 512→512 
- s 64→128 128→256 256→512 512→512 512→512 
- m 64→192 192→384 384→512 512→512 512→512 
- l 64→192 192→384 384→768 768→768 768→768 
+ n 64→128 128→256 256→512 512→512 512→512
+ s 64→128 128→256 256→512 512→512 512→512
+ m 64→192 192→384 384→512 512→512 512→512
+ l 64→192 192→384 384→768 768→768 768→768
  x 64→256 256→512 512→1024 1024→1024 1024→1024
 
 YOLO26 各规模通道配置（以 n/s/m/l/x 为例）:
- 规模 Stage1 Stage2 Stage3 Stage4 SPPF 
+ 规模 Stage1 Stage2 Stage3 Stage4 SPPF
  BottleneckBottleneckBottleneckBottleneck 输入→输出
- n 64→128 128→256 256→512 512→512 512→512 
- s 64→128 128→256 256→512 512→512 512→512 
- m 64→192 192→384 384→512 512→512 512→512 
- l 64→192 192→384 384→768 768→768 768→768 
+ n 64→128 128→256 256→512 512→512 512→512
+ s 64→128 128→256 256→512 512→512 512→512
+ m 64→192 192→384 384→512 512→512 512→512
+ l 64→192 192→384 384→768 768→768 768→768
  x 64→256 256→512 512→1024 1024→1024 1024→1024
 
 关键区别: YOLO26 在相同通道配置下，通过更少的 Bottleneck 数量和
@@ -2346,7 +2346,7 @@ YOLO26 各规模通道配置（以 n/s/m/l/x 为例）:
 # YOLO26n 模型配置 (简化版 YAML 结构)
 # 完整配置见 ultralytics/cfg/models/v26/yolo26n.yaml
 
-# Backbone 
+# Backbone
 backbone:
   # Stem: 2层下采样卷积
   - from: -1
@@ -2411,21 +2411,21 @@ backbone:
 ```
 YOLOv3/v4 (PANet):
  上层特征 (P5) → 上采样 → 拼接 → 卷积 → P4'
- 中层特征 (P4) 
+ 中层特征 (P4)
  P4' → 下采样 → 拼接 → 卷积 → P3' → 输出
           ↑                        ↑
- 中层特征 (P4) 
+ 中层特征 (P4)
           ↑
  下层特征 (P3) → 输出
 
   特点: 双向特征金字塔（FPN自上而下 + PAN自下而上）
-  
+
 YOLOv8 (CSP-PAN + C2f):
  上层特征 (P5) → 上采样 → 拼接 → C2f → P4'
- 中层特征 (P4) 
+ 中层特征 (P4)
  P4' → 下采样 → 拼接 → C2f → P3' → 输出
           ↑                      ↑
- 中层特征 (P4) 
+ 中层特征 (P4)
           ↑
  下层特征 (P3) → 输出
 
@@ -3438,14 +3438,14 @@ DFL 核心思想: 将边界框坐标建模为概率分布
 
 #### 2.6.7 标签分配策略性能对比
 
- 策略 mAP提升 计算开销 适用场景 
- TopK (v3) 基准 低 锚框检测 
- ATSS +0.5pp 低 无锚框 
- PAA +0.8pp 中 高精度 
- SimOTA +1.0pp 中 通用 
- TaskAligned +1.2pp 低 YOLOv8 
- OTA +1.5pp 高 YOLOv9 
- STAL +1.8pp 中 YOLO26 
+ 策略 mAP提升 计算开销 适用场景
+ TopK (v3) 基准 低 锚框检测
+ ATSS +0.5pp 低 无锚框
+ PAA +0.8pp 中 高精度
+ SimOTA +1.0pp 中 通用
+ TaskAligned +1.2pp 低 YOLOv8
+ OTA +1.5pp 高 YOLOv9
+ STAL +1.8pp 中 YOLO26
 
 ### 2.7 激活函数对比
 
@@ -3476,12 +3476,12 @@ DFL 核心思想: 将边界框坐标建模为概率分布
 
 #### 2.7.5 激活函数综合对比
 
- 激活函数 mAP提升 计算开销 可微性 YOLO版本 
- ReLU 基准 1.0x 不可微 v1-v2 
- Leaky -0.1pp 1.0x 可微 v3 
- SiLU +0.7pp 1.05x 可微 v5-v26 
- Mish +0.2pp 1.12x 可微 研究版 
- GeLU +0.1pp 1.25x 可微 研究版 
+ 激活函数 mAP提升 计算开销 可微性 YOLO版本
+ ReLU 基准 1.0x 不可微 v1-v2
+ Leaky -0.1pp 1.0x 可微 v3
+ SiLU +0.7pp 1.05x 可微 v5-v26
+ Mish +0.2pp 1.12x 可微 研究版
+ GeLU +0.1pp 1.25x 可微 研究版
   · 推荐: SiLU (最佳性价比)
 
 ## 三、YOLOv8 架构深度解析
@@ -3851,12 +3851,12 @@ YAML 配置:
   width_multiple: 0.50  (控制通道数)
 
 各规模模型缩放参数:
- 规模 depth_mult width_mult resolution 
- n 0.33 0.25 1.0 
- s 0.33 0.50 1.0 
- m 0.67 0.75 1.0 
- l 1.00 1.00 1.0 
- x 1.00 1.25 1.0 
+ 规模 depth_mult width_mult resolution
+ n 0.33 0.25 1.0
+ s 0.33 0.50 1.0
+ m 0.67 0.75 1.0
+ l 1.00 1.00 1.0
+ x 1.00 1.25 1.0
 
 ```
 
@@ -3900,13 +3900,13 @@ YOLOv8x 缩放 (depth=1.0, width=1.25):
 
 ```
 
- YOLOv8 各规模精度-FLOPs 关系 
- 规模 参数量(M) FLOPs(G) mAP50-95 FLOPs/mAP 
- n 3.2 8.7 37.3% 0.233 
- s 11.2 28.6 44.9% 0.637 
- m 25.9 78.9 50.2% 1.572 
- l 43.7 165.2 52.9% 3.123 
- x 68.2 257.8 53.9% 4.783 
+ YOLOv8 各规模精度-FLOPs 关系
+ 规模 参数量(M) FLOPs(G) mAP50-95 FLOPs/mAP
+ n 3.2 8.7 37.3% 0.233
+ s 11.2 28.6 44.9% 0.637
+ m 25.9 78.9 50.2% 1.572
+ l 43.7 165.2 52.9% 3.123
+ x 68.2 257.8 53.9% 4.783
 
 观察:
   · n→s: 参数量 ×3.5, FLOPs ×3.3, mAP +7.6pp (最高效区间)
@@ -3993,16 +3993,16 @@ def analyze_scaling_effect(base_model_path, scales):
 ```
 YOLOv8s 各组件消融实验 (COCO val2017, 基准: YOLOv5s):
 
- 实验设置 mAP50-95 相比基准提升 参数量(M) 
- YOLOv5s (基准) 37.4% — 7.2 
- + C2f (替代C3) 38.9% +1.5pp 7.5 
- + Decoupled Head 40.2% +2.8pp 7.8 
- + Anchor-Free 41.5% +4.1pp 7.8 
- + Varifocal Loss 42.3% +4.9pp 7.8 
- + TaskAligned 43.1% +5.7pp 7.8 
- + DFL 43.8% +6.4pp 8.2 
- + SPPF 44.2% +6.8pp 8.2 
- 完整 YOLOv8s 44.9% +7.5pp 11.2 
+ 实验设置 mAP50-95 相比基准提升 参数量(M)
+ YOLOv5s (基准) 37.4% — 7.2
+ + C2f (替代C3) 38.9% +1.5pp 7.5
+ + Decoupled Head 40.2% +2.8pp 7.8
+ + Anchor-Free 41.5% +4.1pp 7.8
+ + Varifocal Loss 42.3% +4.9pp 7.8
+ + TaskAligned 43.1% +5.7pp 7.8
+ + DFL 43.8% +6.4pp 8.2
+ + SPPF 44.2% +6.8pp 8.2
+ 完整 YOLOv8s 44.9% +7.5pp 11.2
 
 ```
 
@@ -4156,9 +4156,9 @@ import torch
 import torch.nn as nn
 
 
-# 
+#
 # 基础模块
-# 
+#
 
 class Conv(nn.Module):
     """
@@ -4196,8 +4196,8 @@ class Bottleneck(nn.Module):
 
     结构:
  x → [1×1 Conv] → [3×3 Conv] → [+] → Output
- ↑ 
- x (当 c1==c2 时) 
+ ↑
+ x (当 c1==c2 时)
 
     参数:
         c1: 输入通道数
@@ -4237,9 +4237,9 @@ class BottleneckCSP(nn.Module):
         return self.cv4(torch.cat(y, 1))
 
 
-# 
+#
 # C2f 模块 (YOLOv8 核心创新)
-# 
+#
 
 class C2f(nn.Module):
     """
@@ -4251,10 +4251,10 @@ class C2f(nn.Module):
 
     信息流:
  x → Conv → [x1 | x2]
- x1 
+ x1
  x2 → B1 → B2 → ... → Bn → [Concat] → Conv → Out
- ↑ ↑ 
- B1输出 → B2输入 
+ ↑ ↑
+ B1输出 → B2输入
  B2输出 → B3输入
     """
     def __init__(self, c1, c2, n=1, shortcut=False, g=1, e=0.5):
@@ -4295,9 +4295,9 @@ class C2(nn.Module):
         return self.cv2(torch.cat(y, 1))
 
 
-# 
+#
 # SPPF 模块
-# 
+#
 
 class SPPF(nn.Module):
     """
@@ -4343,9 +4343,9 @@ class SPP(nn.Module):
         return self.cv2(torch.cat([x] + [m(x) for m in self.m], 1))
 
 
-# 
+#
 # 注意力模块
-# 
+#
 
 class CBFuse(nn.Module):
     """
@@ -4435,9 +4435,9 @@ class SAM(nn.Module):
         return x
 
 
-# 
+#
 # RepConv 模块 (重参数化卷积)
-# 
+#
 
 class RepConv(nn.Module):
     """
@@ -4445,7 +4445,7 @@ class RepConv(nn.Module):
     训练时保留多路分支, 推理时合并为单路卷积
 
     结构:
- → [3×3 Conv] 
+ → [3×3 Conv]
  Input → [1×1 Conv] → [Concat] → Conv → Output
  ↑
  → [3×3 Conv (stride=2)] (缩小路径)
@@ -4502,9 +4502,9 @@ class RepConv(nn.Module):
         return torch.nn.functional.pad(kernel1x1, [pad, pad, pad, pad])
 
 
-# 
+#
 # DFL (Distribution Focal Loss) 模块
-# 
+#
 
 class DFL(nn.Module):
     """
@@ -4535,9 +4535,9 @@ class DFL(nn.Module):
         return self.conv(x.view(b, 4, self.c1, a).transpose(2, 3).view(b, 4, -1))
 
 
-# 
+#
 # YOLOv8 Detection Head
-# 
+#
 
 class Detect(nn.Module):
     """
@@ -4630,9 +4630,9 @@ class v8Detect(nn.Module):
         return [torch.cat((self.cv2[i](x[i]), self.cv3[i](x[i])), 1) for i in range(self.nl)]
 
 
-# 
+#
 # 完整 YOLOv8 模型
-# 
+#
 
 class YOLOv8(nn.Module):
     """
@@ -4721,9 +4721,9 @@ class YOLOv8(nn.Module):
         return self.head([p3, p4, p5])
 
 
-# 
+#
 # 测试代码
-# 
+#
 
 if __name__ == "__main__":
     # 测试各个模块
@@ -6066,19 +6066,19 @@ if __name__ == "__main__":
 ```
 YOLOv8 vs YOLOv11 架构详细对比:
 
- 维度 YOLOv8 YOLOv11 
- Backbone CSPDarknet + C2f 优化CSP + C2f-V2 
- Neck PAN-FPN + C2f 优化PAN-FPN + C2f-V2 
- Head 解耦头 解耦头 (优化版) 
- 激活函数 SiLU SiLU 
- DFL 有 (16 bin) 有 (16 bin) 
- 标签分配 TaskAligned TaskAligned (改进) 
- 数据增强 Mosaic + MixUp Mosaic + MixUp + 
- 更强HSV增强 
- YOLOv8n 参数 3.2M 2.6M (-19%) 
- YOLOv8n mAP 37.3% 40.1% (+2.8pp) 
- YOLOv8n FLOPs 8.7G 6.5G (-25%) 
- YOLOv8x mAP 53.9% 56.6% (+2.7pp) 
+ 维度 YOLOv8 YOLOv11
+ Backbone CSPDarknet + C2f 优化CSP + C2f-V2
+ Neck PAN-FPN + C2f 优化PAN-FPN + C2f-V2
+ Head 解耦头 解耦头 (优化版)
+ 激活函数 SiLU SiLU
+ DFL 有 (16 bin) 有 (16 bin)
+ 标签分配 TaskAligned TaskAligned (改进)
+ 数据增强 Mosaic + MixUp Mosaic + MixUp +
+ 更强HSV增强
+ YOLOv8n 参数 3.2M 2.6M (-19%)
+ YOLOv8n mAP 37.3% 40.1% (+2.8pp)
+ YOLOv8n FLOPs 8.7G 6.5G (-25%)
+ YOLOv8x mAP 53.9% 56.6% (+2.7pp)
 
 ```
 
@@ -6087,27 +6087,27 @@ YOLOv8 vs YOLOv11 架构详细对比:
 ```
 YOLOv8n 各层参数量详细分解:
 
- # 层名 输入尺寸 输出尺寸 参数量(K) 
- 0 Conv(3->64, k=3,s=2) 640x640x3 320x320x64 1,792 
- 1 Conv(64->128, k=3,s=2) 320x320x64 160x160x128 73,728 
- 2 C2f(64->128, n=2) 160x160x128 160x160x128 147,968 
- 3 Conv(128->256, k=3,s=2) 160x160x128 80x 80x256 295,424 
- 4 C2f(128->256, n=4) 80x 80x256 80x 80x256 1,180,672 
- 5 Conv(256->512, k=3,s=2) 80x 80x256 40x 40x512 1,180,160 
- 6 C2f(256->512, n=4) 40x 40x512 40x 40x512 4,720,128 
- 7 Conv(512->512, k=3,s=2) 40x 40x512 20x 20x512 2,359,808 
- 8 C2f(512->512, n=2) 20x 20x512 20x 20x512 2,359,296 
- 9 SPPF(512->512) 20x 20x512 20x 20x512 131,584 
- 10 Upsample x2 20x 20x512 40x 40x512 0 
- 11 C2f(1024->512, n=2) 40x 40x102440x40x512 4,721,280 
- 12 Upsample x2 40x 40x512 80x 80x512 0 
- 13 C2f(768->256, n=2) 80x 80x768 80x80x256 1,769,856 
- 14 Conv(256->256, k=3,s=2) 80x 80x256 40x 40x256 590,080 
- 15 C2f(768->512, n=2) 40x 40x768 40x40x512 4,721,280 
- 16 Conv(512->512, k=3,s=2) 40x 40x512 20x 20x512 2,359,808 
- 17 C2f(1024->512, n=2) 20x 20x102420x20x512 4,721,280 
- 18 Detect Head 多变 [B,84,8400] 169,928 
- 合计 — — 3,235,840 
+ # 层名 输入尺寸 输出尺寸 参数量(K)
+ 0 Conv(3->64, k=3,s=2) 640x640x3 320x320x64 1,792
+ 1 Conv(64->128, k=3,s=2) 320x320x64 160x160x128 73,728
+ 2 C2f(64->128, n=2) 160x160x128 160x160x128 147,968
+ 3 Conv(128->256, k=3,s=2) 160x160x128 80x 80x256 295,424
+ 4 C2f(128->256, n=4) 80x 80x256 80x 80x256 1,180,672
+ 5 Conv(256->512, k=3,s=2) 80x 80x256 40x 40x512 1,180,160
+ 6 C2f(256->512, n=4) 40x 40x512 40x 40x512 4,720,128
+ 7 Conv(512->512, k=3,s=2) 40x 40x512 20x 20x512 2,359,808
+ 8 C2f(512->512, n=2) 20x 20x512 20x 20x512 2,359,296
+ 9 SPPF(512->512) 20x 20x512 20x 20x512 131,584
+ 10 Upsample x2 20x 20x512 40x 40x512 0
+ 11 C2f(1024->512, n=2) 40x 40x102440x40x512 4,721,280
+ 12 Upsample x2 40x 40x512 80x 80x512 0
+ 13 C2f(768->256, n=2) 80x 80x768 80x80x256 1,769,856
+ 14 Conv(256->256, k=3,s=2) 80x 80x256 40x 40x256 590,080
+ 15 C2f(768->512, n=2) 40x 40x768 40x40x512 4,721,280
+ 16 Conv(512->512, k=3,s=2) 40x 40x512 20x 20x512 2,359,808
+ 17 C2f(1024->512, n=2) 20x 20x102420x20x512 4,721,280
+ 18 Detect Head 多变 [B,84,8400] 169,928
+ 合计 — — 3,235,840
 
 参数量分布:
   Backbone:  ~2,700K (83.5%)
@@ -6166,9 +6166,9 @@ YOLOv8s: 11.2M | YOLOv8m: 25.9M | YOLOv8l: 43.7M | YOLOv8x: 68.2M
 ### 4.3 代码对比
 
 ```python
-# 
+#
 # YOLOv5 (原始实现)
-# 
+#
 from models.experimental import attempt_load
 from utils.general import non_max_suppression
 
@@ -6178,9 +6178,9 @@ pred = model(img)
 # 需要手动NMS
 dets = non_max_suppression(pred, conf_thres=0.25, iou_thres=0.45)
 
-# 
+#
 # YOLOv8 (Ultralytics 实现)
-# 
+#
 from ultralytics import YOLO
 
 model = YOLO('yolov8s.pt')
@@ -6277,14 +6277,14 @@ Anchor-Free (YOLOv8) 的解决方案:
 ```
 YOLOv8 各组件的消融实验 (COCO val2017, YOLOv8s):
 
- 实验设置 mAP50-95 相比基准提升 
- 基准 (Coupled Head) 43.2% — 
- + Decoupled Head 44.5% +1.3pp 
- + Anchor-Free 44.9% +1.7pp 
- + Varifocal Loss 45.1% +1.9pp 
- + TaskAligned 45.3% +2.1pp 
- + DFL 45.6% +2.4pp 
- 完整 YOLOv8s 44.9% (各组件协同) 
+ 实验设置 mAP50-95 相比基准提升
+ 基准 (Coupled Head) 43.2% —
+ + Decoupled Head 44.5% +1.3pp
+ + Anchor-Free 44.9% +1.7pp
+ + Varifocal Loss 45.1% +1.9pp
+ + TaskAligned 45.3% +2.1pp
+ + DFL 45.6% +2.4pp
+ 完整 YOLOv8s 44.9% (各组件协同)
 
 关键发现:
   · Decoupled Head 贡献最大 (+1.3pp)
@@ -6296,19 +6296,19 @@ YOLOv8 各组件的消融实验 (COCO val2017, YOLOv8s):
 **选择决策树：何时使用 YOLOv5 vs YOLOv8 vs YOLOv10**：
 
 ```
- 模型选择决策树 
- Q1: 是否需要 NMS-Free 推理? 
- 是 → 使用 YOLOv10 (原生端到端) 
- 否 ↓ 
- Q2: 是否需要最高精度? 
- 是 → 使用 YOLOv8 (成熟生态) 
- 否 ↓ 
- Q3: 是否使用旧版代码库? 
- 是 → 继续使用 YOLOv5 (兼容性好) 
- 否 → 使用 YOLOv8 (新一代标准) 
- Q4: 是否资源极度受限? 
- 是 → 使用 YOLO11n (2.6M参数) 
- 否 → YOLOv8s 是最佳平衡点 
+ 模型选择决策树
+ Q1: 是否需要 NMS-Free 推理?
+ 是 → 使用 YOLOv10 (原生端到端)
+ 否 ↓
+ Q2: 是否需要最高精度?
+ 是 → 使用 YOLOv8 (成熟生态)
+ 否 ↓
+ Q3: 是否使用旧版代码库?
+ 是 → 继续使用 YOLOv5 (兼容性好)
+ 否 → 使用 YOLOv8 (新一代标准)
+ Q4: 是否资源极度受限?
+ 是 → 使用 YOLO11n (2.6M参数)
+ 否 → YOLOv8s 是最佳平衡点
 
 ```
 
@@ -6338,34 +6338,34 @@ YOLOv8 各组件的消融实验 (COCO val2017, YOLOv8s):
 
 ```
 YOLOv8 → YOLOv10 的改进:
- 核心突破: 去除 NMS 
- YOLOv8 的问题: 
- · NMS 是不可微的后处理操作，阻碍端到端优化 
- · NMS 超参数（conf, iou阈值）需要场景调优 
- · 冗余预测框增加了不必要的计算 
- YOLOv10 的解决方案: 
- · 一致性双分配 (CDA): 训练时确保每个目标只被一个预测框负责 
- · 端到端优化: 去除 NMS 后，整个检测流程可微 
- · 模型效率提升: 更简洁的 Head 设计 
- 代价: 精度略有下降（约 0.3-0.5 mAP） 
- 收益: 推理速度提升 16-19%，部署更简单 
+ 核心突破: 去除 NMS
+ YOLOv8 的问题:
+ · NMS 是不可微的后处理操作，阻碍端到端优化
+ · NMS 超参数（conf, iou阈值）需要场景调优
+ · 冗余预测框增加了不必要的计算
+ YOLOv10 的解决方案:
+ · 一致性双分配 (CDA): 训练时确保每个目标只被一个预测框负责
+ · 端到端优化: 去除 NMS 后，整个检测流程可微
+ · 模型效率提升: 更简洁的 Head 设计
+ 代价: 精度略有下降（约 0.3-0.5 mAP）
+ 收益: 推理速度提升 16-19%，部署更简单
 
 YOLOv10 → YOLO26 的改进:
- 核心突破: 全面端到端 + 多任务统一 
- YOLOv10 的局限: 
- · 仍然使用 DFL，回归头复杂度高 
- · 单任务架构（仅检测） 
- · 优化器仍是传统 SGD 
- · one-to-one 头是可选的，默认仍是 one-to-many 
- YOLO26 的解决方案: 
- · 移除 DFL: 回归头从 20 通道降至 4 通道，简化 80% 
- · 原生 one-to-one: 默认端到端推理，无需 NMS 
- · MuSGD 优化器: 借鉴 LLM 训练经验，正交化更新 
- · 7 任务统一架构: 检测/分割/姿态/OBB/深度/分类/语义分割 
- · Progressive Loss: 训练时逐步从 one-to-many 过渡到 
- one-to-one，兼顾精度与效率 
- · STAL: 改进小目标检测，动态调整正样本分配 
- 收益: 参数量减少 20-30%，速度提升 40-57%，精度提升 1.5+pp 
+ 核心突破: 全面端到端 + 多任务统一
+ YOLOv10 的局限:
+ · 仍然使用 DFL，回归头复杂度高
+ · 单任务架构（仅检测）
+ · 优化器仍是传统 SGD
+ · one-to-one 头是可选的，默认仍是 one-to-many
+ YOLO26 的解决方案:
+ · 移除 DFL: 回归头从 20 通道降至 4 通道，简化 80%
+ · 原生 one-to-one: 默认端到端推理，无需 NMS
+ · MuSGD 优化器: 借鉴 LLM 训练经验，正交化更新
+ · 7 任务统一架构: 检测/分割/姿态/OBB/深度/分类/语义分割
+ · Progressive Loss: 训练时逐步从 one-to-many 过渡到
+ one-to-one，兼顾精度与效率
+ · STAL: 改进小目标检测，动态调整正样本分配
+ 收益: 参数量减少 20-30%，速度提升 40-57%，精度提升 1.5+pp
 
 ```
 
@@ -6375,13 +6375,13 @@ YOLOv10 → YOLO26 的改进:
                      精度 (mAP, COCO val)
                      ↑
  58% ● YOLO26x (56.9)
- 56% ● YOLOv10 (54.5) 
- 54% ● YOLOv8x (53.9) 
+ 56% ● YOLOv10 (54.5)
+ 54% ● YOLOv8x (53.9)
  52% ● YOLOv8l (52.9) ● YOLO26l (54.4)
  50% ● YOLOv8m (50.2) ● YOLO26m (52.5)
  48% ● YOLOv8s (44.9) ● YOLOv10s (~45) ● YOLO26s (47.8)
  46% ● YOLO26n (40.1)
- 44% 
+ 44%
  → 速度 (延迟, ms)
            YOLOv8n  YOLOv8s YOLOv8m YOLOv8l YOLOv8x
                      (向右=更慢)
@@ -6482,8 +6482,8 @@ YOLO26x     11.8ms      6.0ms       75ms          185ms
  52% ●26s(48.6,2.5ms) ●8m(50.2,22ms) ●8l(52.9,36ms)
  50% ●11s(47.8,~3ms) ●8s(44.9,11ms)
  48% ●26n(40.1,1.7ms) ●5s(37.4,12ms)
- 46% 
- 44% 
+ 46%
+ 44%
  →
          1     5    10    20    50   100ms
 
@@ -6545,30 +6545,30 @@ COCO 80 类别中 Top 10 表现最佳类别 (YOLO26s):
 ```
 YOLOv5/v8/v10/v11/v26 全版本综合对比 (COCO val2017):
 
- 模型 mAP50-95 mAP50 参数量(M) FLOPs(G) T4(ms) NMS 
- YOLOv5n 34.4% 51.5% 1.9 4.5 2.6 需要 
- YOLOv5s 37.4% 56.8% 7.2 15.9 3.7 需要 
- YOLOv5m 45.4% 64.5% 21.2 66.8 10.2 需要 
- YOLOv8n 37.3% 55.7% 3.2 8.7 1.6 需要 
- YOLOv8s 44.9% 62.5% 11.2 28.6 3.5 需要 
- YOLOv8m 50.2% 67.6% 25.9 78.9 7.0 需要 
- YOLOv8l 52.9% 70.1% 43.7 165.2 11.0 需要 
- YOLOv8x 53.9% 71.6% 68.2 258.6 15.5 需要 
- YOLOv10n 37.5% 55.5% 2.7 7.5 1.5 无需 
- YOLOv10s 47.5% 64.0% 10.1 27.0 3.5 无需 
- YOLOv10m 52.0% 68.5% 22.2 76.0 7.0 无需 
- YOLOv10l 54.0% 70.5% 38.3 140.0 10.0 无需 
- YOLOv10x 54.5% 71.5% 62.7 230.0 14.0 无需 
- YOLO11n 39.5% 57.2% 2.6 6.5 1.7 需要 
- YOLO11s 46.7% 64.2% 9.4 21.5 2.8 需要 
- YOLO11m 51.5% 68.8% 20.1 60.0 5.5 需要 
- YOLO11l 53.4% 70.5% 25.3 79.0 7.0 需要 
- YOLO11x 56.6% 73.0% 68.2 193.0 12.0 需要 
- YOLO26n 40.1% 58.2% 2.4 5.4 1.7 无需 
- YOLO26s 48.6% 66.5% 9.5 20.7 2.5 无需 
- YOLO26m 53.1% 70.5% 20.4 68.2 4.7 无需 
- YOLO26l 55.0% 72.5% 24.8 86.4 6.2 无需 
- YOLO26x 57.5% 75.0% 55.7 193.9 11.8 无需 
+ 模型 mAP50-95 mAP50 参数量(M) FLOPs(G) T4(ms) NMS
+ YOLOv5n 34.4% 51.5% 1.9 4.5 2.6 需要
+ YOLOv5s 37.4% 56.8% 7.2 15.9 3.7 需要
+ YOLOv5m 45.4% 64.5% 21.2 66.8 10.2 需要
+ YOLOv8n 37.3% 55.7% 3.2 8.7 1.6 需要
+ YOLOv8s 44.9% 62.5% 11.2 28.6 3.5 需要
+ YOLOv8m 50.2% 67.6% 25.9 78.9 7.0 需要
+ YOLOv8l 52.9% 70.1% 43.7 165.2 11.0 需要
+ YOLOv8x 53.9% 71.6% 68.2 258.6 15.5 需要
+ YOLOv10n 37.5% 55.5% 2.7 7.5 1.5 无需
+ YOLOv10s 47.5% 64.0% 10.1 27.0 3.5 无需
+ YOLOv10m 52.0% 68.5% 22.2 76.0 7.0 无需
+ YOLOv10l 54.0% 70.5% 38.3 140.0 10.0 无需
+ YOLOv10x 54.5% 71.5% 62.7 230.0 14.0 无需
+ YOLO11n 39.5% 57.2% 2.6 6.5 1.7 需要
+ YOLO11s 46.7% 64.2% 9.4 21.5 2.8 需要
+ YOLO11m 51.5% 68.8% 20.1 60.0 5.5 需要
+ YOLO11l 53.4% 70.5% 25.3 79.0 7.0 需要
+ YOLO11x 56.6% 73.0% 68.2 193.0 12.0 需要
+ YOLO26n 40.1% 58.2% 2.4 5.4 1.7 无需
+ YOLO26s 48.6% 66.5% 9.5 20.7 2.5 无需
+ YOLO26m 53.1% 70.5% 20.4 68.2 4.7 无需
+ YOLO26l 55.0% 72.5% 24.8 86.4 6.2 无需
+ YOLO26x 57.5% 75.0% 55.7 193.9 11.8 无需
 
 ```
 
@@ -11956,11 +11956,11 @@ def distill_training(student_model, teacher_model, dataloader, epochs=50):
 
 ### 7.1 根据硬件平台选择
 
-# 
+#
 
 # 边缘设备（RK3588, Jetson Nano, 树莓派）
 
-# 
+#
 
 model = YOLO("yolo26n.pt")  # 2.4M 参数，5.4G FLOPs，原生端到端推理
 
@@ -11970,11 +11970,11 @@ model = YOLO("yolo26n.pt")  # 2.4M 参数，5.4G FLOPs，原生端到端推理
 
 # 预期推理速度: 15-30 FPS (Jetson Nano), 30-60 FPS (RK3588)
 
-# 
+#
 
 # 嵌入式设备（Jetson Xavier, RK3568）
 
-# 
+#
 
 model = YOLO("yolo26s.pt")  # 9.5M 参数，20.7G FLOPs
 
@@ -11984,11 +11984,11 @@ model = YOLO("yolo26s.pt")  # 9.5M 参数，20.7G FLOPs
 
 # 预期推理速度: 30-50 FPS (Jetson Xavier)
 
-# 
+#
 
 # 服务器/云端（GPU集群）
 
-# 
+#
 
 model = YOLO("yolo26l.pt")  # 24.8M 参数，86.4G FLOPs
 model = YOLO("yolo26x.pt")  # 55.7M 参数，193.9G FLOPs
@@ -11999,11 +11999,11 @@ model = YOLO("yolo26x.pt")  # 55.7M 参数，193.9G FLOPs
 
 # 预期推理速度: 25-50 FPS (T4), 50-100 FPS (A100)
 
-# 
+#
 
 # 移动端（Android, iOS）
 
-# 
+#
 
 model = YOLO("yolo26n.pt")
 model.export(format="tflite")    # TensorFlow Lite
@@ -12031,14 +12031,14 @@ model.export(format="coreml")    # CoreML (iOS)
 
 ```
 
- 部署成本分析 (月度估算) 
- 平台 硬件成本 电费 维护成本 总月成本 
- 树莓派 4B $75 $2 $0 ~$5 (一次性 $75) 
- Jetson Nano $150 $5 $0 ~$8 (一次性 $150) 
- Jetson Orin $500 $15 $0 ~$20 (一次性 $500) 
- RK3588 开发板 $200 $5 $0 ~$8 (一次性 $200) 
- T4 GPU 云 — — $700 ~$700 (按需) 
- A100 GPU 云 — — $2000 ~$2000 (按需) 
+ 部署成本分析 (月度估算)
+ 平台 硬件成本 电费 维护成本 总月成本
+ 树莓派 4B $75 $2 $0 ~$5 (一次性 $75)
+ Jetson Nano $150 $5 $0 ~$8 (一次性 $150)
+ Jetson Orin $500 $15 $0 ~$20 (一次性 $500)
+ RK3588 开发板 $200 $5 $0 ~$8 (一次性 $200)
+ T4 GPU 云 — — $700 ~$700 (按需)
+ A100 GPU 云 — — $2000 ~$2000 (按需)
 
 注: 云 GPU 费用按 AWS/GCP 定价估算，边缘设备为一次性硬件成本
 
@@ -12151,10 +12151,10 @@ RK3588 部署指南:
    results = postprocess(outputs, img.shape)
 
 4. 性能基准
- 模型 精度(FP32) 精度(INT8) FPS(INT8) 
- YOLO26n 40.1% mAP 39.5% mAP 35-45 
- YOLO26s 48.6% mAP 47.8% mAP 20-30 
- YOLO26m 53.1% mAP 52.0% mAP 12-18 
+ 模型 精度(FP32) 精度(INT8) FPS(INT8)
+ YOLO26n 40.1% mAP 39.5% mAP 35-45
+ YOLO26s 48.6% mAP 47.8% mAP 20-30
+ YOLO26m 53.1% mAP 52.0% mAP 12-18
    功耗: 5-10W (典型) | 内存: 4GB LPDDR4
 
 ```
@@ -12177,10 +12177,10 @@ WebAssembly 部署 (ONNX Runtime Web):
    const results = await session.run({ input: tensor });
 
 3. 性能
- 浏览器 FPS 备注 
- Chrome (WebGPU) 15-25 需要 WebGL 2.0 
- Safari (WebGPU) 20-30 Metal 后端 
- Chrome (WASM) 5-10 CPU fallback 
+ 浏览器 FPS 备注
+ Chrome (WebGPU) 15-25 需要 WebGL 2.0
+ Safari (WebGPU) 20-30 Metal 后端
+ Chrome (WASM) 5-10 CPU fallback
 
 Edge TPU 部署 (Google Coral):
    1. 导出 TFLite + INT8 量化

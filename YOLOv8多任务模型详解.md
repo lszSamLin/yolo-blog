@@ -1315,64 +1315,64 @@ def evaluate_dataset_adequacy(labels_dir, min_samples_per_class=100):
 **检测任务标注规范**：
 
 ```
- 检测任务标注规范 
- 标注格式：YOLO (.txt) / Pascal VOC (.xml) / COCO (.json) 
- 标注粒度：每张图片中的每个目标一个边界框 
- 最小目标尺寸：≥ 8×8 像素 (小于此尺寸的建议不标注) 
- 截断/遮挡处理： 
- · 截断 > 50%：标注可见部分 
- · 遮挡 > 50%：标注可见部分 
- · 截断/遮挡 ≤ 50%：标注完整目标 
- 模糊处理： 
- · 运动模糊严重导致目标不可辨认：不标注 
- · 轻微模糊仍可识别：标注并添加"blur"标签 
+ 检测任务标注规范
+ 标注格式：YOLO (.txt) / Pascal VOC (.xml) / COCO (.json)
+ 标注粒度：每张图片中的每个目标一个边界框
+ 最小目标尺寸：≥ 8×8 像素 (小于此尺寸的建议不标注)
+ 截断/遮挡处理：
+ · 截断 > 50%：标注可见部分
+ · 遮挡 > 50%：标注可见部分
+ · 截断/遮挡 ≤ 50%：标注完整目标
+ 模糊处理：
+ · 运动模糊严重导致目标不可辨认：不标注
+ · 轻微模糊仍可识别：标注并添加"blur"标签
 
 ```
 
 **分割任务标注规范**：
 
 ```
- 分割任务标注规范 
- 标注格式：COCO polygon / RLE / YOLO polygon 
- 标注粒度：逐像素多边形轮廓 
- 顶点密度要求： 
- · 简单形状 (圆形/方形)：≥ 20 个顶点 
- · 中等复杂度：≥ 50 个顶点 
- · 复杂形状 (有机轮廓)：≥ 100 个顶点 
- 缝隙要求：多边形边缘与真实边界偏差 ≤ 2 像素 
- 标注工具推荐：Labelme, CVAT (多边形模式), SuperAnnotate 
- 质量检查：自动生成 mask 后人工抽检 5% 
+ 分割任务标注规范
+ 标注格式：COCO polygon / RLE / YOLO polygon
+ 标注粒度：逐像素多边形轮廓
+ 顶点密度要求：
+ · 简单形状 (圆形/方形)：≥ 20 个顶点
+ · 中等复杂度：≥ 50 个顶点
+ · 复杂形状 (有机轮廓)：≥ 100 个顶点
+ 缝隙要求：多边形边缘与真实边界偏差 ≤ 2 像素
+ 标注工具推荐：Labelme, CVAT (多边形模式), SuperAnnotate
+ 质量检查：自动生成 mask 后人工抽检 5%
 
 ```
 
 **姿态任务标注规范**：
 
 ```
- 姿态任务标注规范 
- 标注格式：COCO keypoints (x, y, visibility) 
- 关键点数量：17 个 (COCO 标准) 或自定义 (如手部 21 个) 
- 可见性标记： 
- · 1 = 可见且已标注 
- · 2 = 可见但未标注 (漏标) 
- · 0 = 不可见 (被遮挡/超出画面) 
- 标注精度：关键点位置偏差 ≤ 3 像素 
- 遮挡处理：遮挡 > 50% 的关键点标记为 visibility=0 
+ 姿态任务标注规范
+ 标注格式：COCO keypoints (x, y, visibility)
+ 关键点数量：17 个 (COCO 标准) 或自定义 (如手部 21 个)
+ 可见性标记：
+ · 1 = 可见且已标注
+ · 2 = 可见但未标注 (漏标)
+ · 0 = 不可见 (被遮挡/超出画面)
+ 标注精度：关键点位置偏差 ≤ 3 像素
+ 遮挡处理：遮挡 > 50% 的关键点标记为 visibility=0
 
 ```
 
 **OBB 任务标注规范**：
 
 ```
- OBB 任务标注规范 
- 标注格式：DOTA (.txt) / CVPR2019 (.txt) 
- 参数定义：[x1,y1,x2,y2,x3,y3,x4,y4] 或 [cx,cy,w,h,θ] 
- 角度定义： 
- · DOTA: 从 x 轴逆时针，θ ∈ [0, π) 
- · CVPR2019: θ ∈ (-π/2, π/2] 
- 标注精度：顶点偏差 ≤ 3 像素 
- 特殊场景： 
- · 极长目标 (长宽比 > 10:1)：确保角度准确 
- · 圆形/椭圆形目标：用最小旋转矩形近似 
+ OBB 任务标注规范
+ 标注格式：DOTA (.txt) / CVPR2019 (.txt)
+ 参数定义：[x1,y1,x2,y2,x3,y3,x4,y4] 或 [cx,cy,w,h,θ]
+ 角度定义：
+ · DOTA: 从 x 轴逆时针，θ ∈ [0, π)
+ · CVPR2019: θ ∈ (-π/2, π/2]
+ 标注精度：顶点偏差 ≤ 3 像素
+ 特殊场景：
+ · 极长目标 (长宽比 > 10:1)：确保角度准确
+ · 圆形/椭圆形目标：用最小旋转矩形近似
 
 ```
 
@@ -1747,23 +1747,23 @@ results = model.train(
  激光雷达点云
 
 多任务推理 pipeline:
- 输入预处理: 
- · 图像去畸变 + 标定 
- · 多摄像头图像拼接 
- · 分辨率归一化到 1024×1024 
- YOLOv8 多任务推理: 
- 车辆/行人检测 (YOLOv8-detect) 
- 输出: 边界框 + 类别 + 置信度 
- 行人类分割 (YOLOv8-seg) 
- 输出: 像素级 mask，区分行人/骑行者/动物 
- 车道线检测 (YOLOv8-obb) 
- 输出: 旋转框表示的车道线区域 
- 深度估计 (YOLO26-depth) 
- 输出: 距离图，用于 3D 重建 
- 结果融合与输出: 
- · 检测框 + 分割 mask → 精确目标区域 
- · 深度图 + 检测距离 → 3D 位置估计 
- · 输出: 障碍物列表 + 3D 坐标 + 距离 
+ 输入预处理:
+ · 图像去畸变 + 标定
+ · 多摄像头图像拼接
+ · 分辨率归一化到 1024×1024
+ YOLOv8 多任务推理:
+ 车辆/行人检测 (YOLOv8-detect)
+ 输出: 边界框 + 类别 + 置信度
+ 行人类分割 (YOLOv8-seg)
+ 输出: 像素级 mask，区分行人/骑行者/动物
+ 车道线检测 (YOLOv8-obb)
+ 输出: 旋转框表示的车道线区域
+ 深度估计 (YOLO26-depth)
+ 输出: 距离图，用于 3D 重建
+ 结果融合与输出:
+ · 检测框 + 分割 mask → 精确目标区域
+ · 深度图 + 检测距离 → 3D 位置估计
+ · 输出: 障碍物列表 + 3D 坐标 + 距离
 
 ```
 
@@ -1806,17 +1806,17 @@ results = model.train(
 **部署架构**：
 
 ```
- 边缘-云协同架构 
- 边缘节点 1 边缘节点 2 边缘节点 N 
- 20路摄像头 20路摄像头 20路摄像头 
- YOLOv8s YOLOv8s YOLOv8s 
- 检测+姿态 检测+姿态 检测+姿态 
- ▼ 
- 云端服务器 
- · 视频流汇聚 
- · 跨摄像头追踪 
- · 报警聚合与推送 
- · 模型远程更新 
+ 边缘-云协同架构
+ 边缘节点 1 边缘节点 2 边缘节点 N
+ 20路摄像头 20路摄像头 20路摄像头
+ YOLOv8s YOLOv8s YOLOv8s
+ 检测+姿态 检测+姿态 检测+姿态
+ ▼
+ 云端服务器
+ · 视频流汇聚
+ · 跨摄像头追踪
+ · 报警聚合与推送
+ · 模型远程更新
 
 ```
 
@@ -1840,15 +1840,15 @@ YOLOE-26 引入了一种全新的开放词汇检测范式，突破了传统 YOLO
 
 ```
 YOLOE-26 开放词汇检测流程:
- 1. 文本编码器: 将自然语言描述转换为语义嵌入向量 
- "一只棕色狗坐在草地上" → embedding vector [1, 512] 
- 2. 视觉编码器: 提取图像特征 
- 输入图像 → Backbone → 多尺度特征图 [N, C, H, W] 
- 3. 文本-视觉融合: QueryFormer 交叉注意力机制 
- 可学习的检测查询与文本嵌入交互 
- 生成与文本描述匹配的候选框 
- 4. 分类头: 计算候选框与文本嵌入的相似度 
- 无需预定义类别，支持零样本推理 
+ 1. 文本编码器: 将自然语言描述转换为语义嵌入向量
+ "一只棕色狗坐在草地上" → embedding vector [1, 512]
+ 2. 视觉编码器: 提取图像特征
+ 输入图像 → Backbone → 多尺度特征图 [N, C, H, W]
+ 3. 文本-视觉融合: QueryFormer 交叉注意力机制
+ 可学习的检测查询与文本嵌入交互
+ 生成与文本描述匹配的候选框
+ 4. 分类头: 计算候选框与文本嵌入的相似度
+ 无需预定义类别，支持零样本推理
 
 ```
 
@@ -1988,19 +1988,19 @@ YOLOv8-Seg 模型结构
   P3        P4        P5     ← 多尺度特征
     ▼         ▼        ▼
 Detect Detect Detect ← 检测头 (共享)
-Head Head Head 
+Head Head Head
             ▼
  Segmentation ← 分割头
- Head 
+ Head
             ▼
  Mask Features 4×4 掩码系数
- (4×4×160) 
+ (4×4×160)
             ▼
  Mask Prototype 160×160 原型掩码
- (32×160×160) 
+ (32×160×160)
             ▼
  Output Mask 640×640 实例掩码
- (N×640×640) 
+ (N×640×640)
 
 输出:
   - Bbox: [N, 4]       # 边界框
@@ -2031,32 +2031,32 @@ YOLOv8 + SAM 融合流程:
   优势: YOLOv8 提供精准定位，SAM 提供泛化分割能力
 
 详细架构:
- Step 1: YOLOv8 检测 (快速定位) 
- 输入: 原始图像 [B, 3, 640, 640] 
- 输出: N 个边界框 [N, 4] + 类别 [N, nc] 
- 耗时: ~5ms (T4 GPU) 
+ Step 1: YOLOv8 检测 (快速定位)
+ 输入: 原始图像 [B, 3, 640, 640]
+ 输出: N 个边界框 [N, 4] + 类别 [N, nc]
+ 耗时: ~5ms (T4 GPU)
                            ▼
- Step 2: ROI 裁剪 (Region of Interest) 
- 对每个 bbox，从原图中裁剪对应区域 
- 输出: [N, 3, 256, 256] (统一到 256×256) 
- 耗时: ~1ms 
+ Step 2: ROI 裁剪 (Region of Interest)
+ 对每个 bbox，从原图中裁剪对应区域
+ 输出: [N, 3, 256, 256] (统一到 256×256)
+ 耗时: ~1ms
                            ▼
- Step 3: SAM 编码器 (图像编码器) 
- 输入: 裁剪区域 [N, 3, 256, 256] 
- 模型: SAM ViT-H (632M 参数) 或 ViT-B (约 100M) 
- 输出: 图像嵌入 [N, 256, 64, 64] 
- 耗时: ~15ms (ViT-B) / ~50ms (ViT-H) 
+ Step 3: SAM 编码器 (图像编码器)
+ 输入: 裁剪区域 [N, 3, 256, 256]
+ 模型: SAM ViT-H (632M 参数) 或 ViT-B (约 100M)
+ 输出: 图像嵌入 [N, 256, 64, 64]
+ 耗时: ~15ms (ViT-B) / ~50ms (ViT-H)
                            ▼
- Step 4: SAM 提示编码器 (Prompt Encoder) 
- 输入: bbox 坐标 [N, 4] 
- 输出: 提示嵌入 [N, 256, 64, 64] 
- 耗时: ~1ms 
+ Step 4: SAM 提示编码器 (Prompt Encoder)
+ 输入: bbox 坐标 [N, 4]
+ 输出: 提示嵌入 [N, 256, 64, 64]
+ 耗时: ~1ms
                            ▼
- Step 5: SAM 解码器 (掩码生成) 
- 输入: 图像嵌入 + 提示嵌入 
- 输出: 精细化掩码 [N, 1, 256, 256] 
- 后处理: 上采样到原始图像尺寸 
- 耗时: ~10ms (ViT-B) 
+ Step 5: SAM 解码器 (掩码生成)
+ 输入: 图像嵌入 + 提示嵌入
+ 输出: 精细化掩码 [N, 1, 256, 256]
+ 后处理: 上采样到原始图像尺寸
+ 耗时: ~10ms (ViT-B)
 
 总耗时: ~30ms (ViT-B) / ~70ms (ViT-H)
 精度提升: mAP 提升 3-8pp（尤其对小目标和边界不清晰的目标）
@@ -5511,10 +5511,10 @@ class PoseHead(nn.Module):
 class v8PoseLoss:
     """
     YOLOv8 姿态估计损失
-    
+
     Loss = λ1 * BCEbox + λ2 * DFL + λ3 * BCEcls + λ4 * BKEpose
     """
-    
+
     def __init__(self, model):
         self.bce = nn.BCEWithLogitsLoss(reduction='none')
         self.reg_max = model.model[-1].reg_max
@@ -5523,27 +5523,27 @@ class v8PoseLoss:
         self.use_dfl = model.model[-1].use_dfl
         self.bceloss = nn.BCEWithLogitsLoss(reduction='none')
         self.mse = nn.MSELoss()
-    
+
     def __call__(self, preds, batch):
         preds_pred, = preds
-        
+
         loss = torch.zeros(1, device=preds_pred.device)
-        
+
         # bbox 损失 (同检测)
         loss += self.box_loss(preds_pred, batch)
-        
+
         # 类别损失
         loss += self.bceloss(preds_pred[:, 4:self.nkdt+4], batch['bboxes']) * 0.5
-        
+
         # 关键点损失 (BKE - Bounding Box Keypoint Loss)
         loss += self.kpt_loss(preds_pred, batch) * 2.0  # λ4 = 2.0
-        
+
         return loss
-    
+
     def kpt_loss(self, preds, batch):
         """
         关键点损失
-        
+
         使用 BKE Loss:
         1. 根据关键点可见性过滤
         2. 对可见关键点计算 MSE
@@ -5552,21 +5552,21 @@ class v8PoseLoss:
         n, nk = preds.shape[0], self.nk
         kpts = preds[:, 4+self.nkdt:]  # [N, nk*2] (x,y 未分离)
         kpts = kpts.view(n, nk, 2)
-        
+
         target_kpts = batch['keypoints']  # [N, nk, 2]
         kpt_mask = batch['kpt_mask']      # [N, nk] 可见性掩码
-        
+
         # 过滤不可见关键点
         valid_mask = kpt_mask.bool()
         kpts_valid = kpts[valid_mask]
         target_valid = target_kpts[valid_mask]
-        
+
         if kpts_valid.numel() == 0:
             return torch.tensor(0.0, device=kpts.device)
-        
+
         # MSE 损失
         loss = self.mse(kpts_valid, target_valid)
-        
+
         return loss
 
 ```
@@ -5621,9 +5621,9 @@ names:
 ```python
 from ultralytics import YOLO
 
-# 
+#
 # COCO 人体姿态估计
-# 
+#
 model = YOLO("yolov8s-pose.pt")
 
 results = model.train(
@@ -5636,9 +5636,9 @@ results = model.train(
 )
 
 
-# 
+#
 # 自定义姿态数据集
-# 
+#
 model = YOLO("yolov8m-pose.pt")
 
 results = model.train(
@@ -5656,9 +5656,9 @@ results = model.train(
 )
 
 
-# 
+#
 # 迁移学习训练
-# 
+#
 model = YOLO("yolov8l-pose.pt")  # 从 COCO 预训练权重开始
 
 results = model.train(
@@ -5689,17 +5689,17 @@ results = model.predict("test_video.mp4", save=True, verbose=False)
 for result in results:
     kpts = result.keypoints  # Keypoints 对象
     boxes = result.boxes
-    
+
     for kpt, box in zip(kpts, boxes):
         # 关键点坐标: [N, 17, 3] (x, y, visibility)
         keypoints = kpt.data.cpu().numpy()
         conf = float(box.conf.squeeze())
-        
+
         # 绘制关键点
         for i, (x, y, vis) in enumerate(keypoints):
             if vis > 0.5:  # 只绘制可见关键点
                 cv2.circle(result.orig_img, (int(x), int(y)), 5, (0, 255, 0), -1)
-        
+
         # 绘制骨骼连接
         connections = [
             (0, 1), (0, 2), (1, 3), (2, 4),   # 头部
@@ -5709,16 +5709,16 @@ for result in results:
             (11, 13), (13, 15),                  # 下肢
             (12, 14), (14, 16),                  # 下肢
         ]
-        
+
         for i, j in connections:
             if keypoints[i, 2] > 0.5 and keypoints[j, 2] > 0.5:
                 pt1 = (int(keypoints[i, 0]), int(keypoints[i, 1]))
                 pt2 = (int(keypoints[j, 0]), int(keypoints[j, 1]))
                 cv2.line(result.orig_img, pt1, pt2, (0, 255, 0), 2)
-        
+
         # 边界框
         x1, y1, x2, y2 = box.xyxy.squeeze().cpu().numpy()
-        cv2.rectangle(result.orig_img, (int(x1), int(y1)), 
+        cv2.rectangle(result.orig_img, (int(x1), int(y1)),
                       (int(x2), int(y2)), (0, 255, 0), 2)
 
 ```
@@ -5759,38 +5759,38 @@ Total Loss = λ1 * BoxLoss + λ2 * DFL + λ3 * ClsLoss + λ4 * KptLoss
 def kpt_loss(self, preds, batch):
     """
     关键点损失计算
-    
+
     核心设计:
     1. 根据关键点可见性标记过滤不可见关键点
     2. 对可见关键点计算 MSE 损失
     3. 考虑关键点的不确定性 (通过可见性权重)
-    
+
     可见性标记处理:
     - v=0: 不可见 (图像外或被遮挡) → 不参与损失计算
     - v=1: 可见但未标注 → 以低权重参与
     - v=2: 可见且已标注 → 正常权重参与
     """
     n, nk = preds.shape[0], self.nk
-    
+
     # 提取关键点坐标 [N, nk*2] → [N, nk, 2]
     kpts = preds[:, 4+self.nkdt:]
     kpts = kpts.view(n, nk, 2)
-    
+
     # 获取目标关键点和可见性掩码
     target_kpts = batch['keypoints']     # [N, nk, 2]
     kpt_mask = batch['kpt_mask']          # [N, nk] 可见性掩码
-    
+
     # 过滤不可见关键点
     valid_mask = kpt_mask.bool()
     kpts_valid = kpts[valid_mask]
     target_valid = target_kpts[valid_mask]
-    
+
     if kpts_valid.numel() == 0:
         return torch.tensor(0.0, device=kpts.device)
-    
+
     # MSE 损失
     loss = self.mse(kpts_valid, target_valid)
-    
+
     return loss
 
 ```
@@ -5811,7 +5811,7 @@ import numpy as np
 def visualize_pose_advanced(result, image, opacity=0.6):
     """
     高级姿态可视化
-    
+
     特性:
     - 半透明掩码显示关键点置信度
     - 不同身体部位使用不同颜色
@@ -5819,7 +5819,7 @@ def visualize_pose_advanced(result, image, opacity=0.6):
     """
     kpts = result.keypoints
     boxes = result.boxes
-    
+
     # 身体部位颜色映射
     body_colors = {
         'head': (255, 0, 0),      # 红色 - 头部
@@ -5827,7 +5827,7 @@ def visualize_pose_advanced(result, image, opacity=0.6):
         'torso': (0, 0, 255),      # 蓝色 - 躯干
         'lower_body': (255, 255, 0), # 黄色 - 下肢
     }
-    
+
     # 头部关键点
     head_indices = [0, 1, 2, 3, 4]
     # 上肢关键点
@@ -5836,16 +5836,16 @@ def visualize_pose_advanced(result, image, opacity=0.6):
     torso_indices = [11, 12]
     # 下肢关键点
     lower_indices = [13, 14, 15, 16]
-    
+
     for kpt, box in zip(kpts, boxes):
         keypoints = kpt.data.cpu().numpy()
         x1, y1, x2, y2 = box.xyxy.squeeze().cpu().numpy()
         conf = float(box.conf.squeeze())
-        
+
         # 绘制边界框
         cv2.rectangle(image, (int(x1), int(y1)),
                       (int(x2), int(y2)), (0, 255, 0), 2)
-        
+
         # 绘制各部位关键点
         for indices, color in [
             (head_indices, body_colors['head']),
@@ -5859,7 +5859,7 @@ def visualize_pose_advanced(result, image, opacity=0.6):
                     # 关键点大小根据置信度动态调整
                     radius = max(3, int(vis * 8))
                     cv2.circle(image, (int(x), int(y)), radius, color, -1)
-        
+
         # 绘制骨骼连接
         connections = [
             (0, 1), (0, 2), (1, 3), (2, 4),   # 头部
@@ -5869,7 +5869,7 @@ def visualize_pose_advanced(result, image, opacity=0.6):
             (11, 13), (13, 15),                  # 下肢
             (12, 14), (14, 16),                  # 下肢
         ]
-        
+
         for i, j in connections:
             if keypoints[i, 2] > 0.5 and keypoints[j, 2] > 0.5:
                 pt1 = (int(keypoints[i, 0]), int(keypoints[i, 1]))
@@ -5877,12 +5877,12 @@ def visualize_pose_advanced(result, image, opacity=0.6):
                 # 骨骼线宽度根据两点置信度调整
                 width = max(1, int((keypoints[i, 2] + keypoints[j, 2]) / 2 * 3))
                 cv2.line(image, pt1, pt2, (0, 255, 0), width)
-        
+
         # 添加总体置信度标签
         label = f"pose {conf:.2f}"
         cv2.putText(image, label, (int(x1), int(y1) - 5),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-    
+
     return image
 
 ```
@@ -5893,7 +5893,7 @@ def visualize_pose_advanced(result, image, opacity=0.6):
 def analyze_keypoint_confidence(result):
     """
     分析关键点置信度分布
-    
+
     用途:
     - 识别模型容易漏检的关键点
     - 指导数据增强策略
@@ -5901,13 +5901,13 @@ def analyze_keypoint_confidence(result):
     """
     kpts = result.keypoints
     all_confidences = []
-    
+
     for kpt in kpts:
         keypoints = kpt.data.cpu().numpy()
         # 提取可见关键点的置信度
         visible = keypoints[keypoints[:, 2] > 0.5, 2]
         all_confidences.extend(visible.tolist())
-    
+
     if len(all_confidences) > 0:
         import numpy as np
         conf_array = np.array(all_confidences)
@@ -5928,9 +5928,9 @@ def analyze_keypoint_confidence(result):
 
 ```
 遮挡场景的特点:
- 部分遮挡: 关键点可见但被其他物体遮挡 
- 完全遮挡: 关键点完全不可见 
- 自遮挡: 身体部位之间的遮挡 (如手臂遮挡躯干) 
+ 部分遮挡: 关键点可见但被其他物体遮挡
+ 完全遮挡: 关键点完全不可见
+ 自遮挡: 身体部位之间的遮挡 (如手臂遮挡躯干)
 
 解决方案:
 1. 利用关键点可见性标记 (v=0) 自动过滤不可见关键点
@@ -5962,10 +5962,10 @@ def analyze_keypoint_confidence(result):
 
 ```
 多人体场景的挑战:
- 1. 人体间距过小导致关键点混淆 
- 2. 密集排列时边界框重叠严重 
- 3. 相似姿态难以区分不同个体 
- 4. 遮挡导致关键点数量减少 
+ 1. 人体间距过小导致关键点混淆
+ 2. 密集排列时边界框重叠严重
+ 3. 相似姿态难以区分不同个体
+ 4. 遮挡导致关键点数量减少
 
 解决方案:
 1. 调整 NMS 阈值 (iou_thres=0.45)
@@ -6251,13 +6251,13 @@ def draw_custom_skeleton(image, keypoints, connections, colors=None):
 
 ```
 自定义关键点配置的检查清单:
- □ 确认关键点数量合理 (不宜过多，建议 ≤ 50 个) 
- □ 确保标注数据的准确性，尤其是遮挡关键点的标记 
- □ 小数据集 (< 500 张) 建议使用迁移学习 
- □ 关键点可见性阈值建议设置为 0.5 
- □ 对于密集关键点 (如人脸 468 点)，增加训练轮次 
- □ 调整 kpt_loss 权重 (默认 2.0)，可根据任务调整 
- □ 可视化训练过程中的关键点预测，及时发现问题 
+ □ 确认关键点数量合理 (不宜过多，建议 ≤ 50 个)
+ □ 确保标注数据的准确性，尤其是遮挡关键点的标记
+ □ 小数据集 (< 500 张) 建议使用迁移学习
+ □ 关键点可见性阈值建议设置为 0.5
+ □ 对于密集关键点 (如人脸 468 点)，增加训练轮次
+ □ 调整 kpt_loss 权重 (默认 2.0)，可根据任务调整
+ □ 可视化训练过程中的关键点预测，及时发现问题
 
 ```
 
@@ -6704,15 +6704,15 @@ names: ['dog']
   3. 使用迁移学习 (从动物姿态模型微调)
 
 果蝇 (Drosophila) 姿态估计:
- 14 关键点定义: 
- 0: 头 (头部中心) 
- 1-2: 复眼 (左/右) 
- 3-4: 胸 (中胸/后胸) 
- 5: 腹 (腹部起点) 
- 6-7: 前腿 (左/右) 
- 8-9: 中腿 (左/右) 
- 10-11: 后腿 (左/右) 
- 12-13: 翅膀 (左/右) 
+ 14 关键点定义:
+ 0: 头 (头部中心)
+ 1-2: 复眼 (左/右)
+ 3-4: 胸 (中胸/后胸)
+ 5: 腹 (腹部起点)
+ 6-7: 前腿 (左/右)
+ 8-9: 中腿 (左/右)
+ 10-11: 后腿 (左/右)
+ 12-13: 翅膀 (左/右)
 
 ```
 
@@ -7155,15 +7155,15 @@ class PoseActionRecognizer:
 #### 动作识别性能基准
 
 ```
- 动作识别性能基准 (COCO-Proof 数据集) 
- 方法 Action 推理延迟 参数量 
- Accuracy (ms/frame) 
- YOLOv8-pose - 3.5ms 11.2M 
- + ST-GCN 82.3% 8.2ms +5.8M 
- + Transformer 85.1% 12.5ms +12.3M 
- + LSTM 79.6% 5.1ms +2.1M 
- YOLOv10-pose - 2.8ms 9.5M 
- + ST-GCN 83.7% 7.8ms +5.8M 
+ 动作识别性能基准 (COCO-Proof 数据集)
+ 方法 Action 推理延迟 参数量
+ Accuracy (ms/frame)
+ YOLOv8-pose - 3.5ms 11.2M
+ + ST-GCN 82.3% 8.2ms +5.8M
+ + Transformer 85.1% 12.5ms +12.3M
+ + LSTM 79.6% 5.1ms +2.1M
+ YOLOv10-pose - 2.8ms 9.5M
+ + ST-GCN 83.7% 7.8ms +5.8M
 
 ```
 
@@ -7558,7 +7558,7 @@ class PoseHead(nn.Module):
         self.nkpt = nk * 2    # 关键点坐标数 (x, y)
         self.reg_max = reg_max
 
- # 共享检测头分支 
+ # 共享检测头分支
         # cv1: 类别 + 边界框 + 关键点分布
         self.cv1 = nn.ModuleList(
             nn.Sequential(
@@ -7948,9 +7948,9 @@ class KeyPointFeatureExtractor(nn.Module):
         return angles
 
 
-# 
+#
 # 动作识别模型
-# 
+#
 
 class LSTMActionRecognizer(nn.Module):
     """
@@ -8090,9 +8090,9 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 
 
-# 
+#
 # 动作分类器 (完整训练流程)
-# 
+#
 
 class ActionRecognitionPipeline:
     """
@@ -8262,17 +8262,17 @@ class ActionRecognitionPipeline:
 #### 3.21.2 LSTM vs Transformer 性能对比
 
 ```
- 指标 LSTM Transformer 说明 
- 参数量 ~1.2M ~3.8M LSTM 更轻量 
- 训练时间 (1 epoch) ~2min ~5min Transformer 
- 需要更多数据 
- 推理延迟 2.1ms 3.5ms LSTM 更快 
- 短序列 (<10帧) 78.5% 75.2% LSTM 更优 
- 中等序列 (10-30) 82.1% 83.5% 相近 
- 长序列 (>30帧) 81.3% 87.2% Transformer 
- 明显更优 
- 内存占用 45MB 120MB LSTM 更省 
- 部署难度 简单 中等 LSTM 更容易 
+ 指标 LSTM Transformer 说明
+ 参数量 ~1.2M ~3.8M LSTM 更轻量
+ 训练时间 (1 epoch) ~2min ~5min Transformer
+ 需要更多数据
+ 推理延迟 2.1ms 3.5ms LSTM 更快
+ 短序列 (<10帧) 78.5% 75.2% LSTM 更优
+ 中等序列 (10-30) 82.1% 83.5% 相近
+ 长序列 (>30帧) 81.3% 87.2% Transformer
+ 明显更优
+ 内存占用 45MB 120MB LSTM 更省
+ 部署难度 简单 中等 LSTM 更容易
 
 选择建议:
   实时视频分析 (< 30 帧) → LSTM
@@ -8285,9 +8285,9 @@ class ActionRecognitionPipeline:
 #### 3.21.3 实际使用示例
 
 ```python
-# 
+#
 # 完整动作识别流程
-# 
+#
 
 def run_action_recognition(video_path, model_type='lstm'):
     """
@@ -8449,11 +8449,11 @@ class OcclusionHandler:
         kpts = keypoints.copy()
         occlusion_mask = np.zeros(kpts.shape[0])
 
- # 策略 1: 可见性置信度过滤 
+ # 策略 1: 可见性置信度过滤
         low_vis_mask = kpts[:, 2] < self.min_vis_threshold
         occlusion_mask[low_vis_mask] = 1.0 - kpts[low_vis_mask, 2]
 
- # 策略 2: 骨骼长度约束验证 
+ # 策略 2: 骨骼长度约束验证
         if bbox is not None:
             scale = bbox[2] - bbox[0]  #  bounding box 宽度作为尺度参考
             kpts_scaled = kpts[:, :2] / scale  # 归一化到 bbox 尺度
@@ -8480,7 +8480,7 @@ class OcclusionHandler:
                     else:
                         occlusion_mask[j] = max(occlusion_mask[j], 0.5)
 
- # 策略 3: 时序融合 
+ # 策略 3: 时序融合
         if prev_keypoints is not None:
             kpts = self._temporal_fusion(kpts, prev_keypoints,
                                           occlusion_mask)
@@ -8529,8 +8529,8 @@ class OcclusionHandler:
 旋转模糊         目标旋转          关键点丢失        时序跟踪
 
 运动模糊去模糊 + 姿态估计流水线:
- 模糊图像 → 去模糊网络 → 清晰图像 → 姿态估计 → 关键点 
- (Real-ESRGAN) (YOLOv8-pose) 
+ 模糊图像 → 去模糊网络 → 清晰图像 → 姿态估计 → 关键点
+ (Real-ESRGAN) (YOLOv8-pose)
 """
 
 class MotionBlurHandler:
@@ -8618,18 +8618,18 @@ class MotionBlurHandler:
   3. 颜色失真 → 背景干扰增加
 
 解决方案:
- 方案 1: 红外 (IR) 相机 + YOLOv8-pose 
- · 使用 IR 传感器获取深度/热成像信息 
- · 将 IR 图像作为额外通道输入模型 
- · 准确率提升约 25% (相比可见光) 
- 方案 2: 低光照增强预处理 
- · Zero-DCE (零参考深度约束增强) 
- · Retinex 理论增强 
- · DCP (暗通道先验) 去雾 
- 方案 3: 多光谱融合 
- · RGB + IR 双通道输入 
- · 利用 IR 通道的热信号增强身体轮廓 
- · 特征融合层: Conv(4, 64) → ... 
+ 方案 1: 红外 (IR) 相机 + YOLOv8-pose
+ · 使用 IR 传感器获取深度/热成像信息
+ · 将 IR 图像作为额外通道输入模型
+ · 准确率提升约 25% (相比可见光)
+ 方案 2: 低光照增强预处理
+ · Zero-DCE (零参考深度约束增强)
+ · Retinex 理论增强
+ · DCP (暗通道先验) 去雾
+ 方案 3: 多光谱融合
+ · RGB + IR 双通道输入
+ · 利用 IR 通道的热信号增强身体轮廓
+ · 特征融合层: Conv(4, 64) → ...
 """
 
 class LowLightPoseEstimator:
@@ -9405,35 +9405,35 @@ Detect Detect Detect ← OBB 检测头
 class v8OSSLoss:
     """
     YOLOv8-OBB 损失函数
-    
+
     与标准检测的主要区别:
     1. 使用旋转框 IoU (Rotated IoU) 替代标准 IoU
     2. 增加角度正则化项
     """
-    
+
     def __init__(self, model):
         self.bce = nn.BCEWithLogitsLoss(reduction='none')
         self.reg_max = model.model[-1].reg_max
         self.use_dfl = model.model[-1].use_dfl
         self.bceloss = nn.BCEWithLogitsLoss(reduction='none')
-    
+
     def __call__(self, preds, batch):
         preds_pred, = preds
-        
+
         loss = torch.zeros(1, device=preds_pred.device)
-        
+
         # 旋转框 bbox 损失
         loss += self.rotate_box_loss(preds_pred, batch)
-        
+
         # 类别损失
         loss += self.bceloss(preds_pred[:, 5:], batch['cls']) * 0.5
-        
+
         return loss
-    
+
     def rotate_box_loss(self, preds, batch):
         """
         旋转框 IoU 损失
-        
+
         使用 GIoU 的旋转版本:
         1. 计算旋转框的凸包
         2. 计算凸包面积
@@ -9442,49 +9442,49 @@ class v8OSSLoss:
         # preds: [N, 5+nc] = [cx, cy, w, h, angle, conf, ...]
         pred_obb = preds[:, :5]
         target_obb = batch['bboxes']  # [N, 5] = [cx, cy, w, h, angle]
-        
+
         # 旋转框 IoU
         iou = rotated_iou(pred_obb, target_obb)
         loss = 1.0 - iou + g_iou_loss(pred_obb, target_obb)
-        
+
         return loss.mean()
 
 
 def rotated_iou(boxes1, boxes2):
     """
     计算旋转框的 IoU
-    
+
     参数:
         boxes1: [N, 5] (cx, cy, w, h, angle)
         boxes2: [M, 5] (cx, cy, w, h, angle)
-    
+
     返回:
         iou: [N, M]
     """
     # 使用 cv2.rotatedRectangleIntersection
     N, M = boxes1.shape[0], boxes2.shape[0]
     iou = torch.zeros(N, M, device=boxes1.device)
-    
+
     for i in range(N):
         for j in range(M):
             rect1 = cv2.minAreaRect(boxes1[i].cpu().numpy())
             rect2 = cv2.minAreaRect(boxes2[j].cpu().numpy())
-            
+
             # 计算交集面积
             inter = cv2.rotatedRectangleIntersection(rect1, rect2)
             if inter[0] is not None:
                 inter_area = cv2.contourArea(inter[0])
             else:
                 inter_area = 0.0
-            
+
             # 计算并集面积
             area1 = rect1[1][0] * rect1[1][1]
             area2 = rect2[1][0] * rect2[1][1]
             union_area = area1 + area2 - inter_area
-            
+
             if union_area > 0:
                 iou[i, j] = inter_area / union_area
-    
+
     return iou
 
 ```
@@ -9540,9 +9540,9 @@ class_id cx cy w h angle
 ```python
 from ultralytics import YOLO
 
-# 
+#
 # DOTA 航空影像检测
-# 
+#
 model = YOLO("yolov8s-obb.pt")
 
 results = model.train(
@@ -9555,9 +9555,9 @@ results = model.train(
 )
 
 
-# 
+#
 # 自定义旋转框数据集
-# 
+#
 model = YOLO("yolov8m-obb.pt")
 
 results = model.train(
@@ -9572,9 +9572,9 @@ results = model.train(
 )
 
 
-# 
+#
 # 迁移学习
-# 
+#
 model = YOLO("yolov8l-obb.pt")
 
 results = model.train(
@@ -9604,33 +9604,33 @@ results = model.predict("test_image.jpg", save=True, verbose=False)
 for result in results:
     obbs = result.obb  # OBB 对象
     boxes = result.boxes
-    
+
     for obb, box in zip(obbs, boxes):
         # 旋转框: [cx, cy, w, h, angle]
         obb_data = obb.data.cpu().numpy()
         cx, cy, w, h, angle = obb_data[:5]
-        
+
         # 置信度和类别
         conf = float(box.conf.squeeze())
         class_id = int(box.cls.squeeze())
-        
+
         # 转换为4个顶点
         rect = ((cx, cy), (w, h), angle)
         vertices = cv2.boxPoints(rect)
         vertices = np.int0(vertices)
-        
+
         # 绘制旋转框
         for i in range(4):
             pt1 = tuple(vertices[i])
             pt2 = tuple(vertices[(i + 1) % 4])
             cv2.line(result.orig_img, pt1, pt2, (0, 255, 0), 2)
-        
+
         # 绘制标签
         label = f"{result.names[class_id]} {conf:.2f}"
-        cv2.putText(result.orig_img, label, 
+        cv2.putText(result.orig_img, label,
                    (int(cx), int(cy) - 10),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        
+
         print(f"类别: {result.names[class_id]}, 置信度: {conf:.2f}")
         print(f"旋转框: cx={cx:.1f}, cy={cy:.1f}, w={w:.1f}, h={h:.1f}, angle={angle:.3f}")
 
@@ -9659,16 +9659,16 @@ results = model.val()
 
 ```
 标准 IoU 计算 (轴对齐框):
- 1. 计算两个矩形的交集区域 
+ 1. 计算两个矩形的交集区域
  2. 交集面积 = min(x2) - max(x1) × min(y2) - max(y1)
- 3. IoU = 交集面积 / 并集面积 
+ 3. IoU = 交集面积 / 并集面积
 
 旋转框 IoU 计算:
- 1. 将旋转框转换为多边形 (4个顶点) 
- 2. 计算两个多边形的交集多边形 
- 3. 使用 Shamos-Hoey 算法计算交集面积 
- 4. IoU = 交集面积 / 并集面积 
- 5. 可选: 添加 GIoU 项处理不相交情况 
+ 1. 将旋转框转换为多边形 (4个顶点)
+ 2. 计算两个多边形的交集多边形
+ 3. 使用 Shamos-Hoey 算法计算交集面积
+ 4. IoU = 交集面积 / 并集面积
+ 5. 可选: 添加 GIoU 项处理不相交情况
 
 ```
 
@@ -9676,11 +9676,11 @@ results = model.val()
 
 ```python
 # 旋转框参数化方案对比
- 参数化方案 优点 缺点 
- [cx,cy,w,h,θ] 直观，易于理解 角度周期性问题 
- [x1,y1,x2,y2, 无周期性问题 约束条件复杂 
- x3,y3,x4,y4] 
- [cx,cy,s,s,θ] 正方形假设 不适用于矩形 
+ 参数化方案 优点 缺点
+ [cx,cy,w,h,θ] 直观，易于理解 角度周期性问题
+ [x1,y1,x2,y2, 无周期性问题 约束条件复杂
+ x3,y3,x4,y4]
+ [cx,cy,s,s,θ] 正方形假设 不适用于矩形
 
 ```
 
@@ -9705,16 +9705,16 @@ results = model.val()
 
 ```
 YOLO-OBB 格式要求:
- 每个标注文件包含一行: 
- class_id cx cy w h angle 
- 参数说明: 
- - class_id: 类别 ID (整数) 
- - cx, cy: 中心点坐标 (归一化到 [0,1]) 
- - w, h: 宽度和高度 (归一化到 [0,1]) 
- - angle: 旋转角度 (弧度, -π/2 < angle ≤ π/2) 
- 角度定义: 
- - 从水平轴 (x轴正方向) 逆时针旋转到宽边 
- - 正值表示逆时针旋转，负值表示顺时针旋转 
+ 每个标注文件包含一行:
+ class_id cx cy w h angle
+ 参数说明:
+ - class_id: 类别 ID (整数)
+ - cx, cy: 中心点坐标 (归一化到 [0,1])
+ - w, h: 宽度和高度 (归一化到 [0,1])
+ - angle: 旋转角度 (弧度, -π/2 < angle ≤ π/2)
+ 角度定义:
+ - 从水平轴 (x轴正方向) 逆时针旋转到宽边
+ - 正值表示逆时针旋转，负值表示顺时针旋转
 
 ```
 
@@ -9725,14 +9725,14 @@ YOLO-OBB 格式要求:
 def dota_to_yolo_obb(dota_annotation, image_width, image_height):
     """
     将 DOTA 格式的标注转换为 YOLO-OBB 格式
-    
+
     DOTA 格式: x1 y1 x2 y2 x3 y3 x4 y4 class_name
     YOLO-OBB:  class_id cx cy w h angle
     """
     # 解析 DOTA 标注
     coords = [float(x) for x in dota_annotation[:8]]
     class_name = dota_annotation[8]
-    
+
     # 转换为 cv2.minAreaRect 格式
     points = np.array([
         [coords[0], coords[1]],
@@ -9740,36 +9740,36 @@ def dota_to_yolo_obb(dota_annotation, image_width, image_height):
         [coords[4], coords[5]],
         [coords[6], coords[7]]
     ], dtype=np.float32)
-    
+
     rect = cv2.minAreaRect(points)
     box = cv2.boxPoints(rect)
     box = np.int0(box)
-    
+
     # 计算中心点 (归一化)
     cx, cy = rect[0]
     cx_norm = cx / image_width
     cy_norm = cy / image_height
-    
+
     # 计算宽和高 (归一化)
     w, h = rect[1]
     w_norm = w / image_width
     h_norm = h / image_height
-    
+
     # 确保 w >= h (旋转框的约定)
     if w_norm < h_norm:
         w_norm, h_norm = h_norm, w_norm
         angle = rect[2] + np.pi / 2
     else:
         angle = rect[2]
-    
+
     # 角度映射到 (-π/2, π/2]
     while angle > np.pi / 2:
         angle -= np.pi
     while angle <= -np.pi / 2:
         angle += np.pi
-    
+
     class_id = class_names.index(class_name)
-    
+
     return f"{class_id} {cx_norm:.6f} {cy_norm:.6f} {w_norm:.6f} {h_norm:.6f} {angle:.6f}"
 
 ```
@@ -10259,23 +10259,23 @@ def vertices_to_obb(vertices):
 
 ```
 常见 OBB 标注错误:
- 错误1: 角度定义不一致 
- 问题: 不同标注工具对角度的定义不同 
- - DOTA: 从 x 轴顺时针旋转 
- - 某些工具: 从 y 轴逆时针旋转 
- 解决: 统一使用 (-π/2, π/2] 定义，逆时针为正 
- 错误2: 宽高定义混淆 
- 问题: w 和 h 的定义不一致 
- 解决: 约定 w >= h，角度相应调整 
- 错误3: 角度边界处标注跳变 
- 问题: 同一目标相邻帧角度从 π/2 跳变到 -π/2 
- 解决: 使用周期感知的标注检查，确保角度连续性 
- 错误4: 旋转框退化为线段 
- 问题: 标注的 h 值过小 (接近 0) 
- 解决: 设置最小高度约束 (如 h >= 5 像素) 
- 错误5: 顶点顺序不一致 
- 问题: 4 个顶点的顺时针/逆时针顺序不一致 
- 解决: 统一为顺时针或逆时针顺序 
+ 错误1: 角度定义不一致
+ 问题: 不同标注工具对角度的定义不同
+ - DOTA: 从 x 轴顺时针旋转
+ - 某些工具: 从 y 轴逆时针旋转
+ 解决: 统一使用 (-π/2, π/2] 定义，逆时针为正
+ 错误2: 宽高定义混淆
+ 问题: w 和 h 的定义不一致
+ 解决: 约定 w >= h，角度相应调整
+ 错误3: 角度边界处标注跳变
+ 问题: 同一目标相邻帧角度从 π/2 跳变到 -π/2
+ 解决: 使用周期感知的标注检查，确保角度连续性
+ 错误4: 旋转框退化为线段
+ 问题: 标注的 h 值过小 (接近 0)
+ 解决: 设置最小高度约束 (如 h >= 5 像素)
+ 错误5: 顶点顺序不一致
+ 问题: 4 个顶点的顺时针/逆时针顺序不一致
+ 解决: 统一为顺时针或逆时针顺序
 
 ```
 
@@ -11097,19 +11097,19 @@ def obb_to_vertices(cx, cy, w, h, angle):
 
 ```
 海洋场景 OBB 检测特点:
- 船舶检测: 
- • 船舶长宽比差异大 (货船 5:1, 渔船 3:1) 
- • 海上背景复杂 (波浪、倒影、浮标) 
- • 尺度变化极大 (几米到几百米) 
- 解决方案: 
- 1. 使用多尺度特征融合 (PAN-FPN 强化 P3 层) 
- 2. 针对小船舶增加数据增强 
- 3. 调整旋转框角度范围至 [-π/4, π/4] (船舶角度范围有限) 
- 4. 使用大尺寸输入 (1280×1280) 捕捉细节 
- 码头/港口检测: 
- • 集装箱规则排列，角度一致 
- • 使用 OBB 可减少约 35% 背景干扰 
- • 相比标准检测，mAP 提升 5-8% 
+ 船舶检测:
+ • 船舶长宽比差异大 (货船 5:1, 渔船 3:1)
+ • 海上背景复杂 (波浪、倒影、浮标)
+ • 尺度变化极大 (几米到几百米)
+ 解决方案:
+ 1. 使用多尺度特征融合 (PAN-FPN 强化 P3 层)
+ 2. 针对小船舶增加数据增强
+ 3. 调整旋转框角度范围至 [-π/4, π/4] (船舶角度范围有限)
+ 4. 使用大尺寸输入 (1280×1280) 捕捉细节
+ 码头/港口检测:
+ • 集装箱规则排列，角度一致
+ • 使用 OBB 可减少约 35% 背景干扰
+ • 相比标准检测，mAP 提升 5-8%
 
 自然场景文本检测 (Text Detection) 特点:
 
@@ -11756,19 +11756,19 @@ DOTA 数据集划分策略:
   test16:    1825 张图像 (仅用于测试提交)
 
 推荐划分方案:
- 方案 A: 按图像划分 
- train: 80% 的 trainval 图像 
- val: 20% 的 trainval 图像 
- test: 全部 test16 图像 
- 适用: 标准模型评估 
- 方案 B: 按类别划分 (更严格) 
- train: 80% 图像 (保证每个类别都有足够样本) 
- val: 10% 图像 
- test: 10% 图像 
- 适用: 小样本场景 (如只关注 ship/plane) 
- 方案 C: 交叉验证 (5-fold) 
- 将 trainval 分为 5 份，轮流作为验证集 
- 适用: 数据集较小，需要更可靠的性能估计 
+ 方案 A: 按图像划分
+ train: 80% 的 trainval 图像
+ val: 20% 的 trainval 图像
+ test: 全部 test16 图像
+ 适用: 标准模型评估
+ 方案 B: 按类别划分 (更严格)
+ train: 80% 图像 (保证每个类别都有足够样本)
+ val: 10% 图像
+ test: 10% 图像
+ 适用: 小样本场景 (如只关注 ship/plane)
+ 方案 C: 交叉验证 (5-fold)
+ 将 trainval 分为 5 份，轮流作为验证集
+ 适用: 数据集较小，需要更可靠的性能估计
 
 质量检查脚本:
   · 检查每类样本数量是否均衡
@@ -11992,15 +11992,15 @@ class SceneTextDetection:
 **TotalText 和 CTW1500 数据集性能**：
 
 ```
- 文字检测性能基准 
- 数据集 模型 H-score / F1 备注 
- TotalText YOLOv8s-obb 78.2% 标准 
- TotalText YOLOv8m-obb 81.5% 高精度 
- TotalText YOLOv10s-obb 82.3% 无NMS 
- CTW1500 YOLOv8s-obb 72.1% 弯曲文本 
- CTW1500 YOLOv8m-obb 75.8% 弯曲文本 
- ICDAR2015 YOLOv8s-obb 85.2% 水平文本 
- ICDAR2019 YOLOv8s-obb 79.6% 多语言 
+ 文字检测性能基准
+ 数据集 模型 H-score / F1 备注
+ TotalText YOLOv8s-obb 78.2% 标准
+ TotalText YOLOv8m-obb 81.5% 高精度
+ TotalText YOLOv10s-obb 82.3% 无NMS
+ CTW1500 YOLOv8s-obb 72.1% 弯曲文本
+ CTW1500 YOLOv8m-obb 75.8% 弯曲文本
+ ICDAR2015 YOLOv8s-obb 85.2% 水平文本
+ ICDAR2019 YOLOv8s-obb 79.6% 多语言
 
 ```
 
@@ -12086,15 +12086,15 @@ rotate: true
 **船舶检测性能（DOTA ship 类）**：
 
 ```
- 船舶检测性能对比 (DOTA val) 
- 模型配置 DOTA mAP50(O) 备注 
- YOLOv8s-obb, 1024px 62.5% 基准 
- YOLOv8m-obb, 1024px 65.8% +3.3pp 
- YOLOv8l-obb, 1280px 68.2% +5.7pp 
- YOLOv10s-obb, 1024px 63.1% 无NMS 
- YOLOv8s-obb + Tile 67.3% 切片推理 
- YOLOv8m-obb + Tile 70.5% 切片推理 
- YOLOv8s-obb + SAM-HQ 71.2% 精细化分割 
+ 船舶检测性能对比 (DOTA val)
+ 模型配置 DOTA mAP50(O) 备注
+ YOLOv8s-obb, 1024px 62.5% 基准
+ YOLOv8m-obb, 1024px 65.8% +3.3pp
+ YOLOv8l-obb, 1280px 68.2% +5.7pp
+ YOLOv10s-obb, 1024px 63.1% 无NMS
+ YOLOv8s-obb + Tile 67.3% 切片推理
+ YOLOv8m-obb + Tile 70.5% 切片推理
+ YOLOv8s-obb + SAM-HQ 71.2% 精细化分割
 
 ```
 
@@ -12109,11 +12109,11 @@ rotate: true
  · 挑战: 密集停机坪场景，飞机相互遮挡
  · 数据集: DOTA (plane 类), RRPD
  阶段 2: OBB vs 标准检测对比
- 指标 标准检测 OBB 
- mAP50-95 58.2% 65.3% 
- 背景误检率 12.5% 7.2% 
- 密集场景AP 45.3% 56.8% 
- 小目标AP 38.7% 48.2% 
+ 指标 标准检测 OBB
+ mAP50-95 58.2% 65.3%
+ 背景误检率 12.5% 7.2%
+ 密集场景AP 45.3% 56.8%
+ 小目标AP 38.7% 48.2%
  优势分析:
  · OBB 紧密贴合飞机轮廓，减少背景区域
  · 旋转框有效减少密集场景中的重叠
@@ -12400,31 +12400,31 @@ Step 6: 输出格式化
 ```
 场景文字检测流水线:
 
- Step 1: OBB 文字检测 
- 模型: YOLOv8s-obb (训练在 CTW1500/Total-Text) 
- 输出: [N, 6] (cx, cy, w, h, angle, conf) 
- 耗时: ~8ms (T4 GPU) 
+ Step 1: OBB 文字检测
+ 模型: YOLOv8s-obb (训练在 CTW1500/Total-Text)
+ 输出: [N, 6] (cx, cy, w, h, angle, conf)
+ 耗时: ~8ms (T4 GPU)
                          ▼
- Step 2: ROI 裁剪与预处理 
- 对每个文字区域: 
- · 根据角度旋转对齐 
- · 裁剪 + 放大 
- · 二值化 / 对比度增强 
- 输出: [N, H, W, 3] 预处理后图像 
+ Step 2: ROI 裁剪与预处理
+ 对每个文字区域:
+ · 根据角度旋转对齐
+ · 裁剪 + 放大
+ · 二值化 / 对比度增强
+ 输出: [N, H, W, 3] 预处理后图像
                          ▼
- Step 3: OCR 文字识别 
- 模型: PaddleOCR / CRNN / TRBA 
- 输入: [N, H, W, 3] 
- 输出: [N] 文字内容 + 置信度 
- 耗时: ~15ms (T4 GPU) 
+ Step 3: OCR 文字识别
+ 模型: PaddleOCR / CRNN / TRBA
+ 输入: [N, H, W, 3]
+ 输出: [N] 文字内容 + 置信度
+ 耗时: ~15ms (T4 GPU)
                          ▼
- Step 4: 结果融合与输出 
- 输出格式: 
- [text, bbox, angle, confidence, language] 
- 后处理: 
- · 文字方向校正 
- · 重复检测合并 
- · 语言识别 
+ Step 4: 结果融合与输出
+ 输出格式:
+ [text, bbox, angle, confidence, language]
+ 后处理:
+ · 文字方向校正
+ · 重复检测合并
+ · 语言识别
 
 总耗时: ~23ms (检测 8ms + OCR 15ms)
 准确率: 多语言场景文字识别率 85%+
@@ -12602,32 +12602,32 @@ class TextDetectionPipeline:
 
 输入图像
   ▼
- Step 1: OBB 文字检测 (YOLOv8-OBB) 
- 输入: 原始图像 [H, W, 3] 
- 输出: N 个旋转文字框 [N, 5] = [cx, cy, w, h, angle] 
- + 类别 [N] + 置信度 [N] 
- 耗时: ~15ms (T4 GPU, FP16) 
+ Step 1: OBB 文字检测 (YOLOv8-OBB)
+ 输入: 原始图像 [H, W, 3]
+ 输出: N 个旋转文字框 [N, 5] = [cx, cy, w, h, angle]
+ + 类别 [N] + 置信度 [N]
+ 耗时: ~15ms (T4 GPU, FP16)
                          ▼
- Step 2: ROI 裁剪与矫正 
- 对每个旋转框: 
- 1. 根据旋转角计算仿射变换矩阵 
- 2. 旋转矫正使文字水平 
- 3. 裁剪文字区域 (适当扩大边界) 
- 输出: [N, 3, H_roi, W_roi] 
- 耗时: ~5ms 
+ Step 2: ROI 裁剪与矫正
+ 对每个旋转框:
+ 1. 根据旋转角计算仿射变换矩阵
+ 2. 旋转矫正使文字水平
+ 3. 裁剪文字区域 (适当扩大边界)
+ 输出: [N, 3, H_roi, W_roi]
+ 耗时: ~5ms
                          ▼
- Step 3: 文字识别 (PaddleOCR / TRT-OCR) 
- 对每个文字区域进行 OCR 识别: 
- · PaddleOCR: DBNet 检测 + CRNN 识别 
- · TRT-OCR: TensorRT 加速的端到端识别 
- 输出: [text, confidence] 
- 耗时: ~20ms (PaddleOCR) / ~8ms (TRT-OCR) 
+ Step 3: 文字识别 (PaddleOCR / TRT-OCR)
+ 对每个文字区域进行 OCR 识别:
+ · PaddleOCR: DBNet 检测 + CRNN 识别
+ · TRT-OCR: TensorRT 加速的端到端识别
+ 输出: [text, confidence]
+ 耗时: ~20ms (PaddleOCR) / ~8ms (TRT-OCR)
                          ▼
- Step 4: 后处理与结果融合 
- · 文字行分组 (基于空间位置) 
- · 阅读顺序排序 
- · 重复检测消除 
- 输出: 结构化文本结果 
+ Step 4: 后处理与结果融合
+ · 文字行分组 (基于空间位置)
+ · 阅读顺序排序
+ · 重复检测消除
+ 输出: 结构化文本结果
 
 ```
 
@@ -13854,18 +13854,18 @@ L_total = Σ_{t∈Tasks} α_t × L_t
 #### 综合评估矩阵
 
 ```
- 任务选型综合评估矩阵 
- 评估维度 检测 分割 姿态 OBB 
- 精度 (mAP) ★★☆ ★★★ ★★★ ★★★ 
- 速度 (fps) ★★★ ★★☆ ★★★ ★★★ 
- 标注成本 ★★★ ★☆☆ ★★☆ ★★☆ 
- 模型大小 ★★★ ★★☆ ★★★ ★★★ 
- 部署难度 ★★★ ★★☆ ★★★ ★★☆ 
- 实时性适用 ★★★ ★★☆ ★★★ ★★★ 
- 小目标适用 ★★☆ ★★★ ★★☆ ★★☆ 
- 密集场景适用 ★★☆ ★★☆ ★★☆ ★★★ 
- 遮挡鲁棒性 ★★☆ ★★☆ ★☆☆ ★★☆ 
- 多角度适用 ★☆☆ ★☆☆ ★☆☆ ★★★ 
+ 任务选型综合评估矩阵
+ 评估维度 检测 分割 姿态 OBB
+ 精度 (mAP) ★★☆ ★★★ ★★★ ★★★
+ 速度 (fps) ★★★ ★★☆ ★★★ ★★★
+ 标注成本 ★★★ ★☆☆ ★★☆ ★★☆
+ 模型大小 ★★★ ★★☆ ★★★ ★★★
+ 部署难度 ★★★ ★★☆ ★★★ ★★☆
+ 实时性适用 ★★★ ★★☆ ★★★ ★★★
+ 小目标适用 ★★☆ ★★★ ★★☆ ★★☆
+ 密集场景适用 ★★☆ ★★☆ ★★☆ ★★★
+ 遮挡鲁棒性 ★★☆ ★★☆ ★☆☆ ★★☆
+ 多角度适用 ★☆☆ ★☆☆ ★☆☆ ★★★
 评分: ★★★ = 优秀, ★★☆ = 良好, ★☆☆ = 一般
 
 ```
@@ -13922,13 +13922,13 @@ Step 2: 考虑约束条件
 答案：可以，但需要特定条件。
 
 YOLOv8 的多任务支持:
- 任务组合 YOLOv8 支持 YOLO26 支持 
- 检测 + 分割 部分支持 完全支持 
- 检测 + 姿态 部分支持 完全支持 
- 检测 + OBB 部分支持 完全支持 
- 分割 + 姿态 不支持 完全支持 
- 全部 4 任务联合 不支持 完全支持 
- 开放词汇检测 不支持 YOLOE-26 支持 
+ 任务组合 YOLOv8 支持 YOLO26 支持
+ 检测 + 分割 部分支持 完全支持
+ 检测 + 姿态 部分支持 完全支持
+ 检测 + OBB 部分支持 完全支持
+ 分割 + 姿态 不支持 完全支持
+ 全部 4 任务联合 不支持 完全支持
+ 开放词汇检测 不支持 YOLOE-26 支持
 
 注意：YOLOv8 的多任务支持较为有限，通常需要分别训练各任务的模型。
 YOLO26 的 unified architecture 支持真正的多任务联合训练。
@@ -14002,16 +14002,16 @@ class MultiTaskLoss(nn.Module):
 #### 联合训练 vs 分开训练的权衡
 
 ```
- 联合训练 vs 分开训练对比 
- 维度 联合训练 分开训练 
- 训练时间 更长 (需处理所有 更短 (每任务独立) 
- 任务) 
- 推理速度 更快 (单次前向) 更慢 (多次前向) 
- 模型大小 更小 (共享 backbone) 更大 (每任务独立模型) 
- 泛化能力 更强 (特征共享) 一般 
- 任务冲突 可能存在 不存在 
- 部署复杂度 低 (单一模型) 高 (多模型管理) 
- 资源需求 高 (需要更多显存) 低 (可分步训练) 
+ 联合训练 vs 分开训练对比
+ 维度 联合训练 分开训练
+ 训练时间 更长 (需处理所有 更短 (每任务独立)
+ 任务)
+ 推理速度 更快 (单次前向) 更慢 (多次前向)
+ 模型大小 更小 (共享 backbone) 更大 (每任务独立模型)
+ 泛化能力 更强 (特征共享) 一般
+ 任务冲突 可能存在 不存在
+ 部署复杂度 低 (单一模型) 高 (多模型管理)
+ 资源需求 高 (需要更多显存) 低 (可分步训练)
 
 ```
 
@@ -14322,13 +14322,13 @@ mAP 提升的边际效益分析 (检测任务, COCO):
 #### 损失加权方法对比
 
 ```
- 多任务损失加权方法对比 
- 方法 原理 适用场景 
- 固定权重 手工设置 λ_i 任务难度相近 
- GradNorm 动态调整权重 训练初期不稳定 
- PCGrad 梯度投影 任务间梯度冲突 
- 不确定性加权 可学习方差 任务噪声水平差异大 
- PTS (Progressive) 渐进式调整 任务间存在依赖关系 
+ 多任务损失加权方法对比
+ 方法 原理 适用场景
+ 固定权重 手工设置 λ_i 任务难度相近
+ GradNorm 动态调整权重 训练初期不稳定
+ PCGrad 梯度投影 任务间梯度冲突
+ 不确定性加权 可学习方差 任务噪声水平差异大
+ PTS (Progressive) 渐进式调整 任务间存在依赖关系
 
 ```
 
@@ -14575,14 +14575,14 @@ for epoch in range(epochs):
 #### 不同加权策略性能对比
 
 ```
- 多任务损失加权策略性能对比 (COCO val, YOLOv8s) 
- 加权策略 mAP50-95 收敛速度 稳定性 调参难度 
- 固定权重 (1.0) 42.1% 基准 高 高 
- 固定权重 (自适应) 43.5% +15% 高 中 
- GradNorm 44.2% +25% 中 低 
- PCGrad 44.8% +30% 中 低 
- 不确定性加权 45.1% +35% 中 低 
- PTS (渐进式) 45.6% +40% 高 低 
+ 多任务损失加权策略性能对比 (COCO val, YOLOv8s)
+ 加权策略 mAP50-95 收敛速度 稳定性 调参难度
+ 固定权重 (1.0) 42.1% 基准 高 高
+ 固定权重 (自适应) 43.5% +15% 高 中
+ GradNorm 44.2% +25% 中 低
+ PCGrad 44.8% +30% 中 低
+ 不确定性加权 45.1% +35% 中 低
+ PTS (渐进式) 45.6% +40% 高 低
 
 ```
 
@@ -14746,7 +14746,7 @@ class TaskAffinityAnalyzer:
               ▼          ▼          ▼
          仅检测     检测+分割   检测+姿态
  共享特征充足？ 共享特征充足？
- 是 
+ 是
  ▼ ▼
  推荐: 联合训练 推荐: 联合训练
  (mAP+2-3%) (mAP+1-2%)
@@ -15510,16 +15510,16 @@ OBB (obb)       50.1%       49.3%       -0.8%     -1.6%
 #### 5.10.4 联合训练 vs 分开训练 优劣势分析
 
 ```
- 维度 联合训练 分开训练 
- 训练时间 大幅减少 (50-74%) 较长 
- GPU显存 较高 (需同时加载) 较低 (依次训练) 
- 推理速度 单模型推理，更快 多模型推理，较慢 
- 部署复杂度 简单 (单一模型) 复杂 (多个模型) 
- 精度损失 轻微 (-0.5%~-2%) 无 
- 维护成本 低 高 
- 扩展性 需重新训练 独立更新各任务 
- 负迁移风险 存在 无 
- 推荐场景 生产部署 研究/探索阶段 
+ 维度 联合训练 分开训练
+ 训练时间 大幅减少 (50-74%) 较长
+ GPU显存 较高 (需同时加载) 较低 (依次训练)
+ 推理速度 单模型推理，更快 多模型推理，较慢
+ 部署复杂度 简单 (单一模型) 复杂 (多个模型)
+ 精度损失 轻微 (-0.5%~-2%) 无
+ 维护成本 低 高
+ 扩展性 需重新训练 独立更新各任务
+ 负迁移风险 存在 无
+ 推荐场景 生产部署 研究/探索阶段
 
 ```
 
@@ -15533,7 +15533,7 @@ OBB (obb)       50.1%       49.3%       -0.8%     -1.6%
                      /      \
                 ≤ 3 个      > 3 个
             可以分开     推荐联合训练
- 训练 
+ 训练
                       任务相关性?
                        /      \
                    高相关    低相关
@@ -16446,14 +16446,14 @@ class MultiTaskMonitor:
 ```
 YOLOv8 多任务模型服务架构:
 
- API Gateway 
- (负载均衡 + 限流) 
+ API Gateway
+ (负载均衡 + 限流)
               ▼                ▼                ▼
- Worker 1 Worker 2 Worker N 
- (TensorRT) (TensorRT) (TensorRT) 
+ Worker 1 Worker 2 Worker N
+ (TensorRT) (TensorRT) (TensorRT)
                             ▼
- 模型缓存层 
- (Redis / 本地缓存) 
+ 模型缓存层
+ (Redis / 本地缓存)
 
 请求处理流程:
   1. API Gateway 接收请求 → 路由到空闲 Worker

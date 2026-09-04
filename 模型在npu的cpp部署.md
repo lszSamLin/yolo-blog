@@ -1013,32 +1013,32 @@ int main(int argc, char* argv[]) {
         print_usage(argv[0]);
         return -1;
     }
-    
+
     std::string model_path = argv[1];
     std::string input_path = argc > 2 ? argv[2] : "";
-    
+
     YOLODetector detector;
-    
+
     if (detector.load_model(model_path) != 0) {
         std::cout << "Failed to load model!" << std::endl;
         return -1;
     }
-    
-    bool is_image = (input_path.find(".jpg") != std::string::npos || 
+
+    bool is_image = (input_path.find(".jpg") != std::string::npos ||
                      input_path.find(".png") != std::string::npos);
-    bool is_video = (input_path.find(".mp4") != std::string::npos || 
+    bool is_video = (input_path.find(".mp4") != std::string::npos ||
                      input_path.find(".avi") != std::string::npos);
     bool is_camera = !input_path.empty() && input_path.find_first_of("0123456789") == 0;
-    
+
     if (is_image) {
         cv::Mat image = cv::imread(input_path);
         if (image.empty()) {
             std::cout << "Failed to load image: " << input_path << std::endl;
             return -1;
         }
-        
+
         auto detections = detector.detect(image);
-        
+
         for (const auto& det : detections) {
             cv::rectangle(image, cv::Rect(det.x1, det.y1, det.x2 - det.x1, det.y2 - det.y1),
                          cv::Scalar(0, 255, 0), 2);
@@ -1046,35 +1046,35 @@ int main(int argc, char* argv[]) {
             cv::putText(image, label, cv::Point(det.x1, det.y1 - 10),
                        cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         }
-        
+
         cv::imwrite("result.jpg", image);
         std::cout << "Result saved to result.jpg" << std::endl;
-        
+
     } else if (is_video || is_camera) {
         int camera_id = is_camera ? std::stoi(input_path) : -1;
         cv::VideoCapture cap;
-        
+
         if (is_video) {
             cap.open(input_path);
         } else {
             cap.open(camera_id);
         }
-        
+
         if (!cap.isOpened()) {
             std::cout << "Failed to open input!" << std::endl;
             return -1;
         }
-        
+
         std::cout << "Running inference... Press 'q' to quit" << std::endl;
-        
+
         cv::Mat frame;
         int frame_count = 0;
-        
+
         while (cap.read(frame)) {
             frame_count++;
-            
+
             auto detections = detector.detect(frame);
-            
+
             for (const auto& det : detections) {
                 cv::rectangle(frame, cv::Rect(det.x1, det.y1, det.x2 - det.x1, det.y2 - det.y1),
                              cv::Scalar(0, 255, 0), 2);
@@ -1082,38 +1082,38 @@ int main(int argc, char* argv[]) {
                 cv::putText(frame, label, cv::Point(det.x1, det.y1 - 10),
                            cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
             }
-            
+
             std::string fps_str = "FPS: " + std::to_string(1000.0 / detector.get_avg_inference_time()).substr(0, 4);
             cv::putText(frame, fps_str, cv::Point(10, 30),
                        cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
-            
+
             cv::imshow("YOLO NPU C++", frame);
-            
+
             if (cv::waitKey(1) == 'q') break;
         }
-        
+
         cap.release();
         cv::destroyAllWindows();
-        
+
         std::cout << "\nTotal frames processed: " << frame_count << std::endl;
         std::cout << "Average inference time: " << detector.get_avg_inference_time() << " ms" << std::endl;
-        
+
     } else {
         cv::Mat image = cv::imread("test_image.jpg");
         if (image.empty()) {
             std::cout << "Please provide an image path!" << std::endl;
             return -1;
         }
-        
+
         auto detections = detector.detect(image);
         std::cout << "Detected " << detections.size() << " objects:" << std::endl;
         for (const auto& det : detections) {
-            std::cout << "  " << det.class_name << ": " << det.confidence 
-                      << " at [" << det.x1 << "," << det.y1 << "," 
+            std::cout << "  " << det.class_name << ": " << det.confidence
+                      << " at [" << det.x1 << "," << det.y1 << ","
                       << det.x2 << "," << det.y2 << "]" << std::endl;
         }
     }
-    
+
     std::cout << "\nDone." << std::endl;
     return 0;
 }
@@ -3086,12 +3086,12 @@ CPU_accessible（CPU 可访问内存）
 #### 内存类型选择指南
 
 ```
- 特性 DMA_BUF PHYSICAL CPU_accessible 
- 分配速度 慢 (ms级) 中等 快 (us级) 
- CPU 访问延迟 中 快 最快 
- NPU DMA 访问 最优 优 需拷贝 
- 内存开销 中 高 (锁定) 低 
- 适用场景 零拷贝推理 高频推理 原型/调试 
+ 特性 DMA_BUF PHYSICAL CPU_accessible
+ 分配速度 慢 (ms级) 中等 快 (us级)
+ CPU 访问延迟 中 快 最快
+ NPU DMA 访问 最优 优 需拷贝
+ 内存开销 中 高 (锁定) 低
+ 适用场景 零拷贝推理 高频推理 原型/调试
 
 ```
 
@@ -3741,13 +3741,13 @@ make -j$(sysctl -n hw.ncpu)
 ### 12.3 静态链接 vs 动态链接权衡
 
 ```
- 特性 动态链接 静态链接 
- 二进制体积 小 (1-5MB) 大 (10-30MB) 
- 部署复杂度 需确保目标机有 .so 单文件即运行 
- 更新灵活性 可单独升级 .so 需重新编译 
- 启动速度 稍慢 (动态链接解析) 稍快 
- 内存占用 共享 .so 节省内存 每个进程独立拷贝 
- 适用场景 开发/测试/多应用共享 交付/嵌入式/单应用 
+ 特性 动态链接 静态链接
+ 二进制体积 小 (1-5MB) 大 (10-30MB)
+ 部署复杂度 需确保目标机有 .so 单文件即运行
+ 更新灵活性 可单独升级 .so 需重新编译
+ 启动速度 稍慢 (动态链接解析) 稍快
+ 内存占用 共享 .so 节省内存 每个进程独立拷贝
+ 适用场景 开发/测试/多应用共享 交付/嵌入式/单应用
 
 ```
 

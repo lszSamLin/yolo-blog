@@ -1731,11 +1731,11 @@ def bootstrap_significance_test(map_a, map_b, n_bootstrap=10000):
   · 绘制箱线图或误差条展示分布
 
 示例报告格式：
- 模型 mAP@0.5:0.95 mAP@0.5 
- YOLOv8s 44.9 ± 0.3% 63.2 ± 0.5% 
- YOLOv8m 53.0 ± 0.4% 70.1 ± 0.6% 
- YOLOv8l 56.0 ± 0.3% 73.5 ± 0.4% 
- YOLOv8x 56.9 ± 0.2% 74.8 ± 0.3% 
+ 模型 mAP@0.5:0.95 mAP@0.5
+ YOLOv8s 44.9 ± 0.3% 63.2 ± 0.5%
+ YOLOv8m 53.0 ± 0.4% 70.1 ± 0.6%
+ YOLOv8l 56.0 ± 0.3% 73.5 ± 0.4%
+ YOLOv8x 56.9 ± 0.2% 74.8 ± 0.3%
 
   解读：
     · YOLOv8x vs YOLOv8l: mAP差0.9%，但标准差约0.3%，
@@ -1915,13 +1915,13 @@ FPS (Frames Per Second) 是最直观的吞吐量指标：
   Batch=N: 根据显存限制选择
 
   YOLOv8s 吞吐量对比（RTX 4090, 640×640）：
- Batch 延迟(ms) 吞吐量(FPS) 显存占用(MB) 
- 1 1.6 625 350 
- 4 3.2 1250 520 
- 8 5.1 1570 680 
- 16 8.9 1798 960 
- 32 15.2 2105 1520 
- 64 26.8 2388 2640 
+ Batch 延迟(ms) 吞吐量(FPS) 显存占用(MB)
+ 1 1.6 625 350
+ 4 3.2 1250 520
+ 8 5.1 1570 680
+ 16 8.9 1798 960
+ 32 15.2 2105 1520
+ 64 26.8 2388 2640
 
   规律：
     · Batch越大，吞吐量越高（GPU利用率提升）
@@ -1968,12 +1968,12 @@ def find_optimal_batch(model, image, max_batch=64, target_latency_ms=33.3):
     · 自动驾驶：同时处理环视摄像头
 
   并发架构：
- Stream1 Stream2 Stream N 
+ Stream1 Stream2 Stream N
  ▼
- 推理引擎 
- (GPU/TPU/NPU) 
+ 推理引擎
+ (GPU/TPU/NPU)
  ▼
- 结果分发 
+ 结果分发
 
   并发度受限于：
     · GPU显存（同时处理更多batch需要更多显存）
@@ -2078,20 +2078,20 @@ def count_model_flops(model, input_size=(640, 640)):
     Params = 2 × C_out（gamma + beta，不含running stats）
 
   YOLO系列模型参数量对比：
- 模型 Params(M) 训练参数 冻结BN参数 
- YOLOv5n 1.87 1.87 0 
- YOLOv5s 7.20 7.20 0 
- YOLOv5m 21.20 21.20 0 
- YOLOv5l 46.50 46.50 0 
- YOLOv8n 3.15 3.15 0 
- YOLOv8s 11.20 11.20 0 
- YOLOv8m 43.70 43.70 0 
- YOLOv8l 86.70 86.70 0 
- YOLOv8x 68.20* 68.20 0 
- YOLO11n 2.60 2.60 0 
- YOLO11s 9.40 9.40 0 
- YOLO26n 2.40 2.40 0 
- YOLO26x 55.70 55.70 0 
+ 模型 Params(M) 训练参数 冻结BN参数
+ YOLOv5n 1.87 1.87 0
+ YOLOv5s 7.20 7.20 0
+ YOLOv5m 21.20 21.20 0
+ YOLOv5l 46.50 46.50 0
+ YOLOv8n 3.15 3.15 0
+ YOLOv8s 11.20 11.20 0
+ YOLOv8m 43.70 43.70 0
+ YOLOv8l 86.70 86.70 0
+ YOLOv8x 68.20* 68.20 0
+ YOLO11n 2.60 2.60 0
+ YOLO11s 9.40 9.40 0
+ YOLO26n 2.40 2.40 0
+ YOLO26x 55.70 55.70 0
   * YOLOv8x 参数小于 YOLOv8l，因为结构优化
 
 ```
@@ -2111,14 +2111,14 @@ MACs（Multiply-Accumulate Operations）是另一种计算复杂度度量：
     · 更直观地反映硬件计算需求
 
   YOLO模型MACs对比：
- 模型 MACs(G) TOPS需求(RTX4090≈82TOPS) 
- YOLOv5n 4.5 0.05% 算力 
- YOLOv5s 8.3 0.10% 算力 
- YOLOv5m 24.5 0.30% 算力 
- YOLOv8s 14.3 0.17% 算力 
- YOLOv8x 83.2 1.01% 算力 
- YOLO11n 3.9 0.05% 算力 
- YOLO26s 12.8 0.16% 算力 
+ 模型 MACs(G) TOPS需求(RTX4090≈82TOPS)
+ YOLOv5n 4.5 0.05% 算力
+ YOLOv5s 8.3 0.10% 算力
+ YOLOv5m 24.5 0.30% 算力
+ YOLOv8s 14.3 0.17% 算力
+ YOLOv8x 83.2 1.01% 算力
+ YOLO11n 3.9 0.05% 算力
+ YOLO26s 12.8 0.16% 算力
 
 ```
 
@@ -2137,13 +2137,13 @@ MACs（Multiply-Accumulate Operations）是另一种计算复杂度度量：
     · INT8（8位整型）: 1 Byte/param
 
   YOLO模型文件大小对比：
- 模型 FP32(MB) FP16(MB) INT8(MB) 
- YOLOv5n 7.5 3.8 1.9 
- YOLOv5s 28.7 14.4 7.2 
- YOLOv8s 42.6 21.3 10.7 
- YOLOv8x 133.9 67.0 33.5 
- YOLO11n 10.4 5.2 2.6 
- YOLO26s 43.2 21.6 10.8 
+ 模型 FP32(MB) FP16(MB) INT8(MB)
+ YOLOv5n 7.5 3.8 1.9
+ YOLOv5s 28.7 14.4 7.2
+ YOLOv8s 42.6 21.3 10.7
+ YOLOv8x 133.9 67.0 33.5
+ YOLO11n 10.4 5.2 2.6
+ YOLO26s 43.2 21.6 10.8
 
 ```
 
@@ -2155,12 +2155,12 @@ MACs（Multiply-Accumulate Operations）是另一种计算复杂度度量：
   总内存 = 模型权重 + 中间特征图 + 输入/输出缓冲区
 
   各部分占比（以YOLOv8s为例）：
- 组成部分 内存占用 占比 
- 模型权重(FP32) ~45 MB 15% 
- 中间特征图 ~150 MB 50% 
- 输入缓冲区 ~5 MB 2% 
- 输出缓冲区 ~2 MB 1% 
- 框架开销 ~80 MB 26% 
+ 组成部分 内存占用 占比
+ 模型权重(FP32) ~45 MB 15%
+ 中间特征图 ~150 MB 50%
+ 输入缓冲区 ~5 MB 2%
+ 输出缓冲区 ~2 MB 1%
+ 框架开销 ~80 MB 26%
 
   关键洞察：
     · 中间特征图占50%以上，是内存优化的主要目标
@@ -2176,12 +2176,12 @@ GPU显存占用构成：
   显存占用 = 模型权重 + 中间激活 + 优化器状态（训练时）
 
   推理时（无需优化器状态）：
- 模型 权重(MB) 激活(MB) 总显存(MB) 
- YOLOv5n 7.5 50 ~80 
- YOLOv5s 28.7 120 ~160 
- YOLOv8s 42.6 150 ~200 
- YOLOv8x 133.9 350 ~500 
- YOLO11n 10.4 55 ~80 
+ 模型 权重(MB) 激活(MB) 总显存(MB)
+ YOLOv5n 7.5 50 ~80
+ YOLOv5s 28.7 120 ~160
+ YOLOv8s 42.6 150 ~200
+ YOLOv8x 133.9 350 ~500
+ YOLO11n 10.4 55 ~80
 
   Batch=1 vs Batch=8的显存差异：
     · Batch增大主要增加激活内存
@@ -2208,12 +2208,12 @@ GPU显存占用构成：
     总传输: ~155MB × 100 = 15.5 GB/s
 
   设备对比：
- 设备 内存带宽 YOLOv8s带宽需求 
- RTX 4090 1008 GB/s 轻松满足 
- Jetson Orin NX 100 GB/s 满足 
- iPhone 15 100 GB/s 满足（ANE优化） 
- RK3588 20 GB/s 接近瓶颈 
- Raspberry Pi 3 GB/s 瓶颈严重 
+ 设备 内存带宽 YOLOv8s带宽需求
+ RTX 4090 1008 GB/s 轻松满足
+ Jetson Orin NX 100 GB/s 满足
+ iPhone 15 100 GB/s 满足（ANE优化）
+ RK3588 20 GB/s 接近瓶颈
+ Raspberry Pi 3 GB/s 瓶颈严重
 
 ```
 
@@ -2235,13 +2235,13 @@ GPU显存占用构成：
     3. 使用专用功耗测量芯片
 
   YOLO模型能效对比（RTX 4090, 640×640）：
- 模型 功耗(W) FPS 能效(FPS/W) 
- YOLOv5n 45 900 20.0 
- YOLOv5s 52 625 12.0 
- YOLOv8s 55 625 11.4 
- YOLOv8x 68 120 1.8 
- YOLO11n 42 1200 28.6 
- YOLO26n 40 1400 35.0 
+ 模型 功耗(W) FPS 能效(FPS/W)
+ YOLOv5n 45 900 20.0
+ YOLOv5s 52 625 12.0
+ YOLOv8s 55 625 11.4
+ YOLOv8x 68 120 1.8
+ YOLO11n 42 1200 28.6
+ YOLO26n 40 1400 35.0
 
   能效比（FPS/Watt）是最全面的性能指标：
     它综合考虑了速度、精度和功耗
@@ -2495,13 +2495,13 @@ profiled_inference()
 ```
 Scalene 输出示例：
 
- File Line CPU% Mem% GPU% Time 
- inference.py 45 35.2 12.5 85.3 1.2ms 
- (conv2d kernel) 46 28.1 5.2 72.1 0.9ms 
- (batch_norm) 47 2.1 3.1 1.2 0.1ms 
- (silu activation) 48 1.5 2.1 0.8 0.05ms 
- preprocess.py 23 15.2 25.3 0.5 0.5ms 
- postprocess.py 67 8.5 5.2 0.2 0.3ms 
+ File Line CPU% Mem% GPU% Time
+ inference.py 45 35.2 12.5 85.3 1.2ms
+ (conv2d kernel) 46 28.1 5.2 72.1 0.9ms
+ (batch_norm) 47 2.1 3.1 1.2 0.1ms
+ (silu activation) 48 1.5 2.1 0.8 0.05ms
+ preprocess.py 23 15.2 25.3 0.5 0.5ms
+ postprocess.py 67 8.5 5.2 0.2 0.3ms
 
 ```
 
@@ -2541,12 +2541,12 @@ PySpy 优势：
   T_total = T_preprocess + T_inference + T_postprocess + T_overhead
 
   各部分分析:
- 组成部分 典型耗时 优化手段 
- 预处理 0.5-3.0ms CUDA加速、零拷贝、SIMD 
- 模型推理 1.0-50.0ms TensorRT量化、算子融合 
- 后处理 0.1-2.0ms GPU NMS、向量化NMS 
- 框架开销 0.1-1.0ms ONNX Runtime优化、Caching 
- 数据传输 0.1-5.0ms DMA优化、异步传输 
+ 组成部分 典型耗时 优化手段
+ 预处理 0.5-3.0ms CUDA加速、零拷贝、SIMD
+ 模型推理 1.0-50.0ms TensorRT量化、算子融合
+ 后处理 0.1-2.0ms GPU NMS、向量化NMS
+ 框架开销 0.1-1.0ms ONNX Runtime优化、Caching
+ 数据传输 0.1-5.0ms DMA优化、异步传输
 
   瓶颈分析方法:
     1. 使用时间戳测量各阶段耗时
@@ -2637,11 +2637,11 @@ def decompose_latency(model, image, device='cuda'):
 领域迁移（Domain Shift）测试：评估模型在分布外数据上的性能。
 
   测试场景：
- 训练域 → 测试域 
- COCO → 自定义工业数据集 
- 白天图像 → 夜晚/雨雪图像 
- 高分辨率图像 → 低分辨率监控图像 
- 自然场景 → 医学影像/遥感图像 
+ 训练域 → 测试域
+ COCO → 自定义工业数据集
+ 白天图像 → 夜晚/雨雪图像
+ 高分辨率图像 → 低分辨率监控图像
+ 自然场景 → 医学影像/遥感图像
 
   评估方法：
     1. 在目标域上重新标注或已有标注的测试集上评估
@@ -2649,10 +2649,10 @@ def decompose_latency(model, image, device='cuda'):
     3. 分析哪些类别下降最多（薄弱环节）
 
   典型迁移测试结果：
- 模型 COCO(val) 工业检测 下降幅度 
- YOLOv8s 44.9% 31.2% -13.7% 
- YOLOv8x 56.9% 45.8% -11.1% 
- YOLO11s 46.7% 38.5% -8.2% 
+ 模型 COCO(val) 工业检测 下降幅度
+ YOLOv8s 44.9% 31.2% -13.7%
+ YOLOv8x 56.9% 45.8% -11.1%
+ YOLO11s 46.7% 38.5% -8.2%
 
   分析：
     · 大模型（YOLOv8x）迁移性能更好（-11.1% vs -13.7%）
@@ -2671,10 +2671,10 @@ def decompose_latency(model, image, device='cuda'):
     3. 分别报告各组的平均AP
 
   结果格式：
- 类别分组 类别数 平均AP 占比 
- 头部 20 62.3% 40% 
- 中部 30 45.8% 37.5% 
- 尾部 30 18.2% 22.5% 
+ 类别分组 类别数 平均AP 占比
+ 头部 20 62.3% 40%
+ 中部 30 45.8% 37.5%
+ 尾部 30 18.2% 22.5%
 
   问题识别：
     · 尾部类别AP远低于头部 → 存在严重的长尾问题
@@ -2705,13 +2705,13 @@ def decompose_latency(model, image, device='cuda'):
        · 模拟不同光照条件
 
   测试结果报告：
- 条件 AP@0.5 AP@0.5:0.95 下降幅度 
- 原始（基准） 63.2% 44.9% — 
- +高斯噪声(σ=10) 58.1% 39.2% -5.7% 
- +运动模糊(σ=3) 52.3% 34.1% -10.8% 
- +遮挡(30%) 48.7% 30.5% -14.4% 
- +过曝光 55.2% 36.8% -8.1% 
- +欠曝光 51.8% 33.2% -11.7% 
+ 条件 AP@0.5 AP@0.5:0.95 下降幅度
+ 原始（基准） 63.2% 44.9% —
+ +高斯噪声(σ=10) 58.1% 39.2% -5.7%
+ +运动模糊(σ=3) 52.3% 34.1% -10.8%
+ +遮挡(30%) 48.7% 30.5% -14.4%
+ +过曝光 55.2% 36.8% -8.1%
+ +欠曝光 51.8% 33.2% -11.7%
 
 ```
 
@@ -2721,10 +2721,10 @@ def decompose_latency(model, image, device='cuda'):
 消融实验（Ablation Study）是验证模型各组件贡献的标准方法。
 
   设计原则：
- 1. 单变量控制：每次只改变一个组件 
- 2. 基准模型：使用相同的训练条件和超参数 
- 3. 对比指标：使用相同的评估协议 
- 4. 多次运行：每个实验运行3次取平均 
+ 1. 单变量控制：每次只改变一个组件
+ 2. 基准模型：使用相同的训练条件和超参数
+ 3. 对比指标：使用相同的评估协议
+ 4. 多次运行：每个实验运行3次取平均
 
 ```
 
@@ -2770,11 +2770,11 @@ def decompose_latency(model, image, device='cuda'):
     4. 训练轮数（Epochs）
 
   结果格式（学习率敏感性）：
- 学习率 mAP@0.5:0.95 收敛轮数 最终损失 
- 1e-5 43.8% 280 0.032 
- 3e-5 44.9% 250 0.028 
+ 学习率 mAP@0.5:0.95 收敛轮数 最终损失
+ 1e-5 43.8% 280 0.032
+ 3e-5 44.9% 250 0.028
  1e-4 45.2% 220 0.025 ← 最优
- 3e-4 44.1% 300 0.031 
+ 3e-4 44.1% 300 0.031
  1e-3 38.2% 400 0.058 ← 不收敛
 
   结论：
@@ -2839,25 +2839,25 @@ def decompose_latency(model, image, device='cuda'):
 实验复现是科学研究的基本要求，也是工程实践的可靠保障。
 
   复现性控制清单：
- [ ] 随机种子固定 
- seed = 42 
- torch.manual_seed(seed) 
- torch.cuda.manual_seed_all(seed) 
- np.random.seed(seed) 
- [ ] 数据版本控制 
- 记录数据集版本、标注版本 
- 使用dvc或类似工具管理数据 
- [ ] 环境版本控制 
- Python == 3.10.12 
- PyTorch == 2.1.0+cu121 
- CUDA == 12.1 
- 使用requirements.txt或conda env export 
- [ ] 完整实验记录 
- 记录所有超参数、配置、命令 
- 使用MLflow/W&B自动记录 
- [ ] 模型权重存档 
- 保存每个实验的最终权重 
- 便于后续验证和部署 
+ [ ] 随机种子固定
+ seed = 42
+ torch.manual_seed(seed)
+ torch.cuda.manual_seed_all(seed)
+ np.random.seed(seed)
+ [ ] 数据版本控制
+ 记录数据集版本、标注版本
+ 使用dvc或类似工具管理数据
+ [ ] 环境版本控制
+ Python == 3.10.12
+ PyTorch == 2.1.0+cu121
+ CUDA == 12.1
+ 使用requirements.txt或conda env export
+ [ ] 完整实验记录
+ 记录所有超参数、配置、命令
+ 使用MLflow/W&B自动记录
+ [ ] 模型权重存档
+ 保存每个实验的最终权重
+ 便于后续验证和部署
 
 ```
 
@@ -2869,12 +2869,12 @@ def decompose_latency(model, image, device='cuda'):
 RCT 在模型评估中的应用：
 
   试验设计要素:
- 要素 说明 
- 随机化 测试样本随机分配 
- 对照组 基线模型作为对照 
- 双盲 评估者和被评估者都不知道模型身份 
- 样本量 基于统计功效计算 
- 混杂控制 固定硬件、软件、数据集 
+ 要素 说明
+ 随机化 测试样本随机分配
+ 对照组 基线模型作为对照
+ 双盲 评估者和被评估者都不知道模型身份
+ 样本量 基于统计功效计算
+ 混杂控制 固定硬件、软件、数据集
 
   适用场景:
     · 模型 A/B 测试
@@ -3236,21 +3236,21 @@ torch.profiler 是 PyTorch 官方性能分析工具，可以深入分析模型
 的每个算子的执行时间和内存占用。
 
   基本用法：
- import torch.profiler as profiler 
- with profiler.profile( 
- activities=[ 
- profiler.ProfilerActivity.CPU, 
- profiler.ProfilerActivity.CUDA, 
- ], 
- record_shapes=True, 
- profile_memory=True, 
- with_stack=True, 
- ) as prof: 
- model(input) 
- # 生成HTML报告 
- prof.export_html("profile.html") 
- # 生成Chrome Trace格式 
- prof.export_chrome_trace("trace.json") 
+ import torch.profiler as profiler
+ with profiler.profile(
+ activities=[
+ profiler.ProfilerActivity.CPU,
+ profiler.ProfilerActivity.CUDA,
+ ],
+ record_shapes=True,
+ profile_memory=True,
+ with_stack=True,
+ ) as prof:
+ model(input)
+ # 生成HTML报告
+ prof.export_html("profile.html")
+ # 生成Chrome Trace格式
+ prof.export_chrome_trace("trace.json")
 
 ```
 
@@ -3259,17 +3259,17 @@ torch.profiler 是 PyTorch 官方性能分析工具，可以深入分析模型
 
   按时间排序的前10个算子（YOLOv8s forward）：
 
- 排名 算子 时间(ms) 占比 累计占比 
- 1 aten::convolution 0.85 53.1% 53.1% 
- 2 aten::batch_norm 0.12 7.5% 60.6% 
- 3 aten::silu_ 0.08 5.0% 65.6% 
- 4 aten::concat 0.07 4.4% 70.0% 
- 5 aten::upsample_nearest2d 0.06 3.8% 73.8% 
- 6 aten::max_pool2d 0.05 3.1% 76.9% 
- 7 aten::sigmoid 0.04 2.5% 79.4% 
- 8 aten::reshape 0.03 1.9% 81.3% 
- 9 aten::softmax 0.03 1.9% 83.2% 
- 10 aten::cat 0.02 1.3% 84.5% 
+ 排名 算子 时间(ms) 占比 累计占比
+ 1 aten::convolution 0.85 53.1% 53.1%
+ 2 aten::batch_norm 0.12 7.5% 60.6%
+ 3 aten::silu_ 0.08 5.0% 65.6%
+ 4 aten::concat 0.07 4.4% 70.0%
+ 5 aten::upsample_nearest2d 0.06 3.8% 73.8%
+ 6 aten::max_pool2d 0.05 3.1% 76.9%
+ 7 aten::sigmoid 0.04 2.5% 79.4%
+ 8 aten::reshape 0.03 1.9% 81.3%
+ 9 aten::softmax 0.03 1.9% 83.2%
+ 10 aten::cat 0.02 1.3% 84.5%
 
   结论：
     · 卷积运算占53%的时间，是最大热点
@@ -3319,20 +3319,20 @@ prof.export_html("yolov8s_profile.html")
 TensorBoard 是机器学习可视化的标准工具，支持多种分析维度。
 
   训练过程中的TensorBoard记录：
- torch.utils.tensorboard.SummaryWriter 
- writer = SummaryWriter('runs/experiment_001') 
- # 标量指标 
- writer.add_scalar('loss/box', box_loss, epoch) 
- writer.add_scalar('loss/obj', obj_loss, epoch) 
- writer.add_scalar('metrics/mAP', map50, epoch) 
- # 直方图（权重/梯度分布） 
- writer.add_histogram('weights/layers.0.conv.weight', 
- model.layers[0].conv.weight, epoch) 
- # 模型图 
- writer.add_graph(model, img) 
- # 图片（预测可视化） 
- writer.add_image('predictions/val_batch', 
- prediction_image, epoch) 
+ torch.utils.tensorboard.SummaryWriter
+ writer = SummaryWriter('runs/experiment_001')
+ # 标量指标
+ writer.add_scalar('loss/box', box_loss, epoch)
+ writer.add_scalar('loss/obj', obj_loss, epoch)
+ writer.add_scalar('metrics/mAP', map50, epoch)
+ # 直方图（权重/梯度分布）
+ writer.add_histogram('weights/layers.0.conv.weight',
+ model.layers[0].conv.weight, epoch)
+ # 模型图
+ writer.add_graph(model, img)
+ # 图片（预测可视化）
+ writer.add_image('predictions/val_batch',
+ prediction_image, epoch)
 
   启动 TensorBoard：
     tensorboard --logdir=runs --port=6006
@@ -3350,11 +3350,11 @@ TensorBoard 是机器学习可视化的标准工具，支持多种分析维度�
     4. 验证曲线不应与训练曲线差距过大
 
   异常信号：
- 现象 原因 对策 
- Loss不下降 学习率过大 降低LR 
- Loss震荡 学习率过大/BN问题 降低LR 
+ 现象 原因 对策
+ Loss不下降 学习率过大 降低LR
+ Loss震荡 学习率过大/BN问题 降低LR
  mAP停滞不升 过拟合/数据问题 数据增强
- 训练Loss低验证Loss高 过拟合 正则化 
+ 训练Loss低验证Loss高 过拟合 正则化
  训练/验证都低 欠拟合 增大模型
 
 ```
@@ -3371,18 +3371,18 @@ Weights & Biases（W&B）是云原生的实验追踪工具，支持实时可视�
   4. 团队协作：多人共享实验结果，在线协作分析
 
   快速上手：
- import wandb 
- wandb.init(project="yolo-evaluation", 
- entity="your-team") 
- # 记录超参数 
- wandb.config.update({ 
- 'model': 'yolov8s', 
- 'lr': 0.001, 
- 'epochs': 100, 
- 'imgsz': 640, 
- }) 
- # 训练后记录指标 
- wandb.log({'mAP50': results['metrics/mAP50'], 
+ import wandb
+ wandb.init(project="yolo-evaluation",
+ entity="your-team")
+ # 记录超参数
+ wandb.config.update({
+ 'model': 'yolov8s',
+ 'lr': 0.001,
+ 'epochs': 100,
+ 'imgsz': 640,
+ })
+ # 训练后记录指标
+ wandb.log({'mAP50': results['metrics/mAP50'],
  'mAP50-95': results['metrics/mAP50-95']})
 
 ```
@@ -3393,13 +3393,13 @@ W&B 超参数关联分析：
   通过扫描不同超参数组合，可以自动发现最优配置：
 
   示例：学习率和batch size的网格搜索
- run lr batch mAP@0.5:0.95 收敛速度 
- run_001 1e-5 16 42.1% 慢（300ep） 
- run_002 1e-4 16 44.9% 中（250ep） 
- run_003 3e-4 16 43.5% 快（180ep） 
- run_004 1e-5 32 41.8% 慢（320ep） 
+ run lr batch mAP@0.5:0.95 收敛速度
+ run_001 1e-5 16 42.1% 慢（300ep）
+ run_002 1e-4 16 44.9% 中（250ep）
+ run_003 3e-4 16 43.5% 快（180ep）
+ run_004 1e-5 32 41.8% 慢（320ep）
  run_005 1e-4 32 45.2% 中（240ep） ← 最优
- run_006 3e-4 32 43.1% 快（200ep） 
+ run_006 3e-4 32 43.1% 快（200ep）
 
   结论：
     · lr=1e-4 + batch=32 是最优组合
@@ -3420,14 +3420,14 @@ MLflow 是企业级实验管理平台，适合团队协作和模型生命周期�
   4. Project：实验可复现性
 
   基本用法：
- import mlflow 
- with mlflow.start_run(): 
- mlflow.set_tag("model", "yolov8s") 
- mlflow.log_param("lr", 0.001) 
- mlflow.log_param("epochs", 100) 
- mlflow.log_metric("mAP50", 63.2) 
- mlflow.log_metric("mAP50-95", 44.9) 
- mlflow.log_artifact("runs/exp/model.pt") 
+ import mlflow
+ with mlflow.start_run():
+ mlflow.set_tag("model", "yolov8s")
+ mlflow.log_param("lr", 0.001)
+ mlflow.log_param("epochs", 100)
+ mlflow.log_metric("mAP50", 63.2)
+ mlflow.log_metric("mAP50-95", 44.9)
+ mlflow.log_artifact("runs/exp/model.pt")
 
   MLflow UI：
     mlflow ui  →  http://localhost:5000
@@ -3440,31 +3440,31 @@ MLflow 是企业级实验管理平台，适合团队协作和模型生命周期�
 ONNX Runtime 提供详细的推理性能分析，适合部署前的性能摸底。
 
   ONNX Analytic 功能：
- 1. 计算图分析 
- · 节点数量、类型统计 
- · 图优化建议 
- 2. 算子统计 
- · 各算子的执行时间 
- · 算子融合机会识别 
- 3. 内存分析 
- · 内存分配/释放模式 
- · 内存峰值 
- 4. 优化建议 
- · 算子融合建议 
- · 内存优化建议 
+ 1. 计算图分析
+ · 节点数量、类型统计
+ · 图优化建议
+ 2. 算子统计
+ · 各算子的执行时间
+ · 算子融合机会识别
+ 3. 内存分析
+ · 内存分配/释放模式
+ · 内存峰值
+ 4. 优化建议
+ · 算子融合建议
+ · 内存优化建议
 
   ONNX Runtime Profiling 代码：
- import onnxruntime as ort 
- # 启用性能分析 
- sess_options = ort.SessionOptions() 
- sess_options.enable_profiling = True 
- sess_options.profile_output_dir = "./profile" 
- session = ort.InferenceSession("yolov8s.onnx", 
- sess_options) 
- # 运行推理 
- result = session.run(None, {"input": input_data}) 
- # 生成profile报告 
- # 文件保存在 ./profile/ 目录 
+ import onnxruntime as ort
+ # 启用性能分析
+ sess_options = ort.SessionOptions()
+ sess_options.enable_profiling = True
+ sess_options.profile_output_dir = "./profile"
+ session = ort.InferenceSession("yolov8s.onnx",
+ sess_options)
+ # 运行推理
+ result = session.run(None, {"input": input_data})
+ # 生成profile报告
+ # 文件保存在 ./profile/ 目录
 
 ```
 
@@ -3708,19 +3708,19 @@ def plot_pareto_frontier(models):
     将FP32权重和激活值转换为更低精度表示
 
     精度-压缩关系：
- 精度格式 压缩比 内存占用 典型精度损失 
- FP32 1x 100% 0% 
- FP16 2x 50% ~0.1% 
- INT8 4x 25% ~0.5-2% 
- INT4 8x 12.5% ~2-5% 
- INT2 16x 6.25% ~5-15% 
+ 精度格式 压缩比 内存占用 典型精度损失
+ FP32 1x 100% 0%
+ FP16 2x 50% ~0.1%
+ INT8 4x 25% ~0.5-2%
+ INT4 8x 12.5% ~2-5%
+ INT2 16x 6.25% ~5-15%
 
     YOLOv8s 量化结果：
- 格式 mAP@0.5:0.95 速度(×) 模型大小(MB) 
- FP32 44.9% 1.0x 42.6 
- FP16 44.8% 1.3x 21.3 
- INT8 44.1% 2.1x 10.7 
- INT4 41.2% 3.5x 5.4 
+ 格式 mAP@0.5:0.95 速度(×) 模型大小(MB)
+ FP32 44.9% 1.0x 42.6
+ FP16 44.8% 1.3x 21.3
+ INT8 44.1% 2.1x 10.7
+ INT4 41.2% 3.5x 5.4
 
 ```
 
@@ -3729,12 +3729,12 @@ def plot_pareto_frontier(models):
   移除不重要的权重或通道
 
   稀疏度-精度关系：
- 稀疏度 mAP@0.5:0.95 模型大小(MB) 推理加速 
- 0% 44.9% 42.6 1.0x 
- 30% 44.2% 29.8 1.3x 
- 50% 42.8% 21.3 1.8x 
- 70% 39.5% 12.8 2.8x 
- 90% 30.1% 4.3 5.5x 
+ 稀疏度 mAP@0.5:0.95 模型大小(MB) 推理加速
+ 0% 44.9% 42.6 1.0x
+ 30% 44.2% 29.8 1.3x
+ 50% 42.8% 21.3 1.8x
+ 70% 39.5% 12.8 2.8x
+ 90% 30.1% 4.3 5.5x
 
   关键洞察：
     · 30%稀疏度几乎无精度损失，推荐首选
@@ -3748,11 +3748,11 @@ def plot_pareto_frontier(models):
   用小模型学习大模型的输出分布
 
   蒸馏对精度的影响：
- 方法 mAP@0.5:0.95 速度(×) 
- 小模型独立训练 40.2% 1.0x 
- 知识蒸馏 42.5% 1.0x 
- 自蒸馏 43.1% 1.0x 
- 大模型(教师) 56.9% 0.3x 
+ 方法 mAP@0.5:0.95 速度(×)
+ 小模型独立训练 40.2% 1.0x
+ 知识蒸馏 42.5% 1.0x
+ 自蒸馏 43.1% 1.0x
+ 大模型(教师) 56.9% 0.3x
 
   蒸馏收益：+2.3% mAP（相对于独立训练）
   代价：训练时间增加约30%（需要大模型提供soft label）
@@ -3765,15 +3765,15 @@ def plot_pareto_frontier(models):
 输入尺寸对YOLO模型的影响非常显著：
 
   mAP-输入尺寸关系（YOLOv8s, COCO val）：
- 输入尺寸 mAP@0.5:0.95 mAP@0.5 延迟(ms) FPS 
- 320×320 30.1% 45.2% 0.8 1250 
- 416×416 35.8% 52.1% 1.1 909 
- 512×512 39.2% 57.3% 1.4 714 
+ 输入尺寸 mAP@0.5:0.95 mAP@0.5 延迟(ms) FPS
+ 320×320 30.1% 45.2% 0.8 1250
+ 416×416 35.8% 52.1% 1.1 909
+ 512×512 39.2% 57.3% 1.4 714
  640×640 44.9% 63.2% 1.6 625 ← 标准
- 768×768 47.8% 66.5% 2.2 455 
- 896×896 50.1% 69.2% 3.0 333 
- 1024×1024 51.5% 70.8% 4.1 244 
- 1280×1280 53.2% 72.5% 6.5 154 
+ 768×768 47.8% 66.5% 2.2 455
+ 896×896 50.1% 69.2% 3.0 333
+ 1024×1024 51.5% 70.8% 4.1 244
+ 1280×1280 53.2% 72.5% 6.5 154
 
   关键发现：
     · 320→640：mAP提升14.8%，延迟增加2倍（高收益区）
@@ -3929,22 +3929,22 @@ def nsga2_optimization(pop_size=100, n_gen=50):
 AutoML for YOLO 搜索空间：
 
   超参数搜索空间:
- 超参数 搜索范围 分布类型 
- 学习率 [1e-5, 1e-2] LogUniform 
- 权重衰减 [1e-6, 1e-3] LogUniform 
- 数据增强强度 [0.0, 1.0] Uniform 
- Mosaic 概率 [0.0, 1.0] Uniform 
- MixUp 概率 [0.0, 0.5] Uniform 
- 输入尺寸 [320, 1280] Discrete 
- 训练轮数 [50, 300] Discrete 
- 批量大小 [8, 64] Discrete 
+ 超参数 搜索范围 分布类型
+ 学习率 [1e-5, 1e-2] LogUniform
+ 权重衰减 [1e-6, 1e-3] LogUniform
+ 数据增强强度 [0.0, 1.0] Uniform
+ Mosaic 概率 [0.0, 1.0] Uniform
+ MixUp 概率 [0.0, 0.5] Uniform
+ 输入尺寸 [320, 1280] Discrete
+ 训练轮数 [50, 300] Discrete
+ 批量大小 [8, 64] Discrete
 
   架构搜索空间:
- 架构参数 搜索范围 说明 
- 通道数 [32, 128]×[2,4,6] Backbone 通道 
- 深度 [1, 6] 每层重复次数 
- 注意力机制 [None, SE, CBAM] 注意力模块 
- 激活函数 [SiLU, ReLU, GELU] 激活函数选择 
+ 架构参数 搜索范围 说明
+ 通道数 [32, 128]×[2,4,6] Backbone 通道
+ 深度 [1, 6] 每层重复次数
+ 注意力机制 [None, SE, CBAM] 注意力模块
+ 激活函数 [SiLU, ReLU, GELU] 激活函数选择
 
 ```
 
@@ -4166,12 +4166,12 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
 工业场景的评估重点与学术研究不同：
 
   核心指标优先级：
- 优先级 指标 原因 
- 1 误报率(False Positive Rate) 误报导致停机成本高 
+ 优先级 指标 原因
+ 1 误报率(False Positive Rate) 误报导致停机成本高
  2 漏检率(False Negative Rate) 漏检导致产品质量问题
- 3 检测速度 需满足产线节拍 
- 4 长期稳定性 7×24小时连续运行 
- 5 mAP@0.5:0.95 学术研究指标，参考 
+ 3 检测速度 需满足产线节拍
+ 4 长期稳定性 7×24小时连续运行
+ 5 mAP@0.5:0.95 学术研究指标，参考
 
 ```
 
@@ -4179,20 +4179,20 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
 误报/漏检成本分析：
 
   案例分析：PCB板缺陷检测
- 场景：线上有1000块PCB/小时 
- 缺陷类型：焊点缺失、短路、元件错位 
- 成本估算： 
- · 误报（正常板被判为缺陷）: 
- → 人工复检成本: 5元/次 
- → 生产线节拍损失: 200元/分钟 
- · 漏检（缺陷板流出）: 
- → 客户端投诉: 5000元/次 
- → 品牌损失: 无法量化 
- → 召回成本: 10000元/批次 
- 目标设定： 
- · 误报率 < 1%（每小时<10次误报） 
- · 漏检率 < 0.1%（每小时<1块缺陷流出） 
- · 检测速度 < 200ms/块（满足产线节拍） 
+ 场景：线上有1000块PCB/小时
+ 缺陷类型：焊点缺失、短路、元件错位
+ 成本估算：
+ · 误报（正常板被判为缺陷）:
+ → 人工复检成本: 5元/次
+ → 生产线节拍损失: 200元/分钟
+ · 漏检（缺陷板流出）:
+ → 客户端投诉: 5000元/次
+ → 品牌损失: 无法量化
+ → 召回成本: 10000元/批次
+ 目标设定：
+ · 误报率 < 1%（每小时<10次误报）
+ · 漏检率 < 0.1%（每小时<1块缺陷流出）
+ · 检测速度 < 200ms/块（满足产线节拍）
 
 ```
 
@@ -4213,12 +4213,12 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
      · 验证设备适应性
 
   监控指标：
- 指标 正常范围 告警阈值 
- 延迟(P99) < 200ms > 300ms 
- mAP 波动 < 1% 下降 > 3% 
- GPU温度 < 75°C > 85°C 
- 显存使用 < 70% > 85% 
- 错误日志/小时 0 > 5 
+ 指标 正常范围 告警阈值
+ 延迟(P99) < 200ms > 300ms
+ mAP 波动 < 1% 下降 > 3%
+ GPU温度 < 75°C > 85°C
+ 显存使用 < 70% > 85%
+ 错误日志/小时 0 > 5
 
 ```
 
@@ -4228,20 +4228,20 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
 自动驾驶场景对评估有特殊要求：
 
   安全关键指标：
- 指标 定义 目标值 
- Recall@0.5 行人检测召回率 > 99.5% 
- FP/hour 每小时假阳性数量 < 10 
- TTC误差 碰撞时间估计误差 < 0.5s 
- 紧急制动漏检率 应制动但未制动的比例 < 0.01% 
+ 指标 定义 目标值
+ Recall@0.5 行人检测召回率 > 99.5%
+ FP/hour 每小时假阳性数量 < 10
+ TTC误差 碰撞时间估计误差 < 0.5s
+ 紧急制动漏检率 应制动但未制动的比例 < 0.01%
 
   极端场景测试：
- 场景 测试重点 
- 夜间低光照 行人/车辆的检测率 
- 暴雨/大雾 远距离物体的检测能力 
- 强逆光 传感器饱和时的检测稳定性 
- 密集人群 遮挡情况下的多目标检测 
- 突发障碍物 检测延迟和响应速度 
- 小动物(猫/狗) 小目标的召回率 
+ 场景 测试重点
+ 夜间低光照 行人/车辆的检测率
+ 暴雨/大雾 远距离物体的检测能力
+ 强逆光 传感器饱和时的检测稳定性
+ 密集人群 遮挡情况下的多目标检测
+ 突发障碍物 检测延迟和响应速度
+ 小动物(猫/狗) 小目标的召回率
 
 ```
 
@@ -4254,10 +4254,10 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
   · 统计各场景的recall和precision
 
   测试集分层：
- 层级 场景类型 样本占比 目标recall 
- 标准层 正常白天/夜晚 70% > 99% 
- 挑战层 雨雾/逆光/遮挡 20% > 95% 
- 极端层 事故场景/罕见物体 10% > 90% 
+ 层级 场景类型 样本占比 目标recall
+ 标准层 正常白天/夜晚 70% > 99%
+ 挑战层 雨雾/逆光/遮挡 20% > 95%
+ 极端层 事故场景/罕见物体 10% > 90%
 
 ```
 
@@ -4271,12 +4271,12 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
   · Recall 优先于 Precision
 
   评估指标优先级：
- 优先级 指标 说明 
- 1 Sensitivity(Recall) 漏诊率必须极低 
- 2 NPV(Negative Predictive Value) 阴性预测值 
- 3 Specificity 特异度，控制误诊率 
- 4 PPV(Precision) 阳性预测值 
- 5 mAP 综合性能参考 
+ 优先级 指标 说明
+ 1 Sensitivity(Recall) 漏诊率必须极低
+ 2 NPV(Negative Predictive Value) 阴性预测值
+ 3 Specificity 特异度，控制误诊率
+ 4 PPV(Precision) 阳性预测值
+ 5 mAP 综合性能参考
 
 ```
 
@@ -4290,19 +4290,19 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
   3. 结合临床先验知识过滤
 
   临床验证流程：
- 阶段1: 回顾性研究 
- · 使用历史病例数据验证 
- · 主要指标: Sensitivity, Specificity 
- 阶段2: 前瞻性验证 
- · 在模拟临床环境中测试 
- · 评估医生与AI协作效率 
- 阶段3: 临床试验 
- · 随机对照试验(RCT) 
- · 主要终点: 诊断准确率提升 
- · 次要终点: 诊断时间缩短、医生满意度 
- 阶段4: 上市后监测 
- · 真实世界性能监测 
- · 不良事件报告 
+ 阶段1: 回顾性研究
+ · 使用历史病例数据验证
+ · 主要指标: Sensitivity, Specificity
+ 阶段2: 前瞻性验证
+ · 在模拟临床环境中测试
+ · 评估医生与AI协作效率
+ 阶段3: 临床试验
+ · 随机对照试验(RCT)
+ · 主要终点: 诊断准确率提升
+ · 次要终点: 诊断时间缩短、医生满意度
+ 阶段4: 上市后监测
+ · 真实世界性能监测
+ · 不良事件报告
 
 ```
 
@@ -4312,11 +4312,11 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
 消费级应用（手机、平板、智能家居）的评估重点：
 
   1. 用户体验评估
- 指标 目标值 测量方法 
- 首帧延迟 < 200ms 实际体验测试 
- 检测延迟 < 100ms 传感器计时 
- 电池消耗(每小时) < 5% 功耗计测量 
- 设备升温(摄氏度) < 5°C 红外测温 
+ 指标 目标值 测量方法
+ 首帧延迟 < 200ms 实际体验测试
+ 检测延迟 < 100ms 传感器计时
+ 电池消耗(每小时) < 5% 功耗计测量
+ 设备升温(摄氏度) < 5°C 红外测温
 
   2. 设备兼容性测试
   · 测试多种设备型号（不同GPU/NPU组合）
@@ -4324,11 +4324,11 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
   · 测试不同分辨率和屏幕密度
 
   3. 成本评估
- 成本项 影响因素 
- 模型部署成本 模型大小、量化精度 
- 推理成本 算力需求、功耗 
- 维护成本 模型更新频率、OTA包大小 
- 用户换机成本 最低设备要求 
+ 成本项 影响因素
+ 模型部署成本 模型大小、量化精度
+ 推理成本 算力需求、功耗
+ 维护成本 模型更新频率、OTA包大小
+ 用户换机成本 最低设备要求
 
 ```
 
@@ -4367,11 +4367,11 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
 常见误区：只用一个指标（如mAP）来评估模型
 
   单一指标的盲区：
- 只看mAP，可能忽略的问题： 
- · 小目标性能差（mAP_s可能很低） 
- · 延迟太高无法实时（mAP高但FPS低） 
- · 某类别严重缺失（mAP高但某个类别AP=0） 
- · 分布外泛化差（COCO mAP高但实际场景低） 
+ 只看mAP，可能忽略的问题：
+ · 小目标性能差（mAP_s可能很低）
+ · 延迟太高无法实时（mAP高但FPS低）
+ · 某类别严重缺失（mAP高但某个类别AP=0）
+ · 分布外泛化差（COCO mAP高但实际场景低）
 
   正确的做法：
     · 同时报告 mAP、mAP50、mAP_s/mAP_m/mAP_l
@@ -4484,11 +4484,11 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
     · 各种异常输入（模糊、遮挡、极端光照）
 
   差距量化示例：
- 指标 实验室 生产环境 差距 
- mAP@0.5:0.95 44.9% 31.2% -13.7% 
- 延迟(ms) 1.6 8.5 ×5.3 
- 稳定性 无 偶发卡顿 需监控 
- 并发能力 无 需16流 需架构调整 
+ 指标 实验室 生产环境 差距
+ mAP@0.5:0.95 44.9% 31.2% -13.7%
+ 延迟(ms) 1.6 8.5 ×5.3
+ 稳定性 无 偶发卡顿 需监控
+ 并发能力 无 需16流 需架构调整
 
 ```
 
@@ -4523,13 +4523,13 @@ for i, (mAP, latency) in enumerate(pareto_front[:10]):
 ```
 YOLO模型评估体系全景图：
 
- 评估目标 
- ▼ ▼ ▼ ▼ 
- 精度评估 速度评估 效率评估 鲁棒性 
- mAP系列 延迟(ms) FLOPs 噪声 
- AP系列 FPS 参数量 模糊 
- PR曲线 吞吐量 内存占用 遮挡 
- F1 Score 功耗 带宽需求 对抗 
+ 评估目标
+ ▼ ▼ ▼ ▼
+ 精度评估 速度评估 效率评估 鲁棒性
+ mAP系列 延迟(ms) FLOPs 噪声
+ AP系列 FPS 参数量 模糊
+ PR曲线 吞吐量 内存占用 遮挡
+ F1 Score 功耗 带宽需求 对抗
 
   关键原则：
     1. 多维度评估：单一指标不足以反映模型全貌
