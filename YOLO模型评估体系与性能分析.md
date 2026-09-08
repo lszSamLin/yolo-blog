@@ -10,7 +10,6 @@
 
 > **参考来源**：[COCO Evaluation API](https://github.com/cocodataset/cocoapi) | [Ultralytics Performance Metrics](https://docs.ultralytics.com/guides/yolo-performance-metrics/) | [HOTA Metric Paper](https://arxiv.org/abs/2009.07736)
 
-
 ## 一、精度评估指标详解
 
 ### 1.1 基础指标
@@ -19,46 +18,37 @@
 
 目标检测的评估基础是混淆矩阵（Confusion Matrix）。与分类任务不同，检测任务中每个预测结果需要同时满足两个条件：类别正确，且位置足够准确。位置准确度通过 IoU（Intersection over Union）阈值来判断。
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    目标检测结果分类框架                           │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  预测为阳性 (Predicted Positive)           预测为阴性             │
-│  ┌──────────────────┬──────────────────┐    (Predicted Negative)  │
-│  │                  │                  │                          │
-│  │  TP (True        │  FP (False       │                            │
-│  │   Positive)      │   Positive)      │                            │
-│  │                  │                  │                            │
-│  │  正确检测到的目标   │  误报/假阳性      │                            │
-│  │  · 类别正确        │  · 背景被误判为   │                            │
-│  │  · IoU > 阈值      │    目标           │                            │
-│  │  · 类别正确        │  · 同一目标多次   │                            │
-│  │  · 同一目标只计    │    检测（未做NMS）│                            │
-│  │    一次           │                  │                            │
-│  └──────────────────┴──────────────────┘                            │
-│                                                                  │
-│  真实标签为阳性 (Actual Positive)      真实标签为阴性              │
-│  ┌──────────────────┬──────────────────┐    (Actual Negative)     │
-│  │                  │                  │                          │
-│  │  FN (False       │  TN (True        │                            │
-│  │   Negative)      │   Negative)      │                            │
-│  │                  │                  │                            │
-│  │  漏报/假阴性       │  正确判定为背景    │                            │
-│  │  · 目标存在但未    │  · 检测中不涉及   │                            │
-│  │    被检测到        │    此概念         │                            │
-│  │  · 类别预测错误    │                  │                            │
-│  │  · IoU < 阈值      │                  │                            │
-│  └──────────────────┴──────────────────┘                            │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
+目标检测结果分类框架
+
+预测为阳性 (Predicted Positive)  预测为阴性
+(Predicted Negative)
+
+TP (True  FP (False
+Positive)  Positive)
+
+正确检测到的目标  误报/假阳性
+· 类别正确  · 背景被误判为
+· IoU > 阈值  目标
+· 类别正确  · 同一目标多次
+· 同一目标只计  检测（未做NMS）
+一次
+
+真实标签为阳性 (Actual Positive)  真实标签为阴性
+(Actual Negative)
+
+FN (False  TN (True
+Negative)  Negative)
+
+漏报/假阴性  正确判定为背景
+· 目标存在但未  · 检测中不涉及
+被检测到  此概念
+· 类别预测错误
+· IoU < 阈值
 
 关键区别：
-  · 分类任务中，TN 是可计数的（未分类为该类别的样本）
-  · 检测任务中，TN 几乎无意义（背景区域无法穷举）
-  · 因此检测评估主要关注 TP、FP、FN 三个量
-
-```
+· 分类任务中，TN 是可计数的（未分类为该类别的样本）
+· 检测任务中，TN 几乎无意义（背景区域无法穷举）
+· 因此检测评估主要关注 TP、FP、FN 三个量
 
 在目标检测中，判断一个预测是否为 TP 需要满足以下条件：
 
@@ -89,31 +79,19 @@ def is_true_positive(pred, gt_candidates, iou_thresh=0.5):
 
 IoU 的计算公式：
 
-```
-             ┌─────────────────────┐
-             │                     │
-        ┌────┴─────┐      ┌────────┴────────┐
-        │ 预测框    │      │    真实框         │
-        │  (Predict)│      │  (Ground Truth)  │
-        │           │      │                 │
-        └────┬─────┘      └────────┬────────┘
-             │                     │
-             └───────┬─────────────┘
-                     │
-                ┌────┴────┐
-                │  交集    │
-                │  (Inter)│
-                └─────────┘
+| 预测框 |  | 真实框 |
+| --- | --- | --- |
+| (Predict) |  | (Ground Truth) |
+| 交集 |  |  |
+| (Inter) |  |  |
 
 IoU = |Prediction ∩ GroundTruth| / |Prediction ∪ GroundTruth|
-    = 交集面积 / 并集面积
+= 交集面积 / 并集面积
 
 取值范围: [0, 1]
-  · IoU = 1: 完全重合（完美检测）
-  · IoU = 0: 完全不相交
-  · IoU > 0.5: 通常认为位置足够准确
-
-```
+· IoU = 1: 完全重合（完美检测）
+· IoU = 0: 完全不相交
+· IoU > 0.5: 通常认为位置足够准确
 
 **多目标场景下的匹配策略**：
 
@@ -393,7 +371,6 @@ def compute_ap_11point(precisions, recalls):
     ap /= 11.0
     return ap
 
-
 def compute_ap_integral(precisions, recalls):
     """积分近似法计算AP（COCO标准方法）"""
     # 排序
@@ -576,31 +553,26 @@ def compute_mAP_coco_standard(detections, ground_truths):
 
 COCO 评测不仅给出整体 mAP，还按目标大小分类统计。
 
-```
 目标尺寸分类（基于 GT 边界框面积）：
-══════════════════════════════════════════════════════════
 
-  小目标 (small):     面积 <  32² 像素  (约 < 1024 px²)
-  中目标 (medium):    32² ≤ 面积 < 96² 像素  (1024 ~ 9216 px²)
-  大目标 (large):     面积 ≥  96² 像素  (约 > 9216 px²)
+小目标 (small):  面积 <  32² 像素  (约 < 1024 px²)
+中目标 (medium):  32² ≤ 面积 < 96² 像素  (1024 ~ 9216 px²)
+大目标 (large):  面积 ≥  96² 像素  (约 > 9216 px²)
 
 示例：1024×1024 图像中的目标
-  · 小目标：边长 < 32px 的物体（如远处的人、小动物）
-  · 中目标：边长 32~96px 的物体（如中等距离的人）
-  · 大目标：边长 > 96px 的物体（如近处的人）
+· 小目标：边长 < 32px 的物体（如远处的人、小动物）
+· 中目标：边长 32~96px 的物体（如中等距离的人）
+· 大目标：边长 > 96px 的物体（如近处的人）
 
 报告格式：
-  ┌─────────────────────────────────────────────────────┐
-  │  mAP@0.5:0.95  mAP@0.5  mAP_s  mAP_m  mAP_l       │
-  │     44.9      63.2    27.8   48.5   60.4          │
-  └─────────────────────────────────────────────────────┘
+| mAP@0.5:0.95  mAP@0.5  mAP_s  mAP_m  mAP_l |
+| --- |
+| 44.9      63.2    27.8   48.5   60.4 |
 
 解读：
-  · mAP_s=27.8% 远小于 mAP_l=60.4%
-  → 小目标检测是当前 YOLO 模型的普遍薄弱环节
-  → 这与特征图分辨率下采样有关（通常下采样32倍）
-
-```
+· mAP_s=27.8% 远小于 mAP_l=60.4%
+→ 小目标检测是当前 YOLO 模型的普遍薄弱环节
+→ 这与特征图分辨率下采样有关（通常下采样32倍）
 
 ```python
 def categorize_by_size(ground_truths, image_size=(1024, 1024)):
@@ -619,7 +591,6 @@ def categorize_by_size(ground_truths, image_size=(1024, 1024)):
             large.append(gt)
 
     return {'small': small, 'medium': medium, 'large': large}
-
 
 def compute_size_specific_mAP(detections, ground_truths):
     """计算各尺寸类别的mAP"""
@@ -642,58 +613,37 @@ def compute_size_specific_mAP(detections, ground_truths):
 
 #### 各指标之间的关系
 
-```
 指标层级关系图：
-══════════════════════════════════════════════════════════
 
-                    ┌──────────────┐
-                    │   mAP        │  (Mean Average Precision)
-                    │ @0.5:0.95   │  = 80类AP的平均
-                    └──────┬───────┘
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-        ┌─────┴─────┐ ┌────┴────┐ ┌────┴─────┐
-        │ mAP_s     │ │mAP_m    │ │ mAP_l    │  ← 按目标尺寸
-        │ (小目标)  │ │(中目标)  │ │ (大目标) │
-        └─────┬─────┘ └────┬────┘ └────┬─────┘
-              │            │            │
-        ┌─────┴─────┐ ┌────┴────┐ ┌────┴─────┐
-        │ AP@0.5   │ │AP@0.5  │ │ AP@0.5   │  ← 按IoU阈值
-        │ AP@0.75  │ │        │ │ AP@0.75  │
-        └─────┬─────┘ └─────────┘ └────┬─────┘
-              │            │            │
-        ┌─────┴─────┐ ┌────┴────┐ ┌────┴─────┐
-        │ 各类AP    │ │各类AP   │ │ 各类AP   │  ← 按类别
-        └───────────┘ └─────────┘ └──────────┘
-              │
-        ┌─────┴─────┐
-        │ AP(c)     │  = ∫ P(r)dr  (PR曲线下面积)
-        │  = ΣP×ΔR  │
-        └─────┬─────┘
-              │
-        ┌─────┴─────┐
-        │ Precision │  TP/(TP+FP)
-        │ Recall    │  TP/(TP+FN)
-        │ F1        │  2PR/(P+R)
-        └───────────┘
-══════════════════════════════════════════════════════════
+mAP  (Mean Average Precision)
+@0.5:0.95  = 80类AP的平均
+
+mAP_s  mAP_m  mAP_l  ← 按目标尺寸
+(小目标)  (中目标)  (大目标)
+
+AP@0.5  AP@0.5  AP@0.5  ← 按IoU阈值
+AP@0.75  AP@0.75
+
+各类AP  各类AP  各类AP  ← 按类别
+
+AP(c)  = ∫ P(r)dr  (PR曲线下面积)
+= ΣP×ΔR
+
+Precision  TP/(TP+FP)
+Recall  TP/(TP+FN)
+F1  2PR/(P+R)
 
 指标速查表：
-┌──────────────┬─────────────────────────────────────┐
-│ 指标          │ 含义                              │
-├──────────────┼─────────────────────────────────────┤
-│ mAP@0.5      │ IoU=0.5时的平均AP（宽松定位要求）      │
-│ mAP@0.5:0.95 │ 10个IoU阈值的平均AP（COCO标准）        │
-│ mAP_s        │ 小目标(m<32²px²)的平均AP              │
-│ mAP_m        │ 中目标(32²≤m<96²px²)的平均AP          │
-│ mAP_l        │ 大目标(m≥96²px²)的平均AP              │
-│ AP_50        │ 同mAP@0.5                           │
-│ AP_75        │ IoU=0.75时的AP（严格定位要求）          │
-│ AP_r         │ 召回率>90%时的AP（"real-time" AP）     │
-└──────────────┴─────────────────────────────────────┘
-
-```
+| 指标 | 含义 |
+| --- | --- |
+| mAP@0.5 | IoU=0.5时的平均AP（宽松定位要求） |
+| mAP@0.5:0.95 | 10个IoU阈值的平均AP（COCO标准） |
+| mAP_s | 小目标(m<32²px²)的平均AP |
+| mAP_m | 中目标(32²≤m<96²px²)的平均AP |
+| mAP_l | 大目标(m≥96²px²)的平均AP |
+| AP_50 | 同mAP@0.5 |
+| AP_75 | IoU=0.75时的AP（严格定位要求） |
+| AP_r | 召回率>90%时的AP（"real-time" AP） |
 
 ### 1.3 高级评估指标
 
@@ -748,63 +698,51 @@ HOTA的设计动机：
 
 DETRAC 是一个专门针对**行人多目标跟踪**的数据集和评测基准。
 
-```
 DETRAC 数据集特点：
-  · 时长: 约21小时的视频，共94段
-  · 场景: 白天/夜晚，城市/郊區
-  · 标注: 行人边界框 + 轨迹ID
-  · 挑战: 严重遮挡、密集人群、夜间低光照
+· 时长: 约21小时的视频，共94段
+· 场景: 白天/夜晚，城市/郊區
+· 标注: 行人边界框 + 轨迹ID
+· 挑战: 严重遮挡、密集人群、夜间低光照
 
 DETRAC 评测指标：
-  ┌──────────────────────────────────────────────────┐
-  │  MOTA (Multi-Object Tracking Accuracy)           │
-  │    = 1 - (FN + FP + ID Switches) / GT总数        │
-  │                                                  │
-  │  MOTP (Multi-Object Tracking Precision)          │
-  │    = 平均 IoU（匹配成功的预测-GT对）             │
-  │                                                  │
-  │  IDF1 (Id-F1 Score)                              │
-  │    = 2×IDTP / (2×IDTP + IDFP + IDFN)            │
-  │                                                  │
-  │  HOTA                                            │
-  │    = sqrt(HOTA_id × HOTA_loc)                    │
-  │                                                  │
-  │  Count (检测数量)                                 │
-  │    = 正确检测的轨迹数                             │
-  └──────────────────────────────────────────────────┘
-
-```
+| MOTA (Multi-Object Tracking Accuracy) |
+| --- |
+| = 1 - (FN + FP + ID Switches) / GT总数 |
+| MOTP (Multi-Object Tracking Precision) |
+| = 平均 IoU（匹配成功的预测-GT对） |
+| IDF1 (Id-F1 Score) |
+| = 2×IDTP / (2×IDTP + IDFP + IDFN) |
+| HOTA |
+| = sqrt(HOTA_id × HOTA_loc) |
+| Count (检测数量) |
+| = 正确检测的轨迹数 |
 
 #### LVIS指标
 
 LVIS（Large Vocabulary Instance Segmentation）是一个大规模长尾数据集，提供了专门的评估指标。
 
-```
 LVIS 数据集特点：
-  · 类别: 1203 类（COCO的15倍）
-  · 标注: 398,942 个实例
-  · 长尾分布:
-    · Frequent (频繁):  ≥ 100 实例/类
-    · Common (常见):    10 ~ 100 实例/类
-    · Rare (稀有):       < 10 实例/类
+· 类别: 1203 类（COCO的15倍）
+· 标注: 398,942 个实例
+· 长尾分布:
+· Frequent (频繁):  ≥ 100 实例/类
+· Common (常见):  10 ~ 100 实例/类
+· Rare (稀有):  < 10 实例/类
 
 LVIS 报告格式：
-  ┌──────────────────────────────────────────────────┐
-  │  Overall AP:  32.3                                │
-  │  AP^r (Rare):  14.1  ← 严重瓶颈                   │
-  │  AP^c (Common): 32.5                              │
-  │  AP^f (Frequent): 45.2                            │
-  └──────────────────────────────────────────────────┘
+
+Overall AP:  32.3
+AP^r (Rare):  14.1  ← 严重瓶颈
+AP^c (Common): 32.5
+AP^f (Frequent): 45.2
 
 解读：
-  · Rare类别的AP极低（14.1 vs 45.2），说明长尾分布
-    是当前检测模型的主要挑战
-  · 提升 Rare 类别性能需要：
-    · 数据增强（MixUp, Copy-Paste）
-    · 重采样策略
-    · 专门的head设计
-
-```
+· Rare类别的AP极低（14.1 vs 45.2），说明长尾分布
+是当前检测模型的主要挑战
+· 提升 Rare 类别性能需要：
+· 数据增强（MixUp, Copy-Paste）
+· 重采样策略
+· 专门的head设计
 
 #### COCO关键指标解读
 
@@ -900,160 +838,139 @@ Yolo模型在COCO val2017上的典型对比：
 
 #### 实例分割
 
-```
 实例分割（Instance Segmentation）在检测指标基础上增加了mask级别的评估：
 
-  指标              含义
-  ──────────────────────────────────────────────────────
-  AP_box            边界框检测的AP（同检测任务）
-  AP_mask           分割mask的AP
-  mAP_box           所有类别box AP的平均
-  mAP_mask          所有类别mask AP的平均
-  AP50_box          IoU=0.5时的box AP
-  AP50_mask         IoU=0.5时的mask AP
-  AP75_box          IoU=0.75时的box AP
-  AP75_mask         IoU=0.75时的mask AP
+指标  含义
 
-  mask IoU计算：
-    与box IoU类似，但用mask（像素级二值图）替代bbox
-    IoU_mask = |M_pred ∩ M_gt| / |M_pred ∪ M_gt|
+AP_box  边界框检测的AP（同检测任务）
+AP_mask  分割mask的AP
+mAP_box  所有类别box AP的平均
+mAP_mask  所有类别mask AP的平均
+AP50_box  IoU=0.5时的box AP
+AP50_mask  IoU=0.5时的mask AP
+AP75_box  IoU=0.75时的box AP
+AP75_mask  IoU=0.75时的mask AP
 
-  YOLOv8分割模型典型结果（COCO val）：
-  ┌──────────────────────────────────────────────────────┐
-  │  模型      mAP_box   mAP_mask   Params(M)  Speed(ms) │
-  ├──────────────────────────────────────────────────────┤
-  │  YOLOv8s   44.9      36.7       11.2       1.8       │
-  │  YOLOv8m   53.2      44.1       43.7       3.2       │
-  │  YOLOv8l   56.3      47.0       86.7       5.1       │
-  │  YOLOv8x   58.6      49.7       68.2       8.3       │
-  └──────────────────────────────────────────────────────┘
+mask IoU计算：
+与box IoU类似，但用mask（像素级二值图）替代bbox
+IoU_mask = |M_pred ∩ M_gt| / |M_pred ∪ M_gt|
 
-  注意：mask AP 通常比 box AP 低 8~10 个百分点，
-  因为像素级对齐比边界框对齐更难。
+YOLOv8分割模型典型结果（COCO val）：
+| 模型      mAP_box   mAP_mask   Params(M)  Speed(ms) |
+| --- |
+| YOLOv8s   44.9      36.7       11.2       1.8 |
+| YOLOv8m   53.2      44.1       43.7       3.2 |
+| YOLOv8l   56.3      47.0       86.7       5.1 |
+| YOLOv8x   58.6      49.7       68.2       8.3 |
 
-```
+注意：mask AP 通常比 box AP 低 8~10 个百分点，
+因为像素级对齐比边界框对齐更难。
 
 #### 姿态估计
 
-```
 姿态估计（Pose Estimation）的评估指标：
 
-  指标              含义
-  ──────────────────────────────────────────────────────
-  AP                基于PCK或OKS的AP
-  AP@0.5            OKS阈值=0.5时的AP
-  AP@0.75           OKS阈值=0.75时的AP
-  APm               中目标的姿态AP
-  APl               大目标的姿态AP
-  APS               小目标的姿态AP
+指标  含义
 
-  OKS (Object Keypoint Similarity):
-    OKS = exp(-Σ_d² × w_d / (2 × s² × k²)) / Σw_d
+AP  基于PCK或OKS的AP
+AP@0.5  OKS阈值=0.5时的AP
+AP@0.75  OKS阈值=0.75时的AP
+APm  中目标的姿态AP
+APl  大目标的姿态AP
+APS  小目标的姿态AP
 
-    其中：
-    · d = ||p_i - p̂_i||: 预测关键点与GT关键点的距离
-    · s = GT框的对角线长度（用于归一化）
-    · k = 常数（通常取2）
-    · w_d = 1 如果关键点可见，否则为0
-    · w_i = 1/(2×σ_i²) 关键点的权重（不同关键点重要性不同）
+OKS (Object Keypoint Similarity):
+OKS = exp(-Σ_d² × w_d / (2 × s² × k²)) / Σw_d
 
-  COCO Keypoints 数据集的17个关键点：
-    0  Nose        9  Left Eye
-    1  Left Eye    10 Right Eye
-    2  Right Eye   11 Left Ear
-    3  Left Ear    12 Right Ear
-    4  Left Shoulder  13 Right Shoulder
-    5  Right Shoulder 14 Left Hip
-    6  Left Hip    15 Right Hip
-    7  Right Hip   16 Right Knee
-    8  Left Knee
+其中：
+· d = ||p_i - p̂_i||: 预测关键点与GT关键点的距离
+· s = GT框的对角线长度（用于归一化）
+· k = 常数（通常取2）
+· w_d = 1 如果关键点可见，否则为0
+· w_i = 1/(2×σ_i²) 关键点的权重（不同关键点重要性不同）
 
-  YOLOv8姿态估计典型结果（COCO Keypoints val）：
-  ┌─────────────────────────────────────────────────────┐
-  │  模型       AP      AP@.5   AP@.75  APm   APl     │
-  ├─────────────────────────────────────────────────────┤
-  │  YOLOv8s    65.8    87.2    71.4   60.2  72.1    │
-  │  YOLOv8m    71.3    90.1    77.8   66.4  78.2    │
-  │  YOLOv8l    74.2    91.5    80.6   69.1  81.3    │
-  │  YOLOv8x    76.0    92.3    82.1   71.0  83.5    │
-  └─────────────────────────────────────────────────────┘
+COCO Keypoints 数据集的17个关键点：
+0  Nose  9  Left Eye
+1  Left Eye  10 Right Eye
+2  Right Eye  11 Left Ear
+3  Left Ear  12 Right Ear
+4  Left Shoulder  13 Right Shoulder
+5  Right Shoulder 14 Left Hip
+6  Left Hip  15 Right Hip
+7  Right Hip  16 Right Knee
+8  Left Knee
 
-```
+YOLOv8姿态估计典型结果（COCO Keypoints val）：
+| 模型       AP      AP@.5   AP@.75  APm   APl |
+| --- |
+| YOLOv8s    65.8    87.2    71.4   60.2  72.1 |
+| YOLOv8m    71.3    90.1    77.8   66.4  78.2 |
+| YOLOv8l    74.2    91.5    80.6   69.1  81.3 |
+| YOLOv8x    76.0    92.3    82.1   71.0  83.5 |
 
 #### 旋转目标检测（OBB）
 
-```
 旋转目标检测（Oriented Bounding Box）的评估指标：
 
-  与传统AABB检测的区别：
-  · AABB（Axis-Aligned Bounding Box）：边界框与图像坐标轴对齐
-  · OBB（Oriented Bounding Box）：边界框可以旋转，更好地贴合斜向物体
+与传统AABB检测的区别：
+· AABB（Axis-Aligned Bounding Box）：边界框与图像坐标轴对齐
+· OBB（Oriented Bounding Box）：边界框可以旋转，更好地贴合斜向物体
 
-  OBB评估指标：
-  ┌──────────────────────────────────────────────────────┐
-  │  指标        含义                                    │
-  ├──────────────────────────────────────────────────────┤
-  │  mAP         旋转框的平均AP                           │
-  │  mAP50       IoU=0.5时的mAP                          │
-  │  mAP75       IoU=0.75时的mAP                         │
-  └──────────────────────────────────────────────────────┘
+OBB评估指标：
+| 指标        含义 |
+| --- |
+| mAP         旋转框的平均AP |
+| mAP50       IoU=0.5时的mAP |
+| mAP75       IoU=0.75时的mAP |
 
-  OBB IoU计算（旋转矩形相交）：
-    1. 使用分离轴定理（SAT）判断两旋转矩形是否相交
-    2. 计算旋转矩形的交集多边形面积
-    3. IoU = 交集面积 / 并集面积
+OBB IoU计算（旋转矩形相交）：
+1. 使用分离轴定理（SAT）判断两旋转矩形是否相交
+2. 计算旋转矩形的交集多边形面积
+3. IoU = 交集面积 / 并集面积
 
-  典型应用场景：
-    · 遥感图像（DOTA数据集）：建筑物、船只等斜向物体
-    · 密集场景：道路标线、停车场车辆
-    · 医学影像：斜向血管、器官
+典型应用场景：
+· 遥感图像（DOTA数据集）：建筑物、船只等斜向物体
+· 密集场景：道路标线、停车场车辆
+· 医学影像：斜向血管、器官
 
-  DOTA-v1.0 数据集（遥感OBB检测）：
-    · 类别：15类（含建筑物、车辆、飞机等）
-    · 图片：2806张训练图 + 1583张测试图
-    · 标注：旋转边界框（x,y,w,h,θ）
-
-```
+DOTA-v1.0 数据集（遥感OBB检测）：
+· 类别：15类（含建筑物、车辆、飞机等）
+· 图片：2806张训练图 + 1583张测试图
+· 标注：旋转边界框（x,y,w,h,θ）
 
 #### 图像分类
 
-```
 分类任务评估指标：
-══════════════════════════════════════════════════════════
 
-  指标                含义
-  ──────────────────────────────────────────────────────
-  Top-1 Accuracy      最高概率预测正确的比例
-  Top-5 Accuracy      正确类别在前5个预测中的比例
-  Log-Loss (Cross-Entropy) 预测概率分布与真实分布的差异
+指标  含义
 
-  Top-1 vs Top-5:
-    Top-1 = 1/N × Σ 1(pred_argmax == y_true)
-    Top-5 = 1/N × Σ 1(y_true ∈ top5_preds)
+Top-1 Accuracy  最高概率预测正确的比例
+Top-5 Accuracy  正确类别在前5个预测中的比例
+Log-Loss (Cross-Entropy) 预测概率分布与真实分布的差异
 
-  示例：
-    输入: 一张猫的图片
-    模型预测概率:
-      cat:    0.35  ← Top-1
-      dog:    0.28
-      rabbit: 0.20
-      bird:   0.10
-      fish:   0.05
-      ...
-    Top-1 Accuracy: 错误（预测为cat，但真实为dog）
-    Top-5 Accuracy: 正确（dog在前5中）
+Top-1 vs Top-5:
+Top-1 = 1/N × Σ 1(pred_argmax == y_true)
+Top-5 = 1/N × Σ 1(y_true ∈ top5_preds)
 
-  YOLO分类模型典型结果（ImageNet）：
-  ┌─────────────────────────────────────────────────────┐
-  │  模型        Top-1     Top-5    Params(M)  FLOPs(G) │
-  ├─────────────────────────────────────────────────────┤
-  │  YOLO-cls s  78.2%     94.1%    8.6        2.5      │
-  │  YOLO-cls m  81.5%     95.6%    30.8       7.8      │
-  │  YOLO-cls l  83.1%     96.3%    58.6       15.2     │
-  │  YOLO-cls x  84.2%     96.8%    78.9       20.5     │
-  └─────────────────────────────────────────────────────┘
+示例：
+输入: 一张猫的图片
+模型预测概率:
+cat:  0.35  ← Top-1
+dog:  0.28
+rabbit: 0.20
+bird:  0.10
+fish:  0.05
+...
+Top-1 Accuracy: 错误（预测为cat，但真实为dog）
+Top-5 Accuracy: 正确（dog在前5中）
 
-```
+YOLO分类模型典型结果（ImageNet）：
+| 模型        Top-1     Top-5    Params(M)  FLOPs(G) |
+| --- |
+| YOLO-cls s  78.2%     94.1%    8.6        2.5 |
+| YOLO-cls m  81.5%     95.6%    30.8       7.8 |
+| YOLO-cls l  83.1%     96.3%    58.6       15.2 |
+| YOLO-cls x  84.2%     96.8%    78.9       20.5 |
 
 #### 语义分割
 
@@ -1089,36 +1006,29 @@ Yolo模型在COCO val2017上的典型对比：
 
 #### 深度估计
 
-```
 深度估计（Depth Estimation）评估指标：
 
-  常用指标：
-  ┌──────────────────────────────────────────────────────┐
-  │  指标         公式                               含义    │
-  ├──────────────────────────────────────────────────────┤
-  │  Abs Rel    Σ|d-d̂|/d / N            平均绝对相对误差  │
-  │  Sq Rel     Σ(d-d̂)²/d / N           平方相对误差     │
-  │  RMSE       √(Σ(d-d̂)²/N)            均方根误差       │
-  │  log RMSE   exp(√(Σ(ln d - ln d̂)²/N)) 对数RMSE      │
-  │  δ<1.25     Σ 1( max(d/d̂,d̂/d) < 1.25 )/N 精度指标   │
-  │  δ<1.25²    同上调高阈值                  │
-  │  δ<1.25³    同上调高阈值                  │
-  └──────────────────────────────────────────────────────┘
+常用指标：
+| 指标         公式                               含义 |
+| --- |
+| Abs Rel    Σ|d-d̂|/d / N            平均绝对相对误差 |
+| Sq Rel     Σ(d-d̂)²/d / N           平方相对误差 |
+| RMSE       √(Σ(d-d̂)²/N)            均方根误差 |
+| log RMSE   exp(√(Σ(ln d - ln d̂)²/N)) 对数RMSE |
+| δ<1.25     Σ 1( max(d/d̂,d̂/d) < 1.25 )/N 精度指标 |
+| δ<1.25²    同上调高阈值 |
+| δ<1.25³    同上调高阈值 |
 
-  δ<1.25 的含义：
-    如果预测深度 d̂ 满足 1/1.25 < d/d̂ < 1.25
-    则认为该像素的预测是"准确"的
-    δ<1.25 比例越高，深度估计越精确
+δ<1.25 的含义：
+如果预测深度 d̂ 满足 1/1.25 < d/d̂ < 1.25
+则认为该像素的预测是"准确"的
+δ<1.25 比例越高，深度估计越精确
 
-  YOLO深度估计（YOLO-Depth）典型结果（KITTI）：
-  ┌──────────────────────────────────────────────────────┐
-  │  模型      AbsRel   SqRel   RMSE   δ<1.25   δ<1.25²  │
-  ├──────────────────────────────────────────────────────┤
-  │  YOLO-D    0.142    0.782   4.321  0.785    0.932    │
-  │  YOLO-M    0.118    0.621   3.845  0.823    0.951    │
-  └──────────────────────────────────────────────────────┘
-
-```
+YOLO深度估计（YOLO-Depth）典型结果（KITTI）：
+| 模型      AbsRel   SqRel   RMSE   δ<1.25   δ<1.25² |
+| --- |
+| YOLO-D    0.142    0.782   4.321  0.785    0.932 |
+| YOLO-M    0.118    0.621   3.845  0.823    0.951 |
 
 ### 1.5 COCO 评估协议详解
 
@@ -1335,29 +1245,23 @@ def analyze_coco_statistical_properties(coco_eval):
 
 LVIS（Large Vocabulary Instance Segmentation）是专为长尾分布设计的大规模评估基准。
 
-```
 LVIS 数据集特点：
-══════════════════════════════════════════════════════════════
 
-  类别规模:
-    · 1203 个类别（COCO 的 15 倍）
-    · 398,942 个实例标注
-    · 16,731 张图片
+类别规模:
+· 1203 个类别（COCO 的 15 倍）
+· 398,942 个实例标注
+· 16,731 张图片
 
-  长尾分布:
-    ┌──────────────────────────────────────────────────────┐
-    │  类别分组     类别数    平均实例数    占比          │
-    ├──────────────────────────────────────────────────────┤
-    │  Frequent    253      ≥ 100         21%            │
-    │  Common      543      10-99         45%            │
-    │  Rare        407      < 10          34%            │
-    └──────────────────────────────────────────────────────┘
+长尾分布:
+| 类别分组     类别数    平均实例数    占比 |
+| --- |
+| Frequent    253      ≥ 100         21% |
+| Common      543      10-99         45% |
+| Rare        407      < 10          34% |
 
-  关键洞察:
-    · 34% 的类别只有不到 10 个训练实例
-    · 这是现实中大多数检测场景的真实写照
-
-```
+关键洞察:
+· 34% 的类别只有不到 10 个训练实例
+· 这是现实中大多数检测场景的真实写照
 
 #### APE（Average Precision per Error）
 
@@ -1574,7 +1478,6 @@ Brier Score 定义：
 
 ```
 
-
   原理：
     从测试集中有放回地抽样，重复多次，每次计算 mAP，
     得到 mAP 的分布，进而计算置信区间。
@@ -1697,7 +1600,6 @@ def paired_t_test(map_values_a, map_values_b):
     significant = p_value < 0.05
 
     return t_stat, p_value, significant
-
 
 def bootstrap_significance_test(map_a, map_b, n_bootstrap=10000):
     """
@@ -2039,11 +1941,9 @@ def count_flops_conv2d(in_channels, out_channels, kernel_size, stride,
     flops = 2 * out_channels * in_channels * k_h * k_w * out_h * out_w
     return flops
 
-
 def count_flops_linear(in_features, out_features):
     """计算全连接层的FLOPs"""
     return 2 * in_features * out_features
-
 
 def count_model_flops(model, input_size=(640, 640)):
     """
@@ -2998,7 +2898,6 @@ def spatial_kfold_cv(dataset, k=5):
 
     return folds
 
-
 def category_stratified_kfold(dataset, k=5):
     """
     按类别分层的 k 折交叉验证
@@ -3084,14 +2983,12 @@ def calculate_sample_size(
 
     return math.ceil(n)
 
-
 def calculate_effect_size(mAP1, mAP2, std_diff):
     """
     计算 Cohen's d 效应量
     """
     d = abs(mAP1 - mAP2) / std_diff
     return d
-
 
 def interpret_effect_size(d):
     """
@@ -3160,7 +3057,6 @@ def bootstrap_ci_mAP(detections, ground_truths, n_bootstrap=10000, ci=0.95):
     ci_mean = np.mean(bootstrap_means)
 
     return ci_lower, ci_upper, ci_mean, bootstrap_means
-
 
 def bootstrap_significance_test(map_a, map_b, n_bootstrap=10000):
     """
@@ -3877,7 +3773,6 @@ def evaluate_model(individual):
 
     return mAP, latency  # (最大化mAP, 最小化延迟)
 
-
 def nsga2_optimization(pop_size=100, n_gen=50):
     """NSGA-II 优化"""
     toolbox = base.Toolbox()
@@ -3980,7 +3875,6 @@ def objective(trial):
     results = model.val(data="data.yaml")
     return results.box.map  # mAP@0.5:0.95
 
-
 # 创建研究
 study = optuna.create_study(
     direction='maximize',
@@ -4018,7 +3912,6 @@ def train_yolo(config):
     )
     results = model.val(data="data.yaml")
     tune.report({"mAP": results.box.map})
-
 
 # 定义搜索空间
 search_space = {
@@ -4121,7 +4014,6 @@ def yolo_multi_objective(x):
     latency = base_latency * (channel_cost + depth_cost + width_cost + imgsz_cost) * precision_cost
 
     return -mAP, latency  # 最小化 -mAP（即最大化 mAP），最小化延迟
-
 
 # 定义问题
 problem = FunctionalProblem(
@@ -4715,3 +4607,4 @@ print(f"AR large       = {coco_eval.stats[11]:.3f}")
 ---
 
 > **📌 系列导航**：[← 上一篇：训练管道中注意力注入与常见增强措施分析](训练管道中注意力注入与常见增强措施分析.md) · [📖 导读目录](README.md) · [下一篇：模型量化深度解析 →](模型量化深度解析.md)
+```

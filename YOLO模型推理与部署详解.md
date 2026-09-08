@@ -6,131 +6,106 @@
 
 本文系统性覆盖 YOLO 模型从推理流程原理到生产级部署的完整技术栈，包括 PyTorch/ONNX/TensorRT/OpenVINO/TFLite 等多框架实现、Jetson/RK3588/移动端等边缘设备部署、FastAPI/gRPC/Triton 等服务化方案，以及量化、剪枝、批处理等性能优化策略。
 
-
 ## 一、推理流程完整解析
 
 ### 1.1 推理全流程图
 
-```
 YOLO 推理完整流程
-══════════════════════════════════════════════════════════════
 
-原始图像 ──────────────────────────────────────────────────────► 检测结果
-  (H×W×3)                                                       (N×[cx,cy,w,h,conf,cls])
-     │
-     │
-     ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  STEP 1: 预处理 (Preprocessing)                                  │
-│  ─────────────────────────────                                  │
-│                                                                 │
-│  原始图像 (H×W×3, uint8)                                        │
-│       │                                                         │
-│       ▼                                                         │
-│  Letterbox Resize:                                              │
-│    - 保持宽高比缩放到目标尺寸 (如 640×640)                       │
-│    - 空白区域填充灰色 (114, 114, 114)                            │
-│    - 计算缩放比 scale 和偏移量 (pad_w, pad_h)                    │
-│       │                                                         │
-│       ▼                                                         │
-│  归一化: 像素值 / 255.0                                         │
-│       │                                                         │
-│       ▼                                                         │
-│  通道转换: HWC → CHW (H×W×3 → 3×H×W)                            │
-│       │                                                         │
-│       ▼                                                         │
-│  Batch 维: [1, 3, 640, 640] (float32)                           │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  STEP 2: 前向传播 (Inference)                                    │
-│  ───────────────────────                                        │
-│                                                                 │
-│  输入: [1, 3, 640, 640]                                          │
-│       │                                                         │
-│       ▼                                                         │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐          │
-│  │  Backbone   │ →  │    Neck     │ →  │    Head     │          │
-│  │ CSPDarknet  │    │ CSP-PAN     │    │ Detect      │          │
-│  │ (特征提取)   │    │ (特征融合)   │    │ (预测输出)   │          │
-│  └─────────────┘    └─────────────┘    └─────────────┘          │
-│       │                                                         │
-│       ▼                                                         │
-│  YOLOv8/v11 输出: [1, 4+nc, 8400] (one-to-many)                 │
-│  YOLO26 输出:      [1, 300, 6] (one-to-one, e2e)                 │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  STEP 3: 输出解码 (Decoding)                                     │
-│  ──────────────────────                                         │
-│                                                                 │
-│  One-to-Many 解码 (YOLOv8/v11):                                 │
-│    1. Reshape: [1, 4+nc, 8400] → [1, 8400, 4+nc]               │
-│    2. 裁剪掉置信度<阈值的预测 (conf_thres)                        │
-│    3. 坐标解码:                                                  │
-│       cx = (x + grid_x) / scale                                 │
-│       cy = (y + grid_y) / scale                                 │
-│       w = exp(wx) * anchor_w / scale                            │
-│       h = exp(wh) * anchor_h / scale                            │
-│    4. 非极大值抑制 (NMS, iou_thres)                              │
-│                                                                 │
-│  One-to-One 解码 (YOLO26 e2e):                                  │
-│    1. Reshape: [1, 300, 6]                                      │
-│    2. 直接取 top-K 置信度最高的预测                                │
-│    3. 无需 NMS！                                                  │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  STEP 4: 后处理 (Post-processing)                                │
-│  ────────────────────────                                       │
-│                                                                 │
-│    1. 坐标还原: 将归一化坐标转回原始图像坐标                       │
-│       x1 = (cx - w/2) / scale - pad_w/width                     │
-│       y1 = (cy - h/2) / scale - pad_h/height                    │
-│       x2 = (cx + w/2) / scale - pad_w/width                     │
-│       y2 = (cy + h/2) / scale - pad_h/height                    │
-│                                                                 │
-│    2. 格式化输出:                                                │
-│       [x1, y1, x2, y2, conf, class_id]                          │
-│                                                                 │
-│    3. 可视化 (可选): 绘制边界框、标签、掩码/关键点                 │
-└─────────────────────────────────────────────────────────────────┘
+原始图像 ► 检测结果
+(H×W×3)  (N×[cx,cy,w,h,conf,cls])
 
-```
+▼
+
+STEP 1: 预处理 (Preprocessing)
+
+原始图像 (H×W×3, uint8)
+
+▼
+Letterbox Resize:
+- 保持宽高比缩放到目标尺寸 (如 640×640)
+- 空白区域填充灰色 (114, 114, 114)
+- 计算缩放比 scale 和偏移量 (pad_w, pad_h)
+
+▼
+归一化: 像素值 / 255.0
+
+▼
+通道转换: HWC → CHW (H×W×3 → 3×H×W)
+
+▼
+Batch 维: [1, 3, 640, 640] (float32)
+
+▼
+
+STEP 2: 前向传播 (Inference)
+
+输入: [1, 3, 640, 640]
+
+▼
+
+Backbone  →  Neck  →  Head
+CSPDarknet  CSP-PAN  Detect
+(特征提取)  (特征融合)  (预测输出)
+
+▼
+YOLOv8/v11 输出: [1, 4+nc, 8400] (one-to-many)
+YOLO26 输出:  [1, 300, 6] (one-to-one, e2e)
+
+▼
+
+STEP 3: 输出解码 (Decoding)
+
+One-to-Many 解码 (YOLOv8/v11):
+1. Reshape: [1, 4+nc, 8400] → [1, 8400, 4+nc]
+2. 裁剪掉置信度<阈值的预测 (conf_thres)
+3. 坐标解码:
+cx = (x + grid_x) / scale
+cy = (y + grid_y) / scale
+w = exp(wx) * anchor_w / scale
+h = exp(wh) * anchor_h / scale
+4. 非极大值抑制 (NMS, iou_thres)
+
+One-to-One 解码 (YOLO26 e2e):
+1. Reshape: [1, 300, 6]
+2. 直接取 top-K 置信度最高的预测
+3. 无需 NMS！
+
+▼
+| STEP 4: 后处理 (Post-processing) |
+| --- |
+| ──────────────────────── |
+| 1. 坐标还原: 将归一化坐标转回原始图像坐标 |
+| x1 = (cx - w/2) / scale - pad_w/width |
+| y1 = (cy - h/2) / scale - pad_h/height |
+| x2 = (cx + w/2) / scale - pad_w/width |
+| y2 = (cy + h/2) / scale - pad_h/height |
+| 2. 格式化输出: |
+| [x1, y1, x2, y2, conf, class_id] |
+| 3. 可视化 (可选): 绘制边界框、标签、掩码/关键点 |
 
 ### 1.2 Letterbox 预处理详解
 
 Letterbox 是 YOLO 系列的核心预处理技术，其目标是在保持图像宽高比的同时将其缩放到目标尺寸。
 
-```
 Letterbox 原理图:
-══════════════════════════════════════════════════════════════
 
-原始图像 (800×600)                     缩放后 (640×480)
-┌──────────────────┐                  ┌──────────────────┐
-│                  │                  │                  │
-│  ┌──────────┐    │  scale=0.8       │  ┌──────────┐    │
-│  │  目标     │    │──────────►       │  │  目标     │    │
-│  │          │    │                  │  │          │    │
-│  └──────────┘    │                  │  └──────────┘    │
-│                  │                  │                  │
-└──────────────────┘                  └──────────────────┘
-  800×600 (4:3)                           640×480 (4:3)
+原始图像 (800×600)  缩放后 (640×480)
 
- Letterbox 填充 (缩放至 640×640):
-┌────────────────────┐
-│░░░░░┌──────────┐░░░░│  ░ = 灰色填充 (114,114,114)
-│░░░░░│  目标     │░░░░│
-│░░░░░│          │░░░░│
-│░░░░░└──────────┘░░░░│
-│░░░░░░░░░░░░░░░░░░░░░│
-└────────────────────┘
-    640×640
+scale=0.8
+目标  ►  目标
 
-```
+800×600 (4:3)  640×480 (4:3)
+
+Letterbox 填充 (缩放至 640×640):
+
+░░░░░░░░░  ░ = 灰色填充 (114,114,114)
+░░░░░  目标  ░░░░
+░░░░░  ░░░░
+░░░░░░░░░
+░░░░░░░░░░░░░░░░░░░░░
+
+640×640
 
 **Letterbox 数学推导**：
 
@@ -208,7 +183,6 @@ def letterbox(image, new_shape=640, color=(114, 114, 114), auto=True, scaleup=Tr
                                cv2.BORDER_CONSTANT, value=color)
     
     return image, r, (dw, dh)
-
 
 def preprocess_image(image, imgsz=640):
     """完整的预处理流程"""
@@ -696,45 +670,41 @@ def fast_letterbox_cpu(src, target=640):
 
 在生产级系统中，减少内存拷贝是降低延迟的关键。通过零拷贝技术，可以将预处理、推理和后处理的所有操作限制在 GPU 显存中。
 
-```
 零拷贝流水线架构：
-══════════════════════════════════════════════════════════════
 
-  摄像头 / 网络接收
-        │
-        ▼
-  ┌─────────────────┐
-  │ CUDA Video      │  ← 硬件解码 (NVDEC)
-  │ Decoding        │     直接输出到 CUDA 缓冲区
-  └────────┬────────┘
-           │ (零拷贝, CUDA Pinned Memory)
-           ▼
-  ┌─────────────────┐
-  │ GPU Preprocess  │  ← CUDA Kernel 执行预处理
-  │ (Letterbox +    │     直接输出到 GPU 显存
-  │  Normalize +    │
-  │  HWC→CHW)       │
-  └────────┬────────┘
-           │ (零拷贝, 同一片显存)
-           ▼
-  ┌─────────────────┐
-  │ TensorRT Engine │  ← GPU 推理
-  │ Inference       │     直接输出到 GPU 显存
-  └────────┬────────┘
-           │ (零拷贝)
-           ▼
-  ┌─────────────────┐
-  │ GPU Postprocess │  ← CUDA Kernel 执行 NMS 解码
-  │ (NMS + Decode)  │
-  └────────┬────────┘
-           │ (仅结果拷贝到 CPU)
-           ▼
-        检测结果
+摄像头 / 网络接收
 
-  总内存拷贝次数: 1次 (结果 → CPU)
-  传统流水线内存拷贝: 6+次 (上传输入 → 下载推理 → 后处理)
+▼
 
-```
+CUDA Video  ← 硬件解码 (NVDEC)
+Decoding  直接输出到 CUDA 缓冲区
+
+(零拷贝, CUDA Pinned Memory)
+▼
+
+GPU Preprocess  ← CUDA Kernel 执行预处理
+(Letterbox +  直接输出到 GPU 显存
+Normalize +
+HWC→CHW)
+
+(零拷贝, 同一片显存)
+▼
+
+TensorRT Engine  ← GPU 推理
+Inference  直接输出到 GPU 显存
+
+(零拷贝)
+▼
+
+GPU Postprocess  ← CUDA Kernel 执行 NMS 解码
+(NMS + Decode)
+
+(仅结果拷贝到 CPU)
+▼
+检测结果
+
+总内存拷贝次数: 1次 (结果 → CPU)
+传统流水线内存拷贝: 6+次 (上传输入 → 下载推理 → 后处理)
 
 ```python
 import pycuda.driver as cuda
@@ -799,28 +769,20 @@ class ZeroCopyPipeline:
 
 对于视频流场景，可以设计重叠的预处理-推理流水线，使预处理和推理并行执行。
 
-```
 流水线并行架构：
-══════════════════════════════════════════════════════════════
 
-  时间 →
-  ┌──────────┬──────────┬──────────┬──────────┐
-  │ Frame 1  │          │          │          │
-  │ Preproc  │ Inference│          │          │
-  └──────────┼──────────┼──────────┼──────────┘
-             │ Frame 2  │          │
-             │ Preproc  │Inference │          │
-             └──────────┼──────────┼──────────┘
-                        │ Frame 3  │
-                        │ Preproc  │Inference│
-                        └──────────┼──────────┘
-                                     │ Frame 4 │
-                                     │ Preproc  │
-                                     └──────────┘
+时间 →
+| Frame 1 |  |  |  |
+| --- | --- | --- | --- |
+| Preproc | Inference |  |  |
+| Frame 2 |  |  |  |
+| Preproc | Inference |  |  |
+| Frame 3 |  |  |  |
+| Preproc | Inference |  |  |
+| Frame 4 |  |  |  |
+| Preproc |  |  |  |
 
-  效果：预处理和推理重叠执行，总体吞吐提升 ~2x
-
-```
+效果：预处理和推理重叠执行，总体吞吐提升 ~2x
 
 ```python
 import threading
@@ -1341,26 +1303,22 @@ TensorRT 支持通过自定义插件（Plugin）扩展其算子库，这对于�
 
 TensorRT 8.x 推荐使用 `IPluginV2DynamicExt` 接口：
 
-```
 TensorRT Plugin 接口层次：
-══════════════════════════════════════════════════════════════
 
-  IPluginV2                    (基础接口)
-       │
-       ├── IPluginV2DynamicExt  (动态形状支持, TRT 8.x 推荐)
-       │      │
-       │      └── IPluginV2IOExt (扩展 IO 支持)
-       │
-       └── IPluginV2Legacy      (遗留接口, 不推荐)
+IPluginV2  (基础接口)
 
-  关键方法:
-  · getOutputDimensions():  计算输出维度
-  · setExpression():        设置 CUDA kernel 表达式
-  · forward():              执行前向传播
-  · serialize():            序列化插件参数
-  · deserialize():          反序列化插件参数
+IPluginV2DynamicExt  (动态形状支持, TRT 8.x 推荐)
 
-```
+IPluginV2IOExt (扩展 IO 支持)
+
+IPluginV2Legacy  (遗留接口, 不推荐)
+
+关键方法:
+· getOutputDimensions():  计算输出维度
+· setExpression():  设置 CUDA kernel 表达式
+· forward():  执行前向传播
+· serialize():  序列化插件参数
+· deserialize():  反序列化插件参数
 
 ```cpp
 // TensorRT 自定义插件示例: FusedNMS Plugin
@@ -1522,25 +1480,18 @@ REGISTER_TENSORRT_PLUGIN(FusedNMSPluginCreator);
 
 #### 1.8.3 常用自定义插件类型
 
-```
 YOLO 推理中常用的 TensorRT 自定义插件：
-══════════════════════════════════════════════════════════════
 
-┌─────────────────────┬──────────────────────────────────────────────┐
-│  插件名称            │ 用途                                        │
-├─────────────────────┼──────────────────────────────────────────────┤
-│  FusedNMS           │ 将 NMS 融合到推理图中，消除 Python 后处理     │
-│  CustomResize       │ 支持任意比例的 resize（非 32 对齐）           │
-│  DIOU_NMS           │ 基于 DIoU 的 NMS，提升密集场景检测精度         │
-│  SoftNMS            │ Soft-NMS 变体，保留部分低置信度预测            │
-│  DecodeHead         │ 将 YOLO 的 anchor-free 解码集成到网络中       │
-│  ONNX_Sigmoid       │ 修复 ONNX→TRT 转换中的 sigmoid 精度问题       │
-│  GroupNorm          │ 支持 GroupNorm 层（部分 YOLO 变体使用）        │
-│  SyncBN             │ 支持 SyncBatchNorm（分布式训练后的模型）       │
-└─────────────────────┴──────────────────────────────────────────────┘
+插件名称  用途
 
-```
-
+FusedNMS  将 NMS 融合到推理图中，消除 Python 后处理
+CustomResize  支持任意比例的 resize（非 32 对齐）
+DIOU_NMS  基于 DIoU 的 NMS，提升密集场景检测精度
+SoftNMS  Soft-NMS 变体，保留部分低置信度预测
+DecodeHead  将 YOLO 的 anchor-free 解码集成到网络中
+ONNX_Sigmoid  修复 ONNX→TRT 转换中的 sigmoid 精度问题
+GroupNorm  支持 GroupNorm 层（部分 YOLO 变体使用）
+SyncBN  支持 SyncBatchNorm（分布式训练后的模型）
 
 ## 二、各框架推理实现
 
@@ -1860,25 +1811,21 @@ print(f"Optimized layers: {len(optimized_model.predicted_feature_name)}")
 
 ```
 
-```
 CoreML 转换优化阶段：
-══════════════════════════════════════════════════════════════
 
-  ONNX Model ──▶ CoreML Converter ──▶ Optimized MLModel
-       │               │                    │
-       │          1. 算子映射            2. FP16 精度
-       │             (ONNX→CoreML)      3. 算子融合
-       │          2. 常量折叠           4. 内存优化
-       │          3. 图简化             5. NNEF 后端选择
-       │          4. 精度校准
-       │
-       ▼
-  支持的后端：
-  · Neural Engine (A12+)     ← 优先选择
-  · Metal Performance Shaders (MPS)
-  · CPU (Apple Silicon / Intel)
+ONNX Model ▶ CoreML Converter ▶ Optimized MLModel
 
-```
+1. 算子映射  2. FP16 精度
+(ONNX→CoreML)  3. 算子融合
+2. 常量折叠  4. 内存优化
+3. 图简化  5. NNEF 后端选择
+4. 精度校准
+
+▼
+支持的后端：
+· Neural Engine (A12+)  ← 优先选择
+· Metal Performance Shaders (MPS)
+· CPU (Apple Silicon / Intel)
 
 ### 2.8 ONNX GraphSurgeon 优化
 
@@ -2185,26 +2132,20 @@ result = session.run([input_data])
 
 NCNN 是腾讯开源的轻量级神经网络推理框架，专为移动端优化，支持 ARM NEON、OpenCL 和 Vulkan。
 
-```
 NCNN 特性：
-══════════════════════════════════════════════════════════════
 
-  · 零依赖：不依赖任何第三方库
-  · 超轻量：库大小 < 200KB
-  · 高性能：ARM NEON 优化，支持 OpenCL/Vulkan
-  · 跨平台：Android、iOS、Linux、Windows
-  · 模型格式：原生支持 NCNN 格式（可自行转换）
+· 零依赖：不依赖任何第三方库
+· 超轻量：库大小 < 200KB
+· 高性能：ARM NEON 优化，支持 OpenCL/Vulkan
+· 跨平台：Android、iOS、Linux、Windows
+· 模型格式：原生支持 NCNN 格式（可自行转换）
 
-  性能对比（YOLOv8s, 640×640, Android 12, Snapdragon 8 Gen 2）：
-  ┌────────────────────────────────────────────────────────┐
-  │  后端              延迟(ms)   FPS    功耗(mW)          │
-  ├────────────────────────────────────────────────────────┤
-  │  CPU (NEON)        ~8.5      ~118    450               │
-  │  OpenCL GPU        ~4.2      ~238    680               │
-  │  Vulkan GPU        ~3.8      ~263    720               │
-  └────────────────────────────────────────────────────────┘
-
-```
+性能对比（YOLOv8s, 640×640, Android 12, Snapdragon 8 Gen 2）：
+| 后端              延迟(ms)   FPS    功耗(mW) |
+| --- |
+| CPU (NEON)        ~8.5      ~118    450 |
+| OpenCL GPU        ~4.2      ~238    680 |
+| Vulkan GPU        ~3.8      ~263    720 |
 
 ```cpp
 // NCNN C++ 推理示例
@@ -2293,34 +2234,26 @@ def detect_with_ncnn(image_path, model_path):
 
 ### 2.12 框架选择对比
 
-```
 各推理框架特性对比：
-══════════════════════════════════════════════════════════════
 
-┌─────────────┬──────────┬──────────┬──────────┬───────────────┐
-│  框架        │ 精度      │ 速度     │ 平台      │ 易用性        │
-├─────────────┼──────────┼──────────┼──────────┼───────────────┤
-│ PyTorch     │ FP32     │ 中等     │ GPU/CPU  │ ★★★★★ (原生)  │
-│ ONNX RT     │ FP32/16  │ 较快     │ 全平台    │ ★★★★☆        │
-│ TensorRT    │ FP32/16/8│ 最快     │ NVIDIA GPU│ ★★★☆☆ (复杂)  │
-│ OpenVINO    │ FP32/16/8│ 快       │ Intel CPU/│ ★★★★☆        │
-│             │          │          │ VPU/GPU  │               │
-│ TFLite      │ FP32/16/8│ 快       │ Android  │ ★★★★★        │
-│ CoreML      │ FP16     │ 快       │ iOS/macOS │ ★★★★☆        │
-│ MNN         │ FP32/16/8│ 快       │ 全平台    │ ★★★★☆        │
-│ NCNN        │ FP32/16  │ 快       │ 全平台    │ ★★★☆☆        │
-│ MediaPipe   │ FP16     │ 中等     │ 全平台    │ ★★★★★        │
-└─────────────┴──────────┴──────────┴──────────┴───────────────┘
+| 框架 | 精度 | 速度 | 平台 | 易用性 |
+| --- | --- | --- | --- | --- |
+| PyTorch | FP32 | 中等 | GPU/CPU | ★★★★★ (原生) |
+| ONNX RT | FP32/16 | 较快 | 全平台 | ★★★★☆ |
+| TensorRT | FP32/16/8 | 最快 | NVIDIA GPU | ★★★☆☆ (复杂) |
+| OpenVINO | FP32/16/8 | 快 | Intel CPU/ VPU/GPU | ★★★★☆ |
+| TFLite | FP32/16/8 | 快 | Android | ★★★★★ |
+| CoreML | FP16 | 快 | iOS/macOS | ★★★★☆ |
+| MNN | FP32/16/8 | 快 | 全平台 | ★★★★☆ |
+| NCNN | FP32/16 | 快 | 全平台 | ★★★☆☆ |
+| MediaPipe | FP16 | 中等 | 全平台 | ★★★★★ |
 
-  选择建议：
-  · 开发调试：PyTorch → ONNX → TensorRT/OpenVINO
-  · 云端部署：TensorRT (NVIDIA) / OpenVINO (Intel)
-  · 移动端部署：TFLite (Android) / CoreML (iOS)
-  · 边缘设备：NCNN/MNN (轻量级) / RKNN (瑞芯微)
-  · 跨平台：ONNX Runtime
-
-```
-
+选择建议：
+· 开发调试：PyTorch → ONNX → TensorRT/OpenVINO
+· 云端部署：TensorRT (NVIDIA) / OpenVINO (Intel)
+· 移动端部署：TFLite (Android) / CoreML (iOS)
+· 边缘设备：NCNN/MNN (轻量级) / RKNN (瑞芯微)
+· 跨平台：ONNX Runtime
 
 ## 三、边缘设备部署
 
@@ -2485,41 +2418,32 @@ try handler.perform([request])
 
 SNPE（Snapdragon Neural Processing Engine）是高通推出的移动端 NPU 推理框架，专为 Snapdragon 芯片优化。
 
-```
 SNPE 架构：
-══════════════════════════════════════════════════════════════
 
-  SNPE Runtime
-  ┌──────────────────────────────────────┐
-  │  Preprocessing                       │
-  │  ─────────────────────                 │
-  │  · 图像缩放/裁剪                       │
-  │  · 归一化                              │
-  │  · 通道转换                            │
-  ├──────────────────────────────────────┤
-  │  SNPE Runtime                         │
-  │  ─────────────────────                 │
-  │  · Graph 优化                          │
-  │  · 算子调度                            │
-  │  · 内存管理                            │
-  ├──────────────────────────────────────┤
-  │  Hardware Accelerators                 │
-  │  ─────────────────────                 │
-  │  · Hexagon DSP (主要加速后端)          │
-  │  · Adreno GPU                          │
-  │  · CPU                                 │
-  └──────────────────────────────────────┘
+SNPE Runtime
+| Preprocessing |
+| --- |
+| ───────────────────── |
+| · 图像缩放/裁剪 |
+| · 归一化 |
+| · 通道转换 |
+| SNPE Runtime |
+| ───────────────────── |
+| · Graph 优化 |
+| · 算子调度 |
+| · 内存管理 |
+| Hardware Accelerators |
+| ───────────────────── |
+| · Hexagon DSP (主要加速后端) |
+| · Adreno GPU |
+| · CPU |
 
-  性能对比（Snapdragon 8 Gen 2, YOLOv8s, 640×640）：
-  ┌──────────────────────────────────────────────────────────┐
-  │  后端              延迟(ms)   FPS    功耗(mW)            │
-  ├──────────────────────────────────────────────────────────┤
-  │  Hexagon DSP     ~6.5      ~154    380                  │
-  │  Adreno GPU      ~8.2      ~122    520                  │
-  │  CPU             ~25.0     ~40     200                  │
-  └──────────────────────────────────────────────────────────┘
-
-```
+性能对比（Snapdragon 8 Gen 2, YOLOv8s, 640×640）：
+| 后端              延迟(ms)   FPS    功耗(mW) |
+| --- |
+| Hexagon DSP     ~6.5      ~154    380 |
+| Adreno GPU      ~8.2      ~122    520 |
+| CPU             ~25.0     ~40     200 |
 
 ```python
 # SNPE Python API 推理示例
@@ -2570,34 +2494,27 @@ python3 run_snpe_inference.py
 
 QNN（Qualcomm AI Runtime）是 SNPE 的继任者，提供更灵活的插件架构和更好的性能。
 
-```
 QNN 架构：
-══════════════════════════════════════════════════════════════
 
-  QNN Runtime
-  ┌──────────────────────────────────────┐
-  │  QNN API Layer                        │
-  │  ─────────────────────                 │
-  │  · Context Management                  │
-  │  · Graph Compilation                   │
-  │  · Memory Management                   │
-  ├──────────────────────────────────────┤
-  │  QNN Backend                           │
-  │  ─────────────────────                 │
-  │  · Hexagon HVX (Vector DSP)           │
-  │  · Adreno GPU (OpenCL/Vulkan)         │
-  │  · AI Engine Direct (Hexagon)          │
-  │  · CPU                                 │
-  ├──────────────────────────────────────┤
-  │  Compilation Pipeline                  │
-  │  ─────────────────────                 │
-  │  · ONNX/TFLite 解析                     │
-  │  · 算子映射到后端                       │
-  │  · 图优化 (算子融合, 常量折叠)           │
-  │  · 代码生成 (Hexagon HIDL)              │
-  └──────────────────────────────────────┘
-
-```
+QNN Runtime
+| QNN API Layer |
+| --- |
+| ───────────────────── |
+| · Context Management |
+| · Graph Compilation |
+| · Memory Management |
+| QNN Backend |
+| ───────────────────── |
+| · Hexagon HVX (Vector DSP) |
+| · Adreno GPU (OpenCL/Vulkan) |
+| · AI Engine Direct (Hexagon) |
+| · CPU |
+| Compilation Pipeline |
+| ───────────────────── |
+| · ONNX/TFLite 解析 |
+| · 算子映射到后端 |
+| · 图优化 (算子融合, 常量折叠) |
+| · 代码生成 (Hexagon HIDL) |
 
 ```cpp
 // QNN C++ 推理示例
@@ -2678,34 +2595,28 @@ detections = postprocess(output_tensor[0])
 
 CoreMLNX（CoreML Native Execution）是 Apple 推出的下一代模型执行引擎，相比传统 CoreML 有更好的性能和更灵活的集成方式。
 
-```
 CoreMLNX vs 传统 CoreML：
-══════════════════════════════════════════════════════════════
 
-  传统 CoreML:
-  · 使用 Neural Engine 后端
-  · 模型编译为专用格式 (.mlmodelc)
-  · 通过 Vision Framework 集成
-  · 延迟: ~12ms (iPhone 15 Pro)
+传统 CoreML:
+· 使用 Neural Engine 后端
+· 模型编译为专用格式 (.mlmodelc)
+· 通过 Vision Framework 集成
+· 延迟: ~12ms (iPhone 15 Pro)
 
-  CoreMLNX:
-  · 支持 Metal Performance Shaders (MPS)
-  · 支持自定义 Metal kernel
-  · 通过 CoreMLNX API 直接集成
-  · 延迟: ~6ms (iPhone 15 Pro, 2x 加速)
-  · 支持动态形状 (Dynamic Shapes)
-  · 支持模型子图替换
+CoreMLNX:
+· 支持 Metal Performance Shaders (MPS)
+· 支持自定义 Metal kernel
+· 通过 CoreMLNX API 直接集成
+· 延迟: ~6ms (iPhone 15 Pro, 2x 加速)
+· 支持动态形状 (Dynamic Shapes)
+· 支持模型子图替换
 
-  性能对比：
-  ┌──────────────────────────────────────────────────────────┐
-  │  模型            传统 CoreML   CoreMLNX    加速比        │
-  ├──────────────────────────────────────────────────────────┤
-  │  YOLO26n 640×640 │ 12.0ms      6.2ms       1.9x         │
-  │  YOLO26s 640×640 │ 28.5ms      14.8ms      1.9x         │
-  │  YOLO26n 1280×1280 │ 25.2ms   13.1ms      1.9x         │
-  └──────────────────────────────────────────────────────────┘
-
-```
+性能对比：
+| 模型            传统 CoreML   CoreMLNX    加速比 |  |
+| --- | --- |
+| YOLO26n 640×640 | 12.0ms      6.2ms       1.9x |
+| YOLO26s 640×640 | 28.5ms      14.8ms      1.9x |
+| YOLO26n 1280×1280 | 25.2ms   13.1ms      1.9x |
 
 ```swift
 // CoreMLNX Swift 集成
@@ -2772,25 +2683,20 @@ print(f"Memory: {model.performance_stats().memory_usage:.1f}MB")
 
 Edge TPU（Coral）是 Google 推出的专用 AI 加速芯片，专为边缘设备设计，支持 TensorFlow Lite 模型。
 
-```
 Edge TPU 架构：
-══════════════════════════════════════════════════════════════
 
-  Edge TPU 硬件：
-  ┌──────────────────────────────────────────────────────┐
-  │  Edge TPU Core (MXU: Matrix Multiplication Unit)     │
-  │  ─────────────────────────────────────────────────   │
-  │  · 1 TOPS 算力 (Coral Dev Board)                     │
-  │  · 8 TOPS 算力 (Coral Accelerator)                   │
-  │  · INT8 量化推理                                     │
-  │  · 低延迟 (~10ms 推理)                               │
-  │  · 低功耗 (~2-4W)                                   │
-  └──────────────────────────────────────────────────────┘
+Edge TPU 硬件：
+| Edge TPU Core (MXU: Matrix Multiplication Unit) |
+| --- |
+| ───────────────────────────────────────────────── |
+| · 1 TOPS 算力 (Coral Dev Board) |
+| · 8 TOPS 算力 (Coral Accelerator) |
+| · INT8 量化推理 |
+| · 低延迟 (~10ms 推理) |
+| · 低功耗 (~2-4W) |
 
-  部署流程：
-  ONNX/YOLO → TFLite → Edge TPU Compiler → .tflite_edgetpu
-
-```
+部署流程：
+ONNX/YOLO → TFLite → Edge TPU Compiler → .tflite_edgetpu
 
 ```python
 # Edge TPU Python API
@@ -2868,7 +2774,6 @@ Raspberry Pi 5       CPU (NEON)      FP32   ~350     2.9    7         4096
   · 超低成本：Raspberry Pi 5 (2.9 FPS, 适合非实时场景)
 
 ```
-
 
 ## 四、模型服务化部署
 
@@ -3167,32 +3072,25 @@ for i in range(32):
 
 Triton 提供多种并发策略来控制请求处理行为。
 
-```
 Triton 并发策略配置：
-══════════════════════════════════════════════════════════════
 
-  策略                  配置参数              适用场景
-  ──────────────────────────────────────────────────────────────
-  最大并发请求数         max_concurrency      高并发服务器
-  请求队列策略           queue_policy         流量控制
-  超时策略               request_timeout      服务稳定性
-  模型预热               warmup               冷启动优化
-  ──────────────────────────────────────────────────────────────
+策略  配置参数  适用场景
 
-  推荐配置（生产环境）：
-  ┌──────────────────────────────────────────────────────────┐
-  │  参数                    推荐值           说明           │
-  ├──────────────────────────────────────────────────────────┤
-  │  max_batch_size          32              GPU 利用率最佳   │
-  │  dynamic_batching        enabled         自动批处理       │
-  │  max_queue_delay_us      5000           最大等待 5ms     │
-  │  instance_count          2-4             多实例并行       │
-  │  concurrency             32              并发请求数       │
-  │  request_timeout_ms      30000           请求超时 30s     │
-  │  warmup                true              服务启动预热     │
-  └──────────────────────────────────────────────────────────┘
+最大并发请求数  max_concurrency  高并发服务器
+请求队列策略  queue_policy  流量控制
+超时策略  request_timeout  服务稳定性
+模型预热  warmup  冷启动优化
 
-```
+推荐配置（生产环境）：
+| 参数                    推荐值           说明 |
+| --- |
+| max_batch_size          32              GPU 利用率最佳 |
+| dynamic_batching        enabled         自动批处理 |
+| max_queue_delay_us      5000           最大等待 5ms |
+| instance_count          2-4             多实例并行 |
+| concurrency             32              并发请求数 |
+| request_timeout_ms      30000           请求超时 30s |
+| warmup                true              服务启动预热 |
 
 #### 4.4.4 Triton 性能调优
 
@@ -3491,7 +3389,6 @@ server.wait_for_termination()
 
 ```
 
-
 ## 五、推理性能优化
 
 ### 5.1 量化优化
@@ -3656,7 +3553,6 @@ import pycuda.driver as cuda
 
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
 
-
 class YOLOEntropyCalibrator(trt.IInt8EntropyCalibrator2):
     """INT8 熵校准器：喂入有代表性的校准图片（建议约 500 张，预处理须与训练一致）"""
 
@@ -3687,7 +3583,6 @@ class YOLOEntropyCalibrator(trt.IInt8EntropyCalibrator2):
 
     def get_calibration_cache(self):
         return None                                        # 返回 None 则每次重新校准
-
 
 builder = trt.Builder(TRT_LOGGER)
 network = builder.create_network(1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
@@ -4048,7 +3943,6 @@ for epoch in range(20):
 
 ```
 
-
 ## 六、实战案例
 
 ### 6.1 工业质检部署
@@ -4133,37 +4027,29 @@ def autonomous_drive_pipeline(frame):
 
 医疗影像检测是 YOLO 模型的重要应用领域，需要高精度和低误报率。
 
-```
 医疗影像检测流水线架构：
-══════════════════════════════════════════════════════════════
 
-  影像来源 (DICOM/PACS)
-        │
-        ▼
-  ┌─────────────────┐
-  │  影像预处理     │  ← DICOM 解析、灰度化、降噪
-  │  (预处理模块)    │     窗宽窗位调整、直方图均衡化
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  YOLO 检测模型  │  ← YOLOv8s-seg (分割模型)
-  │  (推理引擎)     │     病灶检测 + 实例分割
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  后处理模块     │  ← 病灶大小测量、分类、排序
-  │  (分析引擎)     │      malignancy 风险评估
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  报告生成       │  ← DICOM Report、可视化标注
-  │  (报告模块)     │     PACS 集成、医生审阅界面
-  └─────────────────┘
+影像来源 (DICOM/PACS)
 
-```
+▼
+
+影像预处理  ← DICOM 解析、灰度化、降噪
+(预处理模块)  窗宽窗位调整、直方图均衡化
+
+▼
+
+YOLO 检测模型  ← YOLOv8s-seg (分割模型)
+(推理引擎)  病灶检测 + 实例分割
+
+▼
+
+后处理模块  ← 病灶大小测量、分类、排序
+(分析引擎)  malignancy 风险评估
+
+▼
+
+报告生成  ← DICOM Report、可视化标注
+(报告模块)  PACS 集成、医生审阅界面
 
 ```python
 # 医疗影像检测系统
@@ -4258,31 +4144,24 @@ class MedicalImageDetector:
 
 农业检测涉及作物病害识别、果实计数、杂草检测等应用。
 
-```
 精准农业检测系统架构：
-══════════════════════════════════════════════════════════════
 
-  无人机/摄像头
-        │
-        ▼
-  ┌─────────────────┐
-  │  边缘计算单元    │  ← Raspberry Pi 5 + Coral TPU
-  │  (实时检测)      │     杂草检测 + 作物计数
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  云端分析平台    │  ← YOLOv8x + 数据分析
-  │  (深度分析)      │     产量预测 + 病害趋势
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  决策支持系统    │  ← 施肥建议、灌溉计划
-  │  (农艺师界面)    │     病虫害防治建议
-  └─────────────────┘
+无人机/摄像头
 
-```
+▼
+
+边缘计算单元  ← Raspberry Pi 5 + Coral TPU
+(实时检测)  杂草检测 + 作物计数
+
+▼
+
+云端分析平台  ← YOLOv8x + 数据分析
+(深度分析)  产量预测 + 病害趋势
+
+▼
+
+决策支持系统  ← 施肥建议、灌溉计划
+(农艺师界面)  病虫害防治建议
 
 ```python
 # 农业作物检测系统
@@ -4361,45 +4240,36 @@ class AgricultureDetector:
 
 安防监控需要全天候运行，对稳定性和实时性要求极高。
 
-```
 安防监控检测流水线：
-══════════════════════════════════════════════════════════════
 
-  摄像头 1 ──┐
-  摄像头 2 ──┤
-  摄像头 N ──┘
-     │
-     ▼
-  ┌─────────────────┐
-  │  视频流解码     │  ← RTSP/HTTP 解码, 硬件加速
-  │  (FFmpeg/GPU)   │     NVDEC 硬件解码
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  帧采样选择     │  ← 运动检测 + 关键帧选择
-  │  (帧筛选)       │     避免无效帧推理
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  YOLO 检测      │  ← 多模型并行 (人+车+物)
-  │  (推理服务)      │     Triton 动态批处理
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  行为分析       │  ← 区域入侵、徘徊检测
-  │  (逻辑层)       │     目标跟踪 + 轨迹分析
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  告警触发       │  ← 告警规则引擎
-  │  (告警系统)     │     推送 + 录像 + 通知
-  └─────────────────┘
+摄像头 1
+摄像头 2
+摄像头 N
 
-```
+▼
+
+视频流解码  ← RTSP/HTTP 解码, 硬件加速
+(FFmpeg/GPU)  NVDEC 硬件解码
+
+▼
+
+帧采样选择  ← 运动检测 + 关键帧选择
+(帧筛选)  避免无效帧推理
+
+▼
+
+YOLO 检测  ← 多模型并行 (人+车+物)
+(推理服务)  Triton 动态批处理
+
+▼
+
+行为分析  ← 区域入侵、徘徊检测
+(逻辑层)  目标跟踪 + 轨迹分析
+
+▼
+
+告警触发  ← 告警规则引擎
+(告警系统)  推送 + 录像 + 通知
 
 ```python
 # 安防监控系统
@@ -4529,37 +4399,29 @@ class SecurityMonitor:
 
 零售场景涉及顾客计数、货架分析、热区分析等应用。
 
-```
 零售分析系统架构：
-══════════════════════════════════════════════════════════════
 
-  店内摄像头
-        │
-        ▼
-  ┌─────────────────┐
-  │  客流检测       │  ← YOLOv8n 人检测
-  │  (实时)         │     入口/出口计数
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  货架分析       │  ← YOLOv8s 商品检测
-  │  (定时)         │     缺货检测 + 陈列优化
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  热力图生成     │  ← 轨迹追踪 + 统计
-  │  (离线)         │     顾客动线分析
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  分析报告       │  ← 客流统计 + 热力图
-  │  (可视化)       │     销售预测 + 库存建议
-  └─────────────────┘
+店内摄像头
 
-```
+▼
+
+客流检测  ← YOLOv8n 人检测
+(实时)  入口/出口计数
+
+▼
+
+货架分析  ← YOLOv8s 商品检测
+(定时)  缺货检测 + 陈列优化
+
+▼
+
+热力图生成  ← 轨迹追踪 + 统计
+(离线)  顾客动线分析
+
+▼
+
+分析报告  ← 客流统计 + 热力图
+(可视化)  销售预测 + 库存建议
 
 ```python
 # 零售分析系统
@@ -4623,7 +4485,6 @@ class RetailAnalytics:
 | 客流计数 | YOLOv8n | Retail Dataset | 0.892 | Jetson Orin Nano | 120 FPS |
 | 货架检测 | YOLOv8s | Shelf Dataset | 0.856 | T4 GPU | 250 FPS |
 | 热区分析 | YOLOv8m | Mall Dataset | 0.878 | RK3588 | 85 FPS |
-
 
 ## 七、调试与测试
 
@@ -5862,7 +5723,6 @@ def adaptive_resolution(image, min_target_size=16):
 
     return imgsz
 
-
 def smart_inference(model, image, conf=0.25):
     """智能推理：根据场景自动选择最优参数"""
     h, w = image.shape[:2]
@@ -5941,7 +5801,6 @@ class ModelCache:
             'hit_rate': f"{hit_rate:.2%}"
         }
 
-
 # 使用示例
 cache = ModelCache(max_size=50)
 model = YOLO("yolo26n.pt")
@@ -5991,7 +5850,6 @@ def optimize_gpu_memory():
     if torch.cuda.is_available():
         torch.cuda.set_per_process_memory_fraction(0.8)  # 使用 80% 显存
 
-
 def batch_with_memory_limit(model, images, max_memory_mb=4000):
     """根据显存限制动态调整批大小"""
     if not torch.cuda.is_available():
@@ -6040,7 +5898,6 @@ def worker_gpu(gpu_id, model_path, images, result_queue):
     # 推理
     results = model(local_images, conf=0.25)
     result_queue.put((gpu_id, results))
-
 
 def multi_gpu_inference(model_path, images, num_gpus=4):
     """多GPU并行推理"""
@@ -6195,7 +6052,6 @@ def fast_nms(boxes, scores, iou_threshold=0.45):
         order = order[inds + 1]
 
     return np.array(keep)
-
 
 def fast_postprocess(outputs, img_size, orig_img_size, conf_thres=0.25, iou_thres=0.45):
     """
@@ -6413,3 +6269,4 @@ yolo-inference-deployment/
 ---
 
 > **📌 系列导航**：[← 上一篇：模型在npu的cpp部署](模型在npu的cpp部署.md) · [📖 导读目录](README.md) · [下一篇：yolo模型实战项目完整指南 →](YOLO模型实战项目完整指南.md)
+```

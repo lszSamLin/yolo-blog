@@ -6,7 +6,6 @@ Rockchip NPU（Neural Processing Unit）是瑞芯微芯片内置的神经网络�
 
 > **参考来源**：[RKNN-Toolkit2 Python API](https://github.com/airockchip/rknn-toolkit2) | [Rockchip NPU Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/03_rknn_runtime/)
 
-
 ## 一、硬件平台选择
 
 ### 1.1 Rockchip NPU 系列
@@ -52,25 +51,22 @@ Rockchip NPU（Neural Processing Unit）是瑞芯微芯片内置的神经网络�
 
 ### 1.3 选型决策指南
 
-```
 如何选择合适的开发板？
 
 1. 确定性能需求
-   ├── 单路 1080p 实时检测 (15+ FPS) → RK3568 即可
-   ├── 多路 720p 检测 或 4K 单路   → RK3588 推荐
-   └── 极低功耗持续运行           → RK3562 考虑
+单路 1080p 实时检测 (15+ FPS) → RK3568 即可
+多路 720p 检测 或 4K 单路  → RK3588 推荐
+极低功耗持续运行  → RK3562 考虑
 
 2. 确定接口需求
-   ├── 需要 CSI 摄像头接口     → 选择带 MIPI CSI 的开发板
-   ├── 需要以太网             → NanoPi R5S 或 Orange Pi 3B
-   └── 需要 NVMe 存储         → Rock 5B 或 Orange Pi 5
+需要 CSI 摄像头接口  → 选择带 MIPI CSI 的开发板
+需要以太网  → NanoPi R5S 或 Orange Pi 3B
+需要 NVMe 存储  → Rock 5B 或 Orange Pi 5
 
 3. 确定预算
-   ├── 100-300元              → RK3562 系列
-   ├── 300-600元              → RK3568 系列
-   └── 600元以上              → RK3588 系列
-
-```
+100-300元  → RK3562 系列
+300-600元  → RK3568 系列
+600元以上  → RK3588 系列
 
 ### 1.4 外设兼容性注意事项
 
@@ -78,7 +74,6 @@ Rockchip NPU（Neural Processing Unit）是瑞芯微芯片内置的神经网络�
 - **显示屏**：部分开发板仅支持 HDMI，工业场景推荐支持 LVDS/eDP 的型号
 - **散热**：RK3588 高性能模式下需要主动散热（散热风扇）
 - **电源**：建议使用 5V/3A 以上的稳定电源，避免 NPU 高负载时电压不稳
-
 
 ## 二、环境配置
 
@@ -288,7 +283,6 @@ python3 -c "import rknn"
 
 ```
 
-
 ## 三、Python 推理部署
 
 ### 3.1 完整推理类
@@ -306,7 +300,6 @@ import numpy as np
 import time
 from pathlib import Path
 from rknn.api import RKNN
-
 
 class YOLONPUInference:
     """
@@ -579,7 +572,6 @@ class YOLONPUInference:
         if self.rknn:
             self.rknn.release()
 
-
 def main():
     """主函数：演示图片推理"""
     # 初始化推理器
@@ -621,7 +613,6 @@ def main():
     
     detector.release()
 
-
 if __name__ == "__main__":
     main()
 
@@ -641,7 +632,6 @@ import numpy as np
 import time
 import threading
 from rknn.api import RKNN
-
 
 class RealtimeDetector:
     """
@@ -918,7 +908,6 @@ class RealtimeDetector:
             cv2.destroyAllWindows()
         self.rknn.release()
 
-
 if __name__ == "__main__":
     # 方式1: 摄像头实时检测
     detector = RealtimeDetector("best.rknn", target="rk3588")
@@ -944,7 +933,6 @@ import time
 import json
 from pathlib import Path
 from rknn.api import RKNN
-
 
 class BatchDetector:
     """
@@ -1135,7 +1123,6 @@ class BatchDetector:
         """释放资源"""
         self.rknn.release()
 
-
 if __name__ == "__main__":
     # 批量处理示例
     detector = BatchDetector("best.rknn", target="rk3588")
@@ -1156,7 +1143,6 @@ if __name__ == "__main__":
 import time
 import numpy as np
 from rknn.api import RKNN
-
 
 def benchmark_model(model_path, target="rk3588", imgsz=640, n_runs=50):
     """基准测试单个模型"""
@@ -1206,7 +1192,6 @@ for model_path, name in models:
         print(f"{name:<20} ERROR: {e}")
 
 ```
-
 
 ## 四、性能优化技巧
 
@@ -1318,7 +1303,6 @@ import time
 import queue
 import threading
 from rknn.api import RKNN
-
 
 class PipelineDetector:
     """
@@ -1501,7 +1485,6 @@ class PipelineDetector:
         cv2.destroyAllWindows()
         self.rknn.release()
 
-
 if __name__ == "__main__":
     detector = PipelineDetector("best.rknn", target="rk3588")
     detector.run(camera_id=0)
@@ -1523,7 +1506,6 @@ if __name__ == "__main__":
 import cv2
 import numpy as np
 from rknn.api import RKNN
-
 
 class MemoryOptimizedDetector:
     """
@@ -1634,7 +1616,6 @@ class MemoryOptimizedDetector:
         self.rknn.release()
 
 ```
-
 
 ## 五、常见问题
 
@@ -1858,7 +1839,6 @@ def setup_camera(camera_id=0):
     
     return cap
 
-
 def troubleshoot_camera():
     """
     摄像头故障排查
@@ -1886,7 +1866,6 @@ def troubleshoot_camera():
         capture_output=True, text=True
     )
     print(f"UVC 驱动状态: {result.stdout.strip()}")
-
 
 if __name__ == "__main__":
     troubleshoot_camera()
@@ -1919,7 +1898,6 @@ export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 
 ```
 
-
 ## 总结
 
 本文详细介绍了在 Rockchip NPU 上使用 Python 部署 YOLO 模型的全流程，从硬件选型到最终部署，覆盖了实际工程中常见的问题和优化方法。核心要点如下：
@@ -1943,12 +1921,10 @@ export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 
 通过合理选型、规范配置和针对性优化，YOLO 模型在 Rockchip NPU 上可以达到实时推理性能，满足边缘 AI 应用的实际需求。
 
-
 *参考资料：*
 - *[RKNN-Toolkit2 Python API](https://github.com/airockchip/rknn-toolkit2)*
 - *[RKNN Runtime Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/03_rknn_runtime/)*
 - *[Rockchip NPU Driver Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/02_rknn_toolkit2_installation/)*
 - *[Ultralytics YOLO Documentation](https://docs.ultralytics.com/)*
-
 
 > **📌 系列导航**：[← 上一篇：Yolo模型的转换与rknn-toolkit相关工具链的使用](YOLO模型的转换与rknn-toolkit相关工具链的使用.md) · [📖 导读目录](README.md) · [下一篇：模型在npu的cpp部署 →](模型在npu的cpp部署.md)

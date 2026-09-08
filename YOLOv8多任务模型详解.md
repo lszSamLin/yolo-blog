@@ -8,7 +8,6 @@ Ultralytics YOLOv8 提供了完整的多任务检测能力，除了标准的物�
 
 > **参考来源**：[Ultralytics Multi-Task Documentation](https://docs.ultralytics.com/tasks/) | [Ultralytics GitHub](https://github.com/ultralytics/ultralytics)
 
-
 ## 一、任务类型总览
 
 ### 1.1 YOLOv8 支持的任务
@@ -84,7 +83,6 @@ YOLOv8 多任务模型家族
 - 支持 YOLO 格式和 COCO 格式
 - 标注工具推荐：labelImg、CVAT、Roboflow
 
-
 #### 实例分割（Segmentation）
 
 实例分割在检测的基础上进一步输出像素级掩码，实现目标级别的精细分割。
@@ -106,7 +104,6 @@ YOLOv8 多任务模型家族
 - 需要多边形或 RLE 编码标注，标注成本高
 - 推荐工具：Labelme、CVAT（支持多边形标注）
 - 建议标注精度：至少 100 个顶点描述复杂轮廓
-
 
 #### 姿态估计（Pose）
 
@@ -132,7 +129,6 @@ YOLOv8 多任务模型家族
 - 标注工具：LabelMe（支持关键点标注）、CVAT
 - 建议关键点可见性阈值设置为 0.5，过滤不可见关键点
 
-
 #### 旋转框检测（OBB）
 
 旋转框检测输出包含角度信息的边界框，能够紧密贴合任意朝向的目标。
@@ -156,7 +152,6 @@ YOLOv8 多任务模型家族
 - DOTA 格式：以四个顶点坐标标注
 - 角度定义：从水平轴逆时针旋转为正
 - 建议使用支持旋转框标注的工具，如 LabelMe（polygons 模式）
-
 
 #### 图像分类（Classification）
 
@@ -198,20 +193,20 @@ YOLOv8 多任务模型家族
 
 **标注格式**：
 - 目录结构形式（ImageNet 格式）：
-  ```
-  dataset/
-  ├── train/
-  │   ├── class_0/
-  │   │   ├── img001.jpg
-  │   │   └── img002.jpg
-  │   └── class_1/
-  │       ├── img003.jpg
-  │       └── img004.jpg
-  ├── val/
-  │   ├── class_0/
-  │   └── class_1/
-  └── data.yaml
-  ```
+
+dataset/
+train/
+class_0/
+img001.jpg
+img002.jpg
+class_1/
+img003.jpg
+img004.jpg
+val/
+class_0/
+class_1/
+data.yaml
+
 - YAML 配置示例：
   ```yaml
   path: ./datasets/my_classification
@@ -365,7 +360,6 @@ OBB        400 张       1500 张      4000+ 张       ★★☆☆☆
 
 \* COCO Pose val | \** DOTA val
 
-
 ### 1.11 YOLOv8 vs YOLO11 vs YOLO26 多任务能力全面对比
 
 深入对比三个主要版本的 YOLO 模型家族，了解其任务支持范围和架构演进。
@@ -397,32 +391,27 @@ YOLO 版本任务支持矩阵:
 
 #### 架构差异对比
 
-```
 YOLOv8 vs YOLO11 vs YOLO26 架构演进:
-══════════════════════════════════════════════════════════════════════
 
-                    YOLOv8              YOLO11              YOLO26
-                    ───────             ──────              ──────
-Backbone            CSPDarknet         CSPDarknet v2       EfficientNet-v2
-                    (标准CSP)          (改进CSP)           (混合架构)
-                     │                   │                    │
-Neck                PAN-FPN            BiFPN + PAN          Adaptive PAN
-                    (单路径FPN)        (双向特征金字塔)      (自适应多尺度)
-                     │                   │                    │
-Head                Unified Head       Multi-Scale Head     Mixture-of-Tasks
-                    (统一检测头)        (多尺度检测头)        (任务混合头)
-                     │                   │                    │
-分割头              ProtoNet + CV2     SPPF + ProtoNet      Task-Specific Proto
-                    (固定原型)          (优化原型)            (可学习原型)
-                     │                   │                    │
-姿态头              标准关键点头        增强关键点头          多姿态关键点头
-                    (17点COCO)          (17点+扩展)           (自定义N点)
-                     │                   │                    │
-OBB头               标准旋转框头        GIoU优化旋转框头      Angle-Aware头
-                    (基础旋转IoU)      (改进损失函数)        (角度感知)
-══════════════════════════════════════════════════════════════════════
+YOLOv8  YOLO11  YOLO26
 
-```
+Backbone  CSPDarknet  CSPDarknet v2  EfficientNet-v2
+(标准CSP)  (改进CSP)  (混合架构)
+
+Neck  PAN-FPN  BiFPN + PAN  Adaptive PAN
+(单路径FPN)  (双向特征金字塔)  (自适应多尺度)
+
+Head  Unified Head  Multi-Scale Head  Mixture-of-Tasks
+(统一检测头)  (多尺度检测头)  (任务混合头)
+
+分割头  ProtoNet + CV2  SPPF + ProtoNet  Task-Specific Proto
+(固定原型)  (优化原型)  (可学习原型)
+
+姿态头  标准关键点头  增强关键点头  多姿态关键点头
+(17点COCO)  (17点+扩展)  (自定义N点)
+
+OBB头  标准旋转框头  GIoU优化旋转框头  Angle-Aware头
+(基础旋转IoU)  (改进损失函数)  (角度感知)
 
 #### 性能对比表
 
@@ -546,40 +535,28 @@ YOLO26 (2026):
 
 ```
 
-
 ### 1.7 任务选择决策树（完整版）
 
-```
-                                    ┌─────────────────┐
-                                    │   需要做什么？   │
-                                    └────────┬────────┘
-                                             │
-              ┌──────────────────────────────┼──────────────────────────────┐
-              │                              │                              │
-              ▼                              ▼                              ▼
-        ┌──────────┐                ┌──────────────┐              ┌──────────┐
-        │ 分类任务？ │                │ 检测任务？    │              │ 无标注数据 │
-        └────┬─────┘                └──────┬───────┘              └────┬─────┘
-             │                              │                           │
-    ┌────────┴────────┐              ┌──────┴──────┐              ┌─────┴──────┐
-    ▼                 ▼              ▼             ▼              ▼            ▼
- 是(YOLO26-     否，继续         只需定位      需要更精细      使用预训练    使用开放词汇
-  cls)          判断            分类          信息            模型(迁移学习)   检测(YOLOE-26)
-                 │              │             │
-            ┌────┴────┐     ┌───┴───┐    ┌────┴────┐
-            ▼         ▼     ▼       ▼    ▼         ▼
-        需要轮廓?  需要骨骼? 需要旋转框?
-            │         │         │
-      ┌─────┴───┐  ┌──┴──┐  ┌───┴───┐
-      ▼         ▼  ▼     ▼  ▼       ▼
-    是(Seg)  否   是(Pose) 否   是(OBB)
-                           │       │
-                      需要精细    需要像素级
-                      分割吗？    轮廓吗？
-                           │       │
-                         否(keep)  是(Seg)
+需要做什么？
 
-```
+▼  ▼  ▼
+
+分类任务？  检测任务？  无标注数据
+
+▼  ▼  ▼  ▼  ▼  ▼
+是(YOLO26-  否，继续  只需定位  需要更精细  使用预训练  使用开放词汇
+cls)  判断  分类  信息  模型(迁移学习)  检测(YOLOE-26)
+
+▼  ▼  ▼  ▼  ▼  ▼
+需要轮廓?  需要骨骼? 需要旋转框?
+
+▼  ▼  ▼  ▼  ▼  ▼
+是(Seg)  否  是(Pose) 否  是(OBB)
+
+需要精细  需要像素级
+分割吗？  轮廓吗？
+
+否(keep)  是(Seg)
 
 **按业务指标选择**：
 
@@ -633,7 +610,6 @@ YOLO26 (2026):
   手术引导 → 姿态 (器械关键点)
 
 ```
-
 
 ### 1.8 典型行业案例详解
 
@@ -721,51 +697,37 @@ YOLO26 (2026):
 - 优势：旋转框紧密贴合建筑物，减少背景噪声
 - 应用：城市规划、灾害评估、地图更新
 
-
 ### 1.10 任务选择完整决策流程图
 
-```
-                    ┌─────────────────────────────────┐
-                    │     开始: 明确业务需求            │
-                    └───────────────┬─────────────────┘
-                                    │
-                    ┌───────────────┴───────────────┐
-                    │  Q1: 是否需要像素级定位?        │
-                    └───────┬───────────────┬───────┘
-                           │               │
-                         否(Y)           是(Y)
-                           │               │
-                    ┌──────┴──────┐  ┌──────┴──────┐
-                    │ Q2: 目标有   │  │ Q3: 是否需要│
-                    │ 旋转角度?    │  │ 骨骼关键点? │
-                    └──┬──────┬───┘  └──┬──────┬───┘
-                      否│      │否      否│      │是
-                        ▼      ▼         ▼      ▼
-                   ┌────────┐    ┌──────────┐    │
-                   │ 检测   │    │ OBB检测  │    │
-                   │ 任务   │    │ 任务     │    │
-                   │YOLOv8 │    │YOLOv8-   │    │
-                   │ .pt   │    │obb.pt    │    │
-                   └────────┘    └──────────┘    │
-                           │                    │
-                    ┌──────┴──────┐       ┌─────┴─────┐
-                    │ Q4: 需要     │       │ Q5: 需要  │
-                    │ 精细轮廓?    │       │ 语义级   │
-                    └──┬──────┬───┘       │ 分割?    │
-                      否│      │是        └────┬────┘
-                        ▼      ▼              │是
-                  ┌──────────┐    ┌───────────┴───────────┐
-                  │ 分割任务  │    │ Q6: 是开放词汇?        │
-                  │YOLOv8-   │    └───────┬───────────────┘
-                  │ seg.pt   │           否│      是(Y)    │
-                  └──────────┘             ▼               ▼
-                                          ┌──────────┐  ┌──────────┐
-                                          │ 标准分割  │  │ 语义分割  │
-                                          │ YOLO26   │  │ YOLO26   │
-                                          │ -seg.pt  │  │ -mseg.pt │
-                                          └──────────┘  └──────────┘
+| 开始: 明确业务需求 |
+| --- |
+| Q1: 是否需要像素级定位? |
+否(Y)  是(Y)
+| Q2: 目标有 |  | Q3: 是否需要 |  |  |
+| --- | --- | --- | --- | --- |
+| 旋转角度? |  | 骨骼关键点? |  |  |
+| 否 |  | 否      否 |  | 是 |
+▼  ▼  ▼  ▼
 
-```
+检测  OBB检测
+任务  任务
+YOLOv8  YOLOv8-
+.pt  obb.pt
+
+Q4: 需要  Q5: 需要
+精细轮廓?  语义级
+分割?
+否  是
+▼  ▼  是
+
+分割任务  Q6: 是开放词汇?
+YOLOv8-
+seg.pt  否  是(Y)
+▼  ▼
+
+标准分割  语义分割
+YOLO26  YOLO26
+-seg.pt  -mseg.pt
 
 #### 分支决策详情
 
@@ -805,7 +767,6 @@ YOLO26 (2026):
   关键点数量: 17 (COCO) / 21 (手部) / 68 (人脸)
 
 ```
-
 
 ### 1.11 各任务数据需求详细分析
 
@@ -858,7 +819,6 @@ OBB旋转框      CVAT/PPOI    1分钟/张    80-150        ★★★
 ══════════════════════════════════════════════════════════════
 
 ```
-
 
 ### 1.12 行业应用场景（20+ 场景详解）
 
@@ -1018,7 +978,6 @@ OBB旋转框      CVAT/PPOI    1分钟/张    80-150        ★★★
 
 ```
 
-
 ### 1.13 YOLOv8 vs YOLO11 vs YOLO26 全面对比
 
 | 维度 | YOLOv8 | YOLO11 | YOLO26 |
@@ -1079,7 +1038,6 @@ YOLO26 相比 YOLO11 提升原因:
   · YOLO26: 多任务联合训练，开放词汇需求
 
 ```
-
 
 ### 1.5 各任务数据需求与标注规范
 
@@ -2277,7 +2235,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class v8SegLoss:
     """
     YOLOv8 分割损失函数
@@ -2411,7 +2368,6 @@ results = model.train(
     name="seg_exp1",
 )
 
-
 # ═══════════════════════════════════════════════════════════
 # 方式2: 自定义训练配置
 # ═══════════════════════════════════════════════════════════
@@ -2432,7 +2388,6 @@ results = model.train(
     save=True,
     plots=True,
 )
-
 
 # ═══════════════════════════════════════════════════════════
 # 方式3: YAML 配置训练
@@ -2521,35 +2476,28 @@ YOLOv8 的分割头（SegHead）是整个模型的核心创新之一，其设计
 
 **Proto 网络详解**：
 
-```
 Proto 网络结构:
-  输入特征 (P3, ch=128)
-      │
-      ▼
-  ┌──────────────┐
-  │ Conv(ch→32)   │  分组卷积 (group=4)，降低通道数
-  │ GroupNorm     │
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │ Upsample 2×   │  上采样到 160×160
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │ Conv(32→32)   │  特征增强
-  └──────┬───────┘
-         │
-         ▼
-  ┌──────────────┐
-  │ Conv(32→32)   │  进一步特征提取
-  └──────┬───────┘
-         │
-         ▼
-  输出: [32, 160, 160]  ← 32 个掩码原型
+输入特征 (P3, ch=128)
 
-```
+▼
+
+Conv(ch→32)  分组卷积 (group=4)，降低通道数
+GroupNorm
+
+▼
+
+Upsample 2×  上采样到 160×160
+
+▼
+
+Conv(32→32)  特征增强
+
+▼
+
+Conv(32→32)  进一步特征提取
+
+▼
+输出: [32, 160, 160]  ← 32 个掩码原型
 
 **为什么只有 4 个掩码系数？**
 - 4 个系数足以通过线性组合 32 个原型生成复杂的分割掩码
@@ -2683,7 +2631,6 @@ class YolosamPipeline:
         y1, x1 = coords.max(axis=0)
         return [x0, y0, x1, y1]
 
-
 # 使用示例
 # pipeline = YolosamPipeline(yolo_model="yolov8s.pt")
 # results = pipeline.predict(image, conf_threshold=0.3)
@@ -2812,7 +2759,6 @@ def defect_segmentation_pipeline(image_path, defect_classes=None):
             })
 
     return defects, masks
-
 
 def visualize_results(image, masks, defects):
     """可视化分割结果"""
@@ -2954,52 +2900,44 @@ model.train(
 
 #### 检测头与分割头的结构差异
 
-```
 检测头 (Detect Head) 输出结构:
-┌──────────────────────────────────────────────────────┐
-│  输入: 多尺度特征 [N, C, H, W] (P3/P4/P5)             │
-│                                                      │
-│  每个特征层输出:                                       │
-│  ┌──────────┬────────────────────────────────────┐   │
-│  │ 分支     │  输出维度                          │   │
-│  ├──────────┼────────────────────────────────────┤   │
-│  │ 分类     │  [N, nc, 1, 1]                    │   │
-│  │ 回归     │  [N, 4*reg_max, 1, 1]              │   │
-│  │ 置信度   │  [N, 1, 1, 1]                     │   │
-│  └──────────┴────────────────────────────────────┘   │
-│                                                      │
-│  最终输出: [N, 4+nc+reg_max*4, num_anchors]          │
-└──────────────────────────────────────────────────────┘
+
+输入: 多尺度特征 [N, C, H, W] (P3/P4/P5)
+
+每个特征层输出:
+
+分支  输出维度
+
+分类  [N, nc, 1, 1]
+回归  [N, 4*reg_max, 1, 1]
+置信度  [N, 1, 1, 1]
+
+最终输出: [N, 4+nc+reg_max*4, num_anchors]
 
 分割头 (Seg Head) 输出结构:
-┌──────────────────────────────────────────────────────┐
-│  输入: 多尺度特征 [N, C, H, W] (P3/P4/P5)             │
-│                                                      │
-│  分支1: 掩码系数分支 (同检测头的回归逻辑)              │
-│  ┌──────────────────────────────────────────────┐   │
-│  │  Conv(ch→128) → BN → ReLU                   │   │
-│  │  Conv(128→128, g=4) → BN → ReLU             │   │
-│  │  Conv(128→nk)                               │   │
-│  │  输出: [N, nk, H/4, W/4]                    │   │
-│  │  nk = num_coeffs = 4 (默认)                 │   │
-│  └──────────────────────────────────────────────┘   │
-│                                                      │
-│  分支2: 原型掩码分支 (Proto Head)                    │
-│  ┌──────────────────────────────────────────────┐   │
-│  │  Conv(ch→32) → GroupNorm → ReLU             │   │
-│  │  Upsample 2×                                  │   │
-│  │  Conv(32→32) → ReLU                         │   │
-│  │  Conv(32→32) → ReLU                         │   │
-│  │  输出: [32, 160, 160]  (全局共享原型)        │   │
-│  └──────────────────────────────────────────────┘   │
-│                                                      │
-│  最终输出:                                           │
-│  ├── 检测输出: [N, 4+nc+reg_max*4, num_anchors]     │
-│  ├── 掩码系数: [N, nk, H/4, W/4]                    │
-│  └── 原型掩码: [32, 160, 160]                       │
-└──────────────────────────────────────────────────────┘
 
-```
+输入: 多尺度特征 [N, C, H, W] (P3/P4/P5)
+
+分支1: 掩码系数分支 (同检测头的回归逻辑)
+
+Conv(ch→128) → BN → ReLU
+Conv(128→128, g=4) → BN → ReLU
+Conv(128→nk)
+输出: [N, nk, H/4, W/4]
+nk = num_coeffs = 4 (默认)
+
+分支2: 原型掩码分支 (Proto Head)
+
+Conv(ch→32) → GroupNorm → ReLU
+Upsample 2×
+Conv(32→32) → ReLU
+Conv(32→32) → ReLU
+输出: [32, 160, 160]  (全局共享原型)
+
+最终输出:
+检测输出: [N, 4+nc+reg_max*4, num_anchors]
+掩码系数: [N, nk, H/4, W/4]
+原型掩码: [32, 160, 160]
 
 #### Proto 模块的完整架构
 
@@ -3189,31 +3127,25 @@ def mask_iou_loss(pred, target):
 
 #### 实例分割 vs 语义分割的选择
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    实例分割 vs 语义分割选择指南                    │
-├──────────────────┬───────────────────┬───────────────────────────┤
-│  特性            │  实例分割          │  语义分割                  │
-├──────────────────┼───────────────────┼───────────────────────────┤
-│  目标            │  区分每个实例      │  按类别划分像素            │
-│  输出            │  每个实例独立掩码   │  每像素一个类别标签        │
-│  同一类多个目标   │  分别标记          │  合并为同一区域            │
-│  标注成本         │  高 (逐实例标注)   │  低 (逐像素标注)           │
-│  计算复杂度       │  较高              │  较低                     │
-│  典型应用         │  自动驾驶、医疗    │  遥感、场景理解            │
-│  YOLO 模型       │  YOLOv8-seg       │  YOLO26-seg (新增)        │
-├──────────────────┴───────────────────┴───────────────────────────┤
-│  选择建议:                                                      │
-│  • 需要知道"有几个"同类目标 → 实例分割                          │
-│  • 只需要知道"哪里是什么" → 语义分割                            │
-│  • 标注资源充足 → 实例分割                                      │
-│  • 标注资源有限 → 语义分割                                      │
-│  • 下游任务需要实例级操作 → 实例分割                            │
-│  • 下游任务只需要区域划分 → 语义分割                            │
-└──────────────────────────────────────────────────────────────────┘
+实例分割 vs 语义分割选择指南
 
-```
+特性  实例分割  语义分割
 
+目标  区分每个实例  按类别划分像素
+输出  每个实例独立掩码  每像素一个类别标签
+同一类多个目标  分别标记  合并为同一区域
+标注成本  高 (逐实例标注)  低 (逐像素标注)
+计算复杂度  较高  较低
+典型应用  自动驾驶、医疗  遥感、场景理解
+YOLO 模型  YOLOv8-seg  YOLO26-seg (新增)
+
+选择建议:
+• 需要知道"有几个"同类目标 → 实例分割
+• 只需要知道"哪里是什么" → 语义分割
+• 标注资源充足 → 实例分割
+• 标注资源有限 → 语义分割
+• 下游任务需要实例级操作 → 实例分割
+• 下游任务只需要区域划分 → 语义分割
 
 ### 2.11 掩码生成的数学原理深入
 
@@ -3294,7 +3226,6 @@ Proto 网络的核心理解:
   - 激活/抑制的强度 (系数绝对值大小)
 
 ```
-
 
 ### 2.12 自定义分割训练完整指南
 
@@ -3392,7 +3323,6 @@ print(f'最佳模型 mAP50-95: {metrics.box.map:.3f}, seg mAP50-95: {metrics.seg
 
 ```
 
-
 ### 2.13 分割评估指标详解
 
 #### 指标定义与计算
@@ -3436,7 +3366,6 @@ results = model.val()
 
 ```
 
-
 ### 2.14 常见分割失败模式与修复方案
 
 ```
@@ -3473,7 +3402,6 @@ results = model.val()
         3)使用 Focal Loss 替代 BCE Loss 4)增加少数类标注数据
 
 ```
-
 
 ### 2.15 Proto 模块自定义指南
 
@@ -3548,7 +3476,6 @@ class CustomProto(nn.Module):
 | nk=8, np=48 | +2.5% | +0.8% | +22% | 极端复杂场景 |
 | nk=4, np=16 | -1.5% | -1.2% | -15% | 速度敏感场景 |
 
-
 ### 2.16 实例分割 vs 语义分割深度对比
 
 | 对比维度 | 实例分割 | 语义分割 |
@@ -3601,7 +3528,6 @@ class CustomProto(nn.Module):
 
 ```
 
-
 ### 2.17 完整 SegHead PyTorch 实现（详细注释版）
 
 本节提供 YOLOv8 分割头（SegHead）的完整 PyTorch 实现，每个操作都标注了张量形状。
@@ -3627,7 +3553,6 @@ YOLOv8 SegHead 完整实现
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 
 class Proto(nn.Module):
     """
@@ -3676,7 +3601,6 @@ class Proto(nn.Module):
         return F.interpolate(x, size=(self.ps, self.ps),
                            mode='bilinear', align_corners=False)
         # 上采样到 [N, np, 160, 160]
-
 
 class SegHead(nn.Module):
     """
@@ -3968,7 +3892,6 @@ Step 7: 上采样到原始图像尺寸
 
 ```
 
-
 ### 2.18 实例分割 vs 全景分割深度对比
 
 #### 2.18.1 三种分割任务对比
@@ -3986,53 +3909,38 @@ Step 7: 上采样到原始图像尺寸
 
 #### 2.18.2 全景分割架构
 
-```
 全景分割 (Panoptic Segmentation) 架构:
-══════════════════════════════════════════════════════════════
 
 输入: 图像 [B, 3, 800, 800]
-         │
-         ▼
-┌──────────────────────────────────────────────┐
-│              Backbone (ResNet-101)            │
-│              ↓                                │
-│         P3, P4, P5 (多尺度特征)               │
-└───────────────────┬──────────────────────────┘
-                    │
-        ┌───────────┴───────────┐
-        ▼                       ▼
-┌───────────────┐       ┌───────────────┐
-│  实例分支      │       │  语义分支      │
-│  (DetectHead) │       │  (SegHead)    │
-│               │       │               │
-│  - 检测框      │       │  - 每像素分类  │
-│  - 类别       │       │  - 语义掩码   │
-│  - 掩码系数   │       │               │
-└───────┬───────┘       └───────┬───────┘
-        │                       │
-        ▼                       ▼
-┌───────────────┐       ┌───────────────┐
-│  实例掩码      │       │  语义掩码      │
-│  [N, 800, 800]│       │  [800, 800]   │
-└───────┬───────┘       └───────┬───────┘
-        │                       │
-        └───────────┬───────────┘
-                    ▼
-          ┌─────────────────┐
-          │  融合 (Fusion)   │
-          │  1. 实例掩码     │
-          │  2. 语义掩码     │
-          │  3. 背景填充     │
-          └────────┬────────┘
-                   ▼
-          ┌─────────────────┐
-          │  输出           │
-          │  - 实例: 带ID   │
-          │  - stuff: 无ID  │
-          └─────────────────┘
-══════════════════════════════════════════════════════════════
 
-```
+▼
+
+Backbone (ResNet-101)
+↓
+P3, P4, P5 (多尺度特征)
+
+▼  ▼
+| 实例分支 |  | 语义分支 |
+| --- | --- | --- |
+| (DetectHead) |  | (SegHead) |
+| - 检测框 |  | - 每像素分类 |
+| - 类别 |  | - 语义掩码 |
+| - 掩码系数 |  |  |
+▼  ▼
+| 实例掩码 |  | 语义掩码 |
+| --- | --- | --- |
+| [N, 800, 800] |  | [800, 800] |
+▼
+| 融合 (Fusion) |
+| --- |
+| 1. 实例掩码 |
+| 2. 语义掩码 |
+| 3. 背景填充 |
+▼
+| 输出 |
+| --- |
+| - 实例: 带ID |
+| - stuff: 无ID |
 
 #### 2.18.3 全景分割 vs 实例分割实现对比
 
@@ -4097,7 +4005,6 @@ class PanopticSegmentation:
         """
         pass
 
-
 class InstanceSegmentation:
     """
     实例分割模型 (YOLOv8-Seg)
@@ -4157,7 +4064,6 @@ COCO Panoptic val 基准:
 
 ```
 
-
 ### 2.19 掩码后处理完整实现
 
 本节提供分割掩码的后处理代码，包括颜色映射、轮廓提取、面积计算等。
@@ -4170,7 +4076,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
-
 
 class MaskPostProcessor:
     """
@@ -4460,29 +4365,20 @@ class MaskPostProcessor:
 
 ```
 
-
 ### 2.20 完整分割管线：数据→训练→导出→部署
 
 #### 2.20.1 数据准备
 
-```
 分割数据管线流程:
-══════════════════════════════════════════════════════════════
 
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│  原始图像    │ → │  数据标注    │ → │  格式转换    │ → │  数据增强    │
-│  (JPEG/PNG) │   │  (多边形/    │   │  (COCO→YOLO) │   │  (Mosaic等)  │
-│             │   │   RLE编码)   │   │              │   │             │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-                                                        │
-                                                        ▼
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│  模型评估    │ ← │  模型导出    │ ← │  模型部署    │ ← │  模型训练    │
-│  (mAP/LOSS) │   │  (ONNX/TRT) │   │  (API服务)   │   │  (100epoch)  │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-══════════════════════════════════════════════════════════════
+原始图像  →  数据标注  →  格式转换  →  数据增强
+(JPEG/PNG)  (多边形/  (COCO→YOLO)  (Mosaic等)
+RLE编码)
 
-```
+▼
+
+模型评估  ←  模型导出  ←  模型部署  ←  模型训练
+(mAP/LOSS)  (ONNX/TRT)  (API服务)  (100epoch)
 
 **推荐标注工具**：
 
@@ -4503,7 +4399,6 @@ class MaskPostProcessor:
 from ultralytics import YOLO
 import yaml
 from pathlib import Path
-
 
 def train_segmentation_model(
     data_yaml,
@@ -4586,7 +4481,6 @@ def train_segmentation_model(
 
     return results
 
-
 # 使用示例
 if __name__ == '__main__':
     # 创建数据集配置
@@ -4626,7 +4520,6 @@ if __name__ == '__main__':
 分割模型导出
 """
 from ultralytics import YOLO
-
 
 def export_segmentation_model(model_path, export_dir='./exports'):
     """
@@ -4693,7 +4586,6 @@ def export_segmentation_model(model_path, export_dir='./exports'):
 
     return export_paths
 
-
 def verify_onnx_model(onnx_path):
     """
     验证 ONNX 模型
@@ -4746,7 +4638,6 @@ app = FastAPI(title="YOLOv8-Seg 分割服务")
 
 # 加载模型
 model = YOLO('yolov8s-seg.pt')
-
 
 @app.post("/predict")
 async def predict(image: UploadFile = File(...)):
@@ -4819,83 +4710,74 @@ async def predict(image: UploadFile = File(...)):
         "stats": stats
     })
 
-
 @app.get("/health")
 async def health():
     """健康检查接口"""
     return {"status": "healthy", "model": "yolov8s-seg"}
-
 
 # 运行服务
 # uvicorn segmentation_api:app --host 0.0.0.0 --port 8000
 
 ```
 
-
 ### 2.21 掩码生成数学原理深入（完整推导）
 
 #### 2.21.1 掩码系数预测的张量形状追踪
 
-```
 掩码生成全流程张量形状追踪:
-══════════════════════════════════════════════════════════════
 
 输入: 图像 [B, 3, 640, 640]
-  │
-  ▼
-Backbone (CSPDarknet):
-  P3: [B, 128, 80, 80]   # stride=8
-  P4: [B, 256, 40, 40]   # stride=16
-  P5: [B, 512, 20, 20]   # stride=32
-  │
-  ▼
-Neck (PAN-FPN):
-  F3: [B, 128, 80, 80]   # 上采样后融合
-  F4: [B, 128, 40, 40]
-  F5: [B, 128, 20, 20]
-  │
-  ▼
-检测头 (Detect Head):
-  输出: [B, na*(nc+4), H, W]
-  例如: [B, 3*(80+4), 80, 80] = [B, 252, 80, 80]
-  │
-  ▼
-分割头 (Seg Head):
-  ┌─────────────────────────────────────────────────────────┐
-  │  Proto 网络 (共享):                                     │
-  │    输入: F3 [B, 128, 80, 80]                           │
-  │    上采样 ×4 → [B, 128, 320, 320]                     │
-  │    Conv(128, 32, 3) → [B, 32, 320, 320]               │
-  │    Conv(32, 32, 3) → [B, 32, 160, 160]               │
-  │    输出: proto_masks [B, 32, 160, 160]                │
-  │                                                         │
-  │  掩码系数预测 (每尺度):                                  │
-  │    输入: F5 [B, 128, 20, 20]                           │
-  │    Conv(128, 128, 3) → [B, 128, 20, 20]               │
-  │    Conv(128, 128, 3, g=4) → [B, 128, 20, 20]          │
-  │    Conv(128, 4, 1) → [B, 4, 20, 20]                   │  ← n_ch=4
-  │    输出: mask_coeffs [B, 4, 20, 20]                    │
-  └─────────────────────────────────────────────────────────┘
-  │
-  ▼
-掩码组合:
-  mask_coeffs [B, 4, 20, 20]
-  proto_masks [B, 32, 160, 160]
-  │
-  ├─ 上采样 mask_coeffs: [B, 4, 160, 160]
-  ├─ 转置: [B, 4, 160×160]
-  ├─ proto_masks: [B, 32, 160×160]
-  ├─ 矩阵乘法: [B, 4, 160×160] @ [B, 160×160, 32]
-  │            = [B, 4, 32]
-  ├─ 转置: [B, 32, 4] → reshape → [B, 4, 160, 160]
-  │
-  ▼
-最终掩码:
-  output_masks [B, N_instances, 160, 160]
-  上采样到原始尺寸: [B, N_instances, 640, 640]
-══════════════════════════════════════════════════════════════
 
-```
+▼
+Backbone (CSPDarknet):
+P3: [B, 128, 80, 80]  # stride=8
+P4: [B, 256, 40, 40]  # stride=16
+P5: [B, 512, 20, 20]  # stride=32
+
+▼
+Neck (PAN-FPN):
+F3: [B, 128, 80, 80]  # 上采样后融合
+F4: [B, 128, 40, 40]
+F5: [B, 128, 20, 20]
+
+▼
+检测头 (Detect Head):
+输出: [B, na*(nc+4), H, W]
+例如: [B, 3*(80+4), 80, 80] = [B, 252, 80, 80]
+
+▼
+分割头 (Seg Head):
+
+Proto 网络 (共享):
+输入: F3 [B, 128, 80, 80]
+上采样 ×4 → [B, 128, 320, 320]
+Conv(128, 32, 3) → [B, 32, 320, 320]
+Conv(32, 32, 3) → [B, 32, 160, 160]
+输出: proto_masks [B, 32, 160, 160]
+
+掩码系数预测 (每尺度):
+输入: F5 [B, 128, 20, 20]
+Conv(128, 128, 3) → [B, 128, 20, 20]
+Conv(128, 128, 3, g=4) → [B, 128, 20, 20]
+Conv(128, 4, 1) → [B, 4, 20, 20]  ← n_ch=4
+输出: mask_coeffs [B, 4, 20, 20]
+
+▼
+掩码组合:
+mask_coeffs [B, 4, 20, 20]
+proto_masks [B, 32, 160, 160]
+
+上采样 mask_coeffs: [B, 4, 160, 160]
+转置: [B, 4, 160×160]
+proto_masks: [B, 32, 160×160]
+矩阵乘法: [B, 4, 160×160] @ [B, 160×160, 32]
+= [B, 4, 32]
+转置: [B, 32, 4] → reshape → [B, 4, 160, 160]
+
+▼
+最终掩码:
+output_masks [B, N_instances, 160, 160]
+上采样到原始尺寸: [B, N_instances, 640, 640]
 
 #### 2.21.2 完整 SegHead 实现（带张量形状注释）
 
@@ -4907,7 +4789,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class Conv(nn.Module):
     """标准卷积 + BN + SiLU"""
     def __init__(self, c1, c2, k=1, s=1, g=1):
@@ -4918,7 +4799,6 @@ class Conv(nn.Module):
 
     def forward(self, x):
         return self.act(self.bn(self.conv(x)))
-
 
 class Proto(nn.Module):
     """
@@ -4957,7 +4837,6 @@ class Proto(nn.Module):
         """
         p = self.proto(x)          # [B, 32, 160, 160]
         return self.act(self.bn(self.conv(p))) + p  # 残差连接
-
 
 class SegHead(nn.Module):
     """
@@ -5060,7 +4939,6 @@ class SegHead(nn.Module):
         masks = self.upsample(self.upsample(masks))  # [B, 32, 640, 640]
 
         return masks, proto_masks
-
 
 class MaskLoss(nn.Module):
     """
@@ -5179,94 +5057,62 @@ YOLOv8 + SAM 融合流程:
 
 #### 2.21.4 实例分割 vs 全景分割深度对比
 
-```
-┌──────────────────┬──────────────────┬──────────────────┐
-│ 维度             │  实例分割        │  全景分割        │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 定义             │  检测+分割每个   │  分割所有像素     │
-│                  │  实例            │  (实例+语义)      │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 输出             │  N个掩码+N个类别 │  全像素类别图     │
-│                  │  +边界框         │  +实例ID         │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 背景处理         │  不需要          │  需要 (stuff类)   │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 标注成本         │  中 (polygon)    │  极高 (全像素)    │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 典型模型         │  YOLOv8-Seg      │  YOLACT, MaskRCNN │
-│                  │  YOLO26-seg      │  PANet           │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 推理速度         │  快 (~8ms)       │  较慢 (~25ms)     │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 适用场景         │  目标检测+分割    │  场景理解         │
-│                  │  · 缺陷检测      │  · 自动驾驶       │
-│                  │  · 细胞分析      │  · 遥感           │
-│                  │  · PCB检测       │  · 室内导航       │
-├──────────────────┼──────────────────┼──────────────────┤
-│ COCO指标         │  AP (Average     │  AP (Average     │
-│                  │  Precision)      │  Precision)      │
-├──────────────────┼──────────────────┼──────────────────┤
-│ 实现复杂度       │  中              │  高               │
-└──────────────────┴──────────────────┴──────────────────┘
+| 维度 | 实例分割 | 全景分割 |
+| --- | --- | --- |
+| 定义 | 检测+分割每个 实例 | 分割所有像素 (实例+语义) |
+| 输出 | N个掩码+N个类别 +边界框 | 全像素类别图 +实例ID |
+| 背景处理 | 不需要 | 需要 (stuff类) |
+| 标注成本 | 中 (polygon) | 极高 (全像素) |
+| 典型模型 | YOLOv8-Seg YOLO26-seg | YOLACT, MaskRCNN PANet |
+| 推理速度 | 快 (~8ms) | 较慢 (~25ms) |
+| 适用场景 | 目标检测+分割 · 缺陷检测 · 细胞分析 · PCB检测 | 场景理解 · 自动驾驶 · 遥感 · 室内导航 |
+| COCO指标 | AP (Average Precision) | AP (Average Precision) |
+| 实现复杂度 | 中 | 高 |
 
 选择建议:
-  · 目标检测 + 精细分割 → 实例分割 (YOLOv8-Seg)
-  · 场景理解 + 语义分割 → 全景分割 (需要额外标注)
-  · 实时性要求高 → 实例分割
-  · 需要背景理解 → 全景分割
-
-```
+· 目标检测 + 精细分割 → 实例分割 (YOLOv8-Seg)
+· 场景理解 + 语义分割 → 全景分割 (需要额外标注)
+· 实时性要求高 → 实例分割
+· 需要背景理解 → 全景分割
 
 ### 3.1 模型结构
 
 YOLOv8-Pose 在检测头基础上增加了**关键点头（Pose Head）**：
 
-```
 YOLOv8-Pose 模型结构
-══════════════════════════════════════════════════════════════
 
 输入图像 (640×640×3)
-       │
-       ▼
-┌─────────────────┐
-│   Backbone       │  CSPDarknet
-└────────┬────────┘
-         │ P3, P4, P5
-         ▼
-┌─────────────────┐
-│   Neck           │  PAN-FPN
-└────────┬────────┘
-         │
-    ┌────┴────┬────────┐
-    ▼         ▼        ▼
-  P3        P4        P5
-    │         │        │
-    ▼         ▼        ▼
-┌──────┐ ┌──────┐ ┌──────┐
-│Detect│ │Detect│ │Detect│  ← 检测头
-└──┬───┘ └──┬───┘ └──┬───┘
-   │        │        │
-   └────────┴────────┘
-            │
-            ▼
-   ┌─────────────────┐
-   │   Pose Head     │  ← 关键点头
-   │   (N, 56)       │  17个关键点×3 (x,y,conf)
-   └────────┬────────┘
-            │
-            ▼
-   ┌─────────────────┐
-   │   Output Keypts │  [N, 17, 3]
-   │                 │  x, y, visibility
-   └─────────────────┘
+
+▼
+| Backbone | CSPDarknet |
+| --- | --- |
+| P3, P4, P5 |  |
+▼
+
+Neck  PAN-FPN
+
+▼  ▼  ▼
+P3  P4  P5
+
+▼  ▼  ▼
+
+Detect Detect Detect  ← 检测头
+
+▼
+
+Pose Head  ← 关键点头
+(N, 56)  17个关键点×3 (x,y,conf)
+
+▼
+
+Output Keypts  [N, 17, 3]
+x, y, visibility
 
 关键点定义 (COCO 17 points):
-  0:  鼻子, 1: 左眼, 2: 右眼, 3: 左耳, 4: 右耳
-  5:  左肩, 6: 右肩, 7: 左肘, 8: 右肘
-  9:  左手腕, 10: 右手腕, 11: 左髋, 12: 右髋
-  13: 左膝, 14: 右膝, 15: 左脚, 16: 右脚
-
-```
+0:  鼻子, 1: 左眼, 2: 右眼, 3: 左耳, 4: 右耳
+5:  左肩, 6: 右肩, 7: 左肘, 8: 右肘
+9:  左手腕, 10: 右手腕, 11: 左髋, 12: 右髋
+13: 左膝, 14: 右膝, 15: 左脚, 16: 右脚
 
 ### 3.2 关键点头实现
 
@@ -5365,7 +5211,6 @@ class PoseTracker:
     def get_trajectory(self, target_id):
         """获取指定目标的完整轨迹"""
         return self.tracker.tracks[target_id]
-
 
 """
 姿态驱动的动作识别管线：
@@ -5623,7 +5468,6 @@ results = model.train(
     name="pose_exp1",
 )
 
-
 #
 # 自定义姿态数据集
 #
@@ -5642,7 +5486,6 @@ results = model.train(
     copy_paste=0.2,
     patience=50,
 )
-
 
 #
 # 迁移学习训练
@@ -6433,7 +6276,6 @@ def keypoint_visibility_weight(visibility):
     }
     return weights.get(visibility, 0.0)
 
-
 def weighted_kpt_loss(pred_kpts, target_kpts, kpt_mask):
     """
     加权关键点损失
@@ -6598,7 +6440,6 @@ def analyze_joint_angles(keypoints):
         angles['right_knee'] = angle_between(keypoints[12], keypoints[14], keypoints[16])
 
     return angles
-
 
 def classify_pose(angles):
     """
@@ -6894,7 +6735,6 @@ class PoseDeepSORT:
         track = PoseTrack(detection, self.track_id)
         self.tracks.append(track)
         self.track_id += 1
-
 
 class PoseTrack:
     """单个追踪目标的状态"""
@@ -7365,7 +7205,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class DKLLoss(nn.Module):
     """
     分布关键点损失 (Distribution Keypoint Loss)
@@ -7482,7 +7321,6 @@ class DKLLoss(nn.Module):
         kpts = prob @ self.project             # [N, K, 2]
         return kpts
 
-
 class Conv(nn.Module):
     """标准卷积 + 批量归一化 + SiLU 激活"""
     def __init__(self, c1, c2, k=1, s=1, g=1, d=1):
@@ -7493,7 +7331,6 @@ class Conv(nn.Module):
 
     def forward(self, x):
         return self.act(self.bn(self.conv(x)))
-
 
 class DFL(nn.Module):
     """Distribution Focal Loss 模块 - 用于边界框和关键点的分布建模"""
@@ -7508,7 +7345,6 @@ class DFL(nn.Module):
         b, _, h, w = x.shape
         x = x.view(b, 4, self.conv.in_channels, h, w)
         return self.conv(x.squeeze(3)).sigmoid() * self.conv.in_channels
-
 
 class PoseHead(nn.Module):
     """
@@ -7671,7 +7507,6 @@ class PoseHead(nn.Module):
 
         return bboxes, confs, classes, kpt_dist
 
-
 class YOLOv8PoseModel(nn.Module):
     """
     完整的 YOLOv8 姿态估计模型 (包含 Backbone + Neck + PoseHead)
@@ -7828,7 +7663,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-
 class KeyPointFeatureExtractor(nn.Module):
     """
     从关键点序列中提取动作特征
@@ -7935,7 +7769,6 @@ class KeyPointFeatureExtractor(nn.Module):
 
         return angles
 
-
 #
 # 动作识别模型
 #
@@ -7990,7 +7823,6 @@ class LSTMActionRecognizer(nn.Module):
         last_hidden = lstm_out[:, -1, :]                # [B, 2*hidden]
         logits = self.classifier(last_hidden)           # [B, n_classes]
         return logits
-
 
 class TransformerActionRecognizer(nn.Module):
     """
@@ -8056,7 +7888,6 @@ class TransformerActionRecognizer(nn.Module):
         logits = self.classifier(pooled)                 # [B, n_classes]
         return logits
 
-
 class PositionalEncoding(nn.Module):
     """正弦位置编码"""
 
@@ -8076,7 +7907,6 @@ class PositionalEncoding(nn.Module):
         """x: [B, T, d_model]"""
         x = x + self.pe[:, :x.size(1), :]
         return self.dropout(x)
-
 
 #
 # 动作分类器 (完整训练流程)
@@ -8683,7 +8513,6 @@ class LowLightPoseEstimator:
 
         return keypoints, confidences
 
-
 class IRImageEnhancer:
     """IR 图像增强器"""
 
@@ -8842,7 +8671,6 @@ class SmallTargetAugmentation:
 import numpy as np
 import cv2
 
-
 class PoseColorScheme:
     """
     骨骼颜色方案管理器
@@ -8958,7 +8786,6 @@ class PoseColorScheme:
             (p, q, v), (t, p, v), (v, p, q)
         ]
         return rgb_map[hi]
-
 
 class SkeletonVisualizer:
     """
@@ -9180,7 +9007,6 @@ class SkeletonVisualizer:
                     color, 2, tipLength=0.3,
                 )
 
-
 def create_pose_video_overlay(
     input_video,
     output_video,
@@ -9281,7 +9107,6 @@ def create_pose_video_overlay(
     out.release()
     print(f"Output saved to: {output_video}")
 
-
 if __name__ == "__main__":
     # 示例: 创建骨骼可视化视频
     create_pose_video_overlay(
@@ -9335,7 +9160,6 @@ def draw_cross_keypoints(image, keypoints, radius=8, color=(0, 255, 0)):
         cv2.line(image, (x, y - r), (x, y + r), color, 2)
         # 圆心
         cv2.circle(image, (x, y), 2, color, -1)
-
 
 def draw_dashed_line(img, pt1, pt2, color, thickness=2, dash_len=10):
     """绘制虚线"""
@@ -9436,7 +9260,6 @@ class v8OSSLoss:
         loss = 1.0 - iou + g_iou_loss(pred_obb, target_obb)
 
         return loss.mean()
-
 
 def rotated_iou(boxes1, boxes2):
     """
@@ -9542,7 +9365,6 @@ results = model.train(
     name="obb_dota_exp1",
 )
 
-
 #
 # 自定义旋转框数据集
 #
@@ -9558,7 +9380,6 @@ results = model.train(
     close_mosaic=10,
     patience=50,
 )
-
 
 #
 # 迁移学习
@@ -10078,7 +9899,6 @@ class OBBAngleLoss(nn.Module):
         diff = torch.min(diff, 2 * torch.pi - diff)
         return diff
 
-
 class RotatedIoULoss(nn.Module):
     """
     旋转 IoU 损失
@@ -10315,7 +10135,6 @@ def vertices_to_obb(vertices):
 import numpy as np
 from typing import Tuple, List
 
-
 def rotate_points(cx: float, cy: float, w: float, h: float, angle: float) -> np.ndarray:
     """
     计算旋转框的 4 个顶点坐标（顺时针）
@@ -10355,7 +10174,6 @@ def rotate_points(cx: float, cy: float, w: float, h: float, angle: float) -> np.
 
     return vertices  # shape: [4, 2]
 
-
 def convex_hull(points: np.ndarray) -> np.ndarray:
     """
     计算点集的凸包 (Andrew's Monotone Chain 算法)
@@ -10392,7 +10210,6 @@ def convex_hull(points: np.ndarray) -> np.ndarray:
     hull = lower[:-1] + upper[:-1]
     return np.array(hull, dtype=np.float32)
 
-
 def polygon_area(vertices: np.ndarray) -> float:
     """
     计算多边形的有向面积 (鞋带公式)
@@ -10408,7 +10225,6 @@ def polygon_area(vertices: np.ndarray) -> float:
     # 鞋带公式
     area = np.abs(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1))) / 2.0
     return float(area)
-
 
 def clip_polygon(subject: np.ndarray, clip_edge: Tuple[float, float, float, float]) -> np.ndarray:
     """
@@ -10452,7 +10268,6 @@ def clip_polygon(subject: np.ndarray, clip_edge: Tuple[float, float, float, floa
 
     return np.array(output) if output else np.empty((0, 2))
 
-
 def rotated_iou_python(box1: np.ndarray, box2: np.ndarray) -> float:
     """
     计算两个旋转框的 IoU (纯 Python 版本)
@@ -10493,7 +10308,6 @@ def rotated_iou_python(box1: np.ndarray, box2: np.ndarray) -> float:
 
     return area_intersect / area_union
 
-
 def rotated_ious_python(boxes1: np.ndarray, boxes2: np.ndarray) -> np.ndarray:
     """
     批量计算两批旋转框的 IoU 矩阵
@@ -10525,7 +10339,6 @@ import numba
 from numba import cuda
 import torch
 
-
 @numba.njit(cache=True)
 def _rotate_points_jit(cx, cy, w, h, angle, out):
     """
@@ -10549,7 +10362,6 @@ def _rotate_points_jit(cx, cy, w, h, angle, out):
         out[i, 0] = lx * cos_a - ly * sin_a + cx
         out[i, 1] = lx * sin_a + ly * cos_a + cy
 
-
 @numba.njit(cache=True)
 def _polygon_area_jit(vertices, n):
     """
@@ -10568,7 +10380,6 @@ def _polygon_area_jit(vertices, n):
         area += vertices[i, 0] * vertices[j, 1]
         area -= vertices[j, 0] * vertices[i, 1]
     return abs(area) * 0.5
-
 
 @numba.njit(cache=True)
 def _clip_polygon_jit(subject, subject_n, clip_v1, clip_v2, output):
@@ -10623,7 +10434,6 @@ def _clip_polygon_jit(subject, subject_n, clip_v1, clip_v2, output):
 
     return output_n
 
-
 @numba.njit(cache=True)
 def _rotated_iou_single_jit(box1, box2):
     """
@@ -10664,7 +10474,6 @@ def _rotated_iou_single_jit(box1, box2):
 
     return area_intersect / area_union
 
-
 @numba.njit(cache=True, parallel=True)
 def rotated_ious_jit(boxes1, boxes2):
     """
@@ -10685,7 +10494,6 @@ def rotated_ious_jit(boxes1, boxes2):
             ious[i, j] = _rotated_iou_single_jit(boxes1[i], boxes2[j])
 
     return ious
-
 
 # ===================== 性能基准 =====================
 def benchmark_rotated_iou():
@@ -10715,7 +10523,6 @@ def benchmark_rotated_iou():
     print(f"  纯 Python: {t_python*1000:.1f} ms")
     print(f"  Numba JIT: {t_numba*1000:.1f} ms")
     print(f"  加速比:    {t_python/t_numba:.1f}x")
-
 
 # ===================== PyTorch 集成版本 =====================
 class RotatedIoULoss(torch.nn.Module):
@@ -10925,7 +10732,6 @@ def rotated_nms(boxes_4v, confidences, angles, iou_threshold=0.45):
 
     return np.array(keep)
 
-
 def compute_rotated_ious_batch(box_a, boxes_b, angle_a, angles_b):
     """批量计算旋转框 IoU"""
     M = len(boxes_b)
@@ -10934,7 +10740,6 @@ def compute_rotated_ious_batch(box_a, boxes_b, angle_a, angles_b):
         iou = compute_rotated_iou_single(box_a, boxes_b[j], angle_a, angles_b[j])
         ious[j] = iou
     return ious
-
 
 def compute_rotated_iou_single(box1, box2, angle1, angle2):
     """
@@ -11027,7 +10832,6 @@ def postprocess_obb_complete(outputs, input_shape, conf_thresh=0.25, iou_thresh=
         'cls_ids': cls_ids[keep_indices],
         'angles': angles[keep_indices],
     }
-
 
 def obb_to_vertices(cx, cy, w, h, angle):
     """旋转框转 4 个顶点"""
@@ -11354,7 +11158,6 @@ from pathlib import Path
 from tqdm import tqdm
 import json
 
-
 class DOTAConverter:
     """DOTA 数据集转换器"""
 
@@ -11608,7 +11411,6 @@ DOTA 数据增强实现
 import cv2
 import numpy as np
 
-
 class DOTAEnhancer:
     """DOTA 数据集数据增强器"""
 
@@ -11708,7 +11510,6 @@ class DOTAEnhancer:
                 new_labels.append((cls, new_cx, new_cy, new_w, new_h, angle))
         return img, new_labels
 
-
 # 使用示例
 enhancer = DOTAEnhancer(img_size=1024)
 
@@ -11773,7 +11574,6 @@ DOTA 数据集质量检查工具
 import json
 from collections import Counter
 from pathlib import Path
-
 
 def check_dota_dataset(dota_dir):
     """检查 DOTA 数据集质量"""
@@ -12208,7 +12008,6 @@ def unwrap_angle(angle_prev, angle_curr, pi_boundary=np.pi / 2):
     angle_unwrapped[jump_mask] -= np.pi * np.sign(diff[jump_mask])
 
     return angle_unwrapped
-
 
 def normalize_obb_angle(obb):
     """
@@ -12697,7 +12496,6 @@ names:
 import cv2
 import numpy as np
 
-
 def get_rotation_matrix(center, angle, scale=1.0):
     """
     获取旋转矩阵
@@ -12712,7 +12510,6 @@ def get_rotation_matrix(center, angle, scale=1.0):
     cx, cy = center
     M = cv2.getRotationMatrix2D((cx, cy), np.degrees(angle), scale)
     return M
-
 
 def warp_perspective_roi(
     image,
@@ -12777,7 +12574,6 @@ def warp_perspective_roi(
 
     return warped, M, inv_M
 
-
 def batch_warp_text_rois(image, obb_boxes, target_height=64):
     """
     批量处理旋转文字框
@@ -12837,7 +12633,6 @@ import cv2
 import numpy as np
 from pathlib import Path
 from typing import List, Tuple, Dict
-
 
 class TextDetectionPipeline:
     """
@@ -13098,7 +12893,6 @@ class TextDetectionPipeline:
             "visualization": vis_image,
         }
 
-
 # 使用示例
 if __name__ == "__main__":
     # 初始化流水线
@@ -13177,7 +12971,6 @@ MULTI_LANGUAGE_CONFIG = {
     },
 }
 
-
 def select_language_config(image, lang_hint=None):
     """
     根据图像特征或提示选择语言配置
@@ -13216,7 +13009,6 @@ OBB 后处理 - 角度解卷绕与标准化
 import numpy as np
 import cv2
 
-
 def unwrap_angle(angle, period=np.pi):
     """
     角度解卷绕
@@ -13235,7 +13027,6 @@ def unwrap_angle(angle, period=np.pi):
     angle = angle % period
     # 解卷绕: 使相邻帧角度变化连续
     return angle
-
 
 def normalize_ob angle(angle, range_type="symmetric"):
     """
@@ -13258,7 +13049,6 @@ def normalize_ob angle(angle, range_type="symmetric"):
         # 映射到 [0, π)
         angle = angle % np.pi
     return angle
-
 
 def resolve_angle_conflict(box1, box2):
     """
@@ -13304,7 +13094,6 @@ def resolve_angle_conflict(box1, box2):
 """
 import numpy as np
 import cv2
-
 
 def rotated_nms(
     boxes: np.ndarray,
@@ -13365,7 +13154,6 @@ def rotated_nms(
 
     return np.array(kept, dtype=np.int32)
 
-
 def rotated_boxes_iou(box1: np.ndarray, box2: np.ndarray) -> float:
     """
     计算两个旋转框的 IoU
@@ -13400,7 +13188,6 @@ def rotated_boxes_iou(box1: np.ndarray, box2: np.ndarray) -> float:
         return 0.0
 
     return intersection / union
-
 
 def fast_rotated_nms(
     boxes: np.ndarray,
@@ -13477,7 +13264,6 @@ OBB 后处理 - 置信度校准 (Temperature Scaling)
 import numpy as np
 from scipy.optimize import brentq
 
-
 def temperature_scaling(
     scores: np.ndarray,
     labels: np.ndarray,
@@ -13505,7 +13291,6 @@ def temperature_scaling(
     calibrated = 1.0 / (1.0 + np.exp(-calibrated))
 
     return calibrated
-
 
 def find_optimal_temperature(
     scores: np.ndarray,
@@ -13544,7 +13329,6 @@ def find_optimal_temperature(
 
     return best_temp
 
-
 def small_object_filter(
     boxes: np.ndarray,
     scores: np.ndarray,
@@ -13571,7 +13355,6 @@ def small_object_filter(
 
     return np.where(keep)[0]
 
-
 def aspect_ratio_filter(
     boxes: np.ndarray,
     scores: np.ndarray,
@@ -13590,7 +13373,6 @@ def aspect_ratio_filter(
     keep = (ar >= min_ar) & (ar <= max_ar)
 
     return np.where(keep)[0]
-
 
 def full_ob postprocessing(
     boxes: np.ndarray,
@@ -14464,7 +14246,6 @@ def pcgrad_project(gradients, conflict_threshold=0.0):
 
     return projected
 
-
 class PCGradOptimizer:
     """
     PCGrad 多任务优化器
@@ -14539,7 +14320,6 @@ class UncertaintyWeightedLoss(nn.Module):
             total_loss += weight * loss + reg_term
 
         return total_loss
-
 
 # 使用示例
 num_tasks = 4  # 检测 + 分割 + 姿态 + OBB
@@ -14825,7 +14605,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class GradNorm:
     """
     GradNorm 自适应损失加权器
@@ -14974,7 +14753,6 @@ PCGrad: Project Conflicting Gradients for Multi-Task Learning
 import torch
 import torch.nn as nn
 import random
-
 
 class PCGrad:
     """
@@ -15133,7 +14911,6 @@ Uncertainty Weighting: Learning Task Weights via Aleatoric Uncertainty
 import torch
 import torch.nn as nn
 
-
 class UncertaintyWeighting:
     """
     基于不确定性的多任务损失加权
@@ -15224,7 +15001,6 @@ import torch
 import numpy as np
 from collections import deque
 
-
 class DynamicWeightAveraging:
     """
     DWA 动态权重平均器
@@ -15313,7 +15089,6 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 import numpy as np
-
 
 class MultiTaskLossExperiment:
     """
@@ -15545,7 +15320,6 @@ OBB (obb)       50.1%       49.3%       -0.8%     -1.6%
 """
 import torch
 import torch.nn as nn
-
 
 class HierarchicalMultiTaskTrainer:
     """
@@ -15948,7 +15722,6 @@ from ultralytics.data.dataset import YOLODataset
 from ultralytics.utils import LOGGER
 from pathlib import Path
 
-
 class MultiTaskYOLO26Trainer:
     """
     YOLO26 多任务联合训练器
@@ -16107,7 +15880,6 @@ import torch
 import cv2
 import numpy as np
 
-
 class MultiTaskYOLO26Inference:
     """多任务推理器"""
 
@@ -16251,7 +16023,6 @@ from ultralytics import YOLO
 import onnx
 import onnxruntime as ort
 
-
 def export_multitask_model(model_path, export_dir='./exports'):
     """
     导出多任务模型
@@ -16287,7 +16058,6 @@ def export_multitask_model(model_path, export_dir='./exports'):
         'tflite': tflite_path,
     }
 
-
 def verify_export(export_paths):
     """验证导出模型"""
     import onnx
@@ -16316,7 +16086,6 @@ def verify_export(export_paths):
 import time
 import numpy as np
 from collections import deque
-
 
 class MultiTaskMonitor:
     """多任务推理性能监控"""
@@ -16588,7 +16357,6 @@ def analyze_ab_results(stats_a, stats_b):
     results["decision"] = decision
     return results
 
-
 """
 完整 A/B 测试流程:
 
@@ -16711,7 +16479,6 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
-
 class MultiTaskDetector:
     """多任务检测器基类"""
     
@@ -16833,21 +16600,15 @@ class MultiTaskDetector:
 
 #### 导出格式对比
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        导出格式对比                                  │
-├──────────────┬─────────┬─────────┬─────────┬─────────┬─────────────┤
-│  格式         │  平台    │  速度    │  精度    │  文件大小 │  适用场景    │
-├──────────────┼─────────┼─────────┼─────────┼─────────┼─────────────┤
-│  ONNX         │  跨平台  │  ★★☆    │  ★★★    │  中      │  通用部署    │
-│  TensorRT     │  NVIDIA  │  ★★★    │  ★★★    │  小      │  GPU 服务器  │
-│  OpenVINO     │  Intel   │  ★★★    │  ★★★    │  小      │  CPU 推理    │
-│  TFLite       │  移动端  │  ★★☆    │  ★★☆    │  小      │  Android    │
-│  CoreML       │  Apple   │  ★★☆    │  ★★☆    │  小      │  iOS/macOS  │
-│  torchscript  │  Python  │  ★★☆    │  ★★★    │  中      │  服务化部署  │
-└──────────────┴─────────┴─────────┴─────────┴─────────┴─────────────┘
-
-```
+| 导出格式对比 |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- |
+| 格式 | 平台 | 速度 | 精度 | 文件大小 | 适用场景 |
+| ONNX | 跨平台 | ★★☆ | ★★★ | 中 | 通用部署 |
+| TensorRT | NVIDIA | ★★★ | ★★★ | 小 | GPU 服务器 |
+| OpenVINO | Intel | ★★★ | ★★★ | 小 | CPU 推理 |
+| TFLite | 移动端 | ★★☆ | ★★☆ | 小 | Android |
+| CoreML | Apple | ★★☆ | ★★☆ | 小 | iOS/macOS |
+| torchscript | Python | ★★☆ | ★★★ | 中 | 服务化部署 |
 
 #### 各任务导出注意事项
 
@@ -17084,21 +16845,17 @@ try handler.perform([request])
 
 #### 推理性能优化
 
-```
 推理优化策略汇总:
-┌─────────────────────────────────────────────────────────────┐
-│ 优化维度        │  具体方法                      │  预期提升   │
-├─────────────────┼────────────────────────────────┼───────────┤
-│ 模型精度        │  FP16 / INT8 量化             │  2-4x     │
-│ 输入尺寸        │  降低 imgsz (640→320)         │  2-3x     │
-│ 推理引擎        │  TensorRT / ONNX Runtime      │  1.5-2x   │
-│ 并行推理        │  批处理多帧图像                │  N x      │
-│ 预处理优化        │  GPU 上预处理                  │  0.5-1ms  │
-│ 后处理优化        │  合并 NMS 操作                 │  0.1-0.5ms│
-│ 模型压缩        │  剪枝 + 量化 (PTQ/QAT)        │  2-4x     │
-└─────────────────┴────────────────────────────────┴───────────┘
 
-```
+优化维度  具体方法  预期提升
+
+模型精度  FP16 / INT8 量化  2-4x
+输入尺寸  降低 imgsz (640→320)  2-3x
+推理引擎  TensorRT / ONNX Runtime  1.5-2x
+并行推理  批处理多帧图像  N x
+预处理优化  GPU 上预处理  0.5-1ms
+后处理优化  合并 NMS 操作  0.1-0.5ms
+模型压缩  剪枝 + 量化 (PTQ/QAT)  2-4x
 
 ### 6.4 各任务导出后的后处理差异
 
@@ -17358,59 +17115,44 @@ def nms_obb(boxes_4v, confs, angles, iou_thresh=0.45):
 
 #### 各任务推理性能基准
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                  各任务导出格式推理性能基准                        │
-├──────────────┬─────────┬─────────┬─────────┬─────────┬──────────┤
-│  任务        │  ONNX   │ TensorRT│  TFLite │ CoreML  │ PyTorch  │
-│              │ (ms)    │ (ms)    │ (ms)    │ (ms)    │ (ms)     │
-├──────────────┼─────────┼─────────┼─────────┼─────────┼──────────┤
-│  检测 (n)    │   4.2   │   1.8   │   5.1   │   4.8   │   6.5    │
-│  检测 (s)    │   8.5   │   3.5   │   10.2  │   9.1   │   12.3   │
-│  分割 (n)    │   6.8   │   3.2   │   8.5   │   7.9   │   10.2   │
-│  分割 (s)    │  13.5   │   6.1   │  16.2   │  14.8   │   19.5   │
-│  姿态 (n)    │   4.5   │   1.9   │   5.4   │   5.0   │   6.8    │
-│  姿态 (s)    │   9.0   │   3.7   │  10.8   │   9.5   │   12.8   │
-│  OBB (n)     │   4.3   │   1.9   │   5.2   │   4.9   │   6.6    │
-│  OBB (s)     │   8.7   │   3.6   │  10.5   │   9.3   │   12.5   │
-└──────────────┴─────────┴─────────┴─────────┴─────────┴──────────┘
+| 各任务导出格式推理性能基准 |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- |
+| 任务 | ONNX (ms) | TensorRT (ms) | TFLite (ms) | CoreML (ms) | PyTorch (ms) |
+| 检测 (n) | 4.2 | 1.8 | 5.1 | 4.8 | 6.5 |
+| 检测 (s) | 8.5 | 3.5 | 10.2 | 9.1 | 12.3 |
+| 分割 (n) | 6.8 | 3.2 | 8.5 | 7.9 | 10.2 |
+| 分割 (s) | 13.5 | 6.1 | 16.2 | 14.8 | 19.5 |
+| 姿态 (n) | 4.5 | 1.9 | 5.4 | 5.0 | 6.8 |
+| 姿态 (s) | 9.0 | 3.7 | 10.8 | 9.5 | 12.8 |
+| OBB (n) | 4.3 | 1.9 | 5.2 | 4.9 | 6.6 |
+| OBB (s) | 8.7 | 3.6 | 10.5 | 9.3 | 12.5 |
 测试环境: NVIDIA RTX 4090, CUDA 12.1, TensorRT 8.6
-
-```
 
 #### 常见部署陷阱与解决方案
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  陷阱1: 分割掩码分辨率不匹配                                     │
-│  问题: 导出后掩码分辨率与输入图像尺寸不一致                      │
-│  原因: Proto 网络输出固定为 160×160，上采样比例依赖输入尺寸       │
-│  解决: 确保导出和推理时使用相同的输入尺寸 (如 640×640)           │
-├─────────────────────────────────────────────────────────────────┤
-│  陷阱2: 姿态关键点坐标超出图像范围                               │
-│  问题: 推理结果中关键点坐标超出图像边界                           │
-│  原因: 模型输出经过缩放，但未正确处理边界情况                    │
-│  解决: 后处理时对关键点坐标进行 clamp 操作                        │
-│         kpts[:, 0] = np.clip(kpts[:, 0], 0, img_width)          │
-│         kpts[:, 1] = np.clip(kpts[:, 1], 0, img_height)         │
-├─────────────────────────────────────────────────────────────────┤
-│  陷阱3: OBB 角度方向不一致                                       │
-│  问题: 不同框架对旋转框角度的定义不同                            │
-│  解决: 统一角度定义，在导出时记录角度约定                        │
-│         DOTA: 从 x 轴逆时针                                    │
-│         CVPR2019: 从 x 轴逆时针，θ∈[-π/2, π/2]                 │
-├─────────────────────────────────────────────────────────────────┤
-│  陷阱4: 半精度导致的精度损失                                     │
-│  问题: FP16 导出后分割掩码质量下降                               │
-│  解决: 对分割和姿态任务使用 FP32 推理，或进行 QAT 量化           │
-├─────────────────────────────────────────────────────────────────┤
-│  陷阱5: 多任务模型导出后访问接口变化                             │
-│  问题: ONNX 导出后输出名称和顺序改变                             │
-│  解决: 导出后打印输出名称进行验证                               │
-│         print(session.get_outputs()[i].name)                    │
-└─────────────────────────────────────────────────────────────────┘
-
-```
+| 陷阱1: 分割掩码分辨率不匹配 |
+| --- |
+| 问题: 导出后掩码分辨率与输入图像尺寸不一致 |
+| 原因: Proto 网络输出固定为 160×160，上采样比例依赖输入尺寸 |
+| 解决: 确保导出和推理时使用相同的输入尺寸 (如 640×640) |
+| 陷阱2: 姿态关键点坐标超出图像范围 |
+| 问题: 推理结果中关键点坐标超出图像边界 |
+| 原因: 模型输出经过缩放，但未正确处理边界情况 |
+| 解决: 后处理时对关键点坐标进行 clamp 操作 |
+| kpts[:, 0] = np.clip(kpts[:, 0], 0, img_width) |
+| kpts[:, 1] = np.clip(kpts[:, 1], 0, img_height) |
+| 陷阱3: OBB 角度方向不一致 |
+| 问题: 不同框架对旋转框角度的定义不同 |
+| 解决: 统一角度定义，在导出时记录角度约定 |
+| DOTA: 从 x 轴逆时针 |
+| CVPR2019: 从 x 轴逆时针，θ∈[-π/2, π/2] |
+| 陷阱4: 半精度导致的精度损失 |
+| 问题: FP16 导出后分割掩码质量下降 |
+| 解决: 对分割和姿态任务使用 FP32 推理，或进行 QAT 量化 |
+| 陷阱5: 多任务模型导出后访问接口变化 |
+| 问题: ONNX 导出后输出名称和顺序改变 |
+| 解决: 导出后打印输出名称进行验证 |
+| print(session.get_outputs()[i].name) |
 
 ### 6.5 ONNX 模型优化详解
 
@@ -17487,7 +17229,6 @@ def validate_onnx_model(onnx_path, input_shape=(1, 3, 640, 640)):
     return True
 
 ```
-
 
 ### 6.10 ONNX 优化深度解析
 
@@ -17614,7 +17355,6 @@ def fuse_operators_onnx(model_path: str, output_path: str):
 
     return optimized_model
 
-
 def apply_onnx_simplifier(model_path: str, output_path: str):
     """
     使用 onnx-simplifier 进行深度优化
@@ -17727,7 +17467,6 @@ def create_optimized_session(model_path: str):
     print(f"使用 Provider: {session.get_providers()}")
 
     return session
-
 
 def create_ep_extended_session(model_path: str):
     """
@@ -17870,7 +17609,6 @@ class ONNXOptimizer:
             'fps': float(1000 / times.mean()),
         }
 
-
 # 使用示例
 if __name__ == '__main__':
     optimizer = ONNXOptimizer(verbose=True)
@@ -17952,7 +17690,6 @@ ONNX 优化检查清单:
 ══════════════════════════════════════════════════════════════
 
 ```
-
 
 ### 6.6 TensorRT 插件开发指南
 
@@ -18044,7 +17781,6 @@ def build_obb_engine_with_plugin(model_path, workspace_size=1 << 30):
     return engine
 
 ```
-
 
 ### 6.11 TensorRT 插件开发完整指南
 
@@ -18402,7 +18138,6 @@ class RotatedIoUPlugin_wrapper:
         iou_matrix = bindings[-1]
         return iou_matrix
 
-
 # 使用示例
 if __name__ == '__main__':
     # 构建引擎
@@ -18546,7 +18281,6 @@ def rotated_nms(boxes: np.ndarray, scores: np.ndarray,
 
     return keep.tolist()
 
-
 # 性能对比测试
 if __name__ == '__main__':
     # 生成测试数据
@@ -18618,7 +18352,6 @@ def benchmark_rotated_iou_pytorch(n1=100, n2=100):
         pass  # 实际实现
     return (time.perf_counter() - start) / 10 * 1000
 
-
 def benchmark_rotated_iou_tensorrt(engine_path, n1=100, n2=100):
     """TensorRT 插件实现"""
     wrapper = RotatedIoUPlugin_wrapper(engine_path)
@@ -18630,7 +18363,6 @@ def benchmark_rotated_iou_tensorrt(engine_path, n1=100, n2=100):
         iou = wrapper.inference(engine_path, boxes1, boxes2)
     return (time.perf_counter() - start) / 10 * 1000
 
-
 # 性能对比
 print("旋转 IoU 性能对比:")
 print(f"  PyTorch (CPU):   {benchmark_rotated_iou_pytorch():.1f} ms")
@@ -18639,29 +18371,23 @@ print(f"  加速比:          {benchmark_rotated_iou_pytorch()/benchmark_rotated
 
 ```
 
-
 ### 6.7 多平台部署案例
 
 #### NVIDIA Jetson 系列部署
 
-```
 Jetson 平台对比:
-┌────────────┬──────────┬─────────┬──────────┬──────────────┐
-│  平台       │  GPU 算力 │  内存   │  功耗    │  适用模型    │
-├────────────┼──────────┼─────────┼──────────┼──────────────┤
-│  Jetson Nano│  0.47 TFLOPS│ 4GB   │  10W     │ YOLOv8n 检测 │
-│  Jetson XP  │  21 TFLOPS │ 8GB   │  15W     │ YOLOv8s 任意 │
-│  Jetson AGX │  31 TFLOPS │ 32GB  │  20-50W  │ YOLOv8m/l    │
-│  Jetson Orin│  275 TFLOPS│ 16-64GB│ 15-60W  │ YOLOv8 全尺寸│
-└────────────┴──────────┴─────────┴──────────┴──────────────┘
+| 平台 | GPU 算力 | 内存 | 功耗 | 适用模型 |
+| --- | --- | --- | --- | --- |
+| Jetson Nano | 0.47 TFLOPS | 4GB | 10W | YOLOv8n 检测 |
+| Jetson XP | 21 TFLOPS | 8GB | 15W | YOLOv8s 任意 |
+| Jetson AGX | 31 TFLOPS | 32GB | 20-50W | YOLOv8m/l |
+| Jetson Orin | 275 TFLOPS | 16-64GB | 15-60W | YOLOv8 全尺寸 |
 
 Jetson 部署完整流程:
-  1. 在 PC 上训练并导出 TensorRT 引擎
-     model.export(format='engine', half=True, imgsz=640, simplify=True)
-  2. 传输引擎文件到 Jetson
-  3. 在 Jetson 上加载并推理
-
-```
+1. 在 PC 上训练并导出 TensorRT 引擎
+model.export(format='engine', half=True, imgsz=640, simplify=True)
+2. 传输引擎文件到 Jetson
+3. 在 Jetson 上加载并推理
 
 ```python
 # Jetson 推理示例
@@ -18743,26 +18469,20 @@ rknn.release()
 
 #### 移动端部署
 
-```
 移动端 (iOS/Android) 部署对比:
-┌─────────────┬──────────────┬──────────────┬─────────────────┐
-│  平台        │  格式        │  最优模型    │  推理速度       │
-├─────────────┼──────────────┼──────────────┼─────────────────┤
-│  iOS        │  CoreML      │  YOLOv8n     │  ~15ms/帧      │
-│  Android    │  TFLite      │  YOLOv8n     │  ~20ms/帧      │
-│  iOS (MLK)  │  ML Kit      │  YOLOv8n     │  ~25ms/帧      │
-│  Android    │  NCNN        │  YOLOv8n     │  ~18ms/帧      │
-└─────────────┴──────────────┴──────────────┴─────────────────┘
+| 平台 | 格式 | 最优模型 | 推理速度 |
+| --- | --- | --- | --- |
+| iOS | CoreML | YOLOv8n | ~15ms/帧 |
+| Android | TFLite | YOLOv8n | ~20ms/帧 |
+| iOS (MLK) | ML Kit | YOLOv8n | ~25ms/帧 |
+| Android | NCNN | YOLOv8n | ~18ms/帧 |
 
 移动端部署最佳实践:
-  1. 使用 YOLOv8n 或 YOLOv8s 模型
-  2. 输入尺寸降至 320 或 416
-  3. 启用 FP16 或 INT8 量化
-  4. 使用平台原生推理引擎
-  5. 预处理在 GPU/NEON 上并行执行
-
-```
-
+1. 使用 YOLOv8n 或 YOLOv8s 模型
+2. 输入尺寸降至 320 或 416
+3. 启用 FP16 或 INT8 量化
+4. 使用平台原生推理引擎
+5. 预处理在 GPU/NEON 上并行执行
 
 ### 6.8 模型服务化部署
 
@@ -18998,30 +18718,27 @@ docker run -d --gpus all \
 
 #### 多任务模型仓库结构
 
-```
 /models/
-├── detect/
-│   ├── 1/
-│   │   └── model.onnx          # 检测模型 ONNX
-│   └── config.pbtxt             # 检测模型配置
-├── segment/
-│   ├── 1/
-│   │   └── model.onnx          # 分割模型 ONNX
-│   └── config.pbtxt             # 分割模型配置
-├── pose/
-│   ├── 1/
-│   │   └── model.onnx          # 姿态模型 ONNX
-│   └── config.pbtxt             # 姿态模型配置
-├── obb/
-│   ├── 1/
-│   │   └── model.onnx          # OBB 模型 ONNX
-│   └── config.pbtxt             # OBB 模型配置
-└── ensemble/
-    ├── 1/
-    │   └── model.onnx          # 多任务集成模型
-    └── config.pbtxt             # 集成模型配置 (ensemble)
-
-```
+detect/
+1/
+model.onnx  # 检测模型 ONNX
+config.pbtxt  # 检测模型配置
+segment/
+1/
+model.onnx  # 分割模型 ONNX
+config.pbtxt  # 分割模型配置
+pose/
+1/
+model.onnx  # 姿态模型 ONNX
+config.pbtxt  # 姿态模型配置
+obb/
+1/
+model.onnx  # OBB 模型 ONNX
+config.pbtxt  # OBB 模型配置
+ensemble/
+1/
+model.onnx  # 多任务集成模型
+config.pbtxt  # 集成模型配置 (ensemble)
 
 #### 各任务 Config.pbtxt 配置
 
@@ -19356,7 +19073,6 @@ class TritonMultiTaskClient:
             'obbs': self.postprocess_obb({'output0': result.as_numpy('obbs')}, None),
         }
 
-
 # 性能基准测试
 if __name__ == '__main__':
     client = TritonMultiTaskClient(server_url='localhost:8001')
@@ -19434,14 +19150,12 @@ class TritonHealthChecker:
         except Exception as e:
             return {'error': str(e)}
 
-
 # Prometheus metrics 端点
 @app.get('/metrics')
 def metrics():
     """导出 Prometheus 格式的指标"""
     collector = TritonMetricsCollector()
     return collector.generate_metrics()
-
 
 class TritonMetricsCollector:
     """从 Triton 收集指标并导出为 Prometheus 格式"""
@@ -19526,7 +19240,6 @@ def benchmark_triton(server_url, model_name, n_requests=100, batch_size=1):
         'max_ms': max(latencies),
         'throughput_qps': n_requests / (sum(latencies) / 1000),
     }
-
 
 # 测试所有任务
 if __name__ == '__main__':
@@ -19620,7 +19333,6 @@ spec:
 
 ```
 
-
 ### 核心要点
 
 1. **实例分割**：在检测头基础上增加分割头，采用"掩码系数 + 掩码原型"的解耦设计。掩码系数仅 4 个，通过线性组合 32 个原型掩码生成最终分割结果。训练时建议使用 copy-paste 数据增强，可显著提升分割精度。适合需要精确轮廓定位的场景，如工业质检、医疗影像分析。
@@ -19650,7 +19362,6 @@ spec:
 2. **推理速度慢**：降低输入尺寸 → 使用小模型 → 启用半精度 → 转换为 TensorRT
 3. **训练不收敛**：降低学习率 → 检查数据 → 减少增强强度 → 增加训练轮次
 4. **遮挡场景效果差**：增加遮挡数据 → 调整可见性阈值 → 使用更强的数据增强
-
 
 ### 6.9 部署性能监控与优化
 
@@ -19729,23 +19440,17 @@ if __name__ == '__main__':
 
 #### 各任务导出格式推理性能基准
 
-```
-┌──────────────┬─────────┬─────────┬─────────┬─────────┬──────────┐
-│  任务        │  ONNX   │ TensorRT│  TFLite │ CoreML  │ PyTorch  │
-│              │ (ms)    │ (ms)    │ (ms)    │ (ms)    │ (ms)     │
-├──────────────┼─────────┼─────────┼─────────┼─────────┼──────────┤
-│  检测 (n)    │   4.2   │   1.8   │   5.1   │   4.8   │   6.5    │
-│  检测 (s)    │   8.5   │   3.5   │   10.2  │   9.1   │   12.3   │
-│  分割 (n)    │   6.8   │   3.2   │   8.5   │   7.9   │   10.2   │
-│  分割 (s)    │  13.5   │   6.1   │  16.2   │  14.8   │   19.5   │
-│  姿态 (n)    │   4.5   │   1.9   │   5.4   │   5.0   │   6.8    │
-│  姿态 (s)    │   9.0   │   3.7   │  10.8   │   9.5   │   12.8   │
-│  OBB (n)     │   4.3   │   1.9   │   5.2   │   4.9   │   6.6    │
-│  OBB (s)     │   8.7   │   3.6   │  10.5   │   9.3   │   12.5   │
-└──────────────┴─────────┴─────────┴─────────┴─────────┴──────────┘
+| 任务 | ONNX (ms) | TensorRT (ms) | TFLite (ms) | CoreML (ms) | PyTorch (ms) |
+| --- | --- | --- | --- | --- | --- |
+| 检测 (n) | 4.2 | 1.8 | 5.1 | 4.8 | 6.5 |
+| 检测 (s) | 8.5 | 3.5 | 10.2 | 9.1 | 12.3 |
+| 分割 (n) | 6.8 | 3.2 | 8.5 | 7.9 | 10.2 |
+| 分割 (s) | 13.5 | 6.1 | 16.2 | 14.8 | 19.5 |
+| 姿态 (n) | 4.5 | 1.9 | 5.4 | 5.0 | 6.8 |
+| 姿态 (s) | 9.0 | 3.7 | 10.8 | 9.5 | 12.8 |
+| OBB (n) | 4.3 | 1.9 | 5.2 | 4.9 | 6.6 |
+| OBB (s) | 8.7 | 3.6 | 10.5 | 9.3 | 12.5 |
 测试环境: NVIDIA RTX 4090, CUDA 12.1, TensorRT 8.6
-
-```
 
 #### 常见部署陷阱与解决方案
 
@@ -19778,46 +19483,33 @@ if __name__ == '__main__':
 
 ```
 
-
 ### 6.5 模型服务架构设计
 
 工业级 YOLO 多任务模型的部署需要完整的模型服务架构，包括推理引擎、API 网关、负载均衡、监控告警等组件。
 
 #### Triton Inference Server 部署架构
 
-```
 Triton Inference Server 架构:
-══════════════════════════════════════════════════════════════
 
-                    ┌─────────────────────┐
-                    │   Client / SDK      │
-                    │  (Python/REST/gRPC) │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │   API Gateway       │
-                    │  (负载均衡 + 限流)   │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │  Triton Server      │
-                    │  (NVIDIA)           │
-                    ├─────────────────────┤
-                    │  Model 1: Detect    │
-                    │  Model 2: Segment   │
-                    │  Model 3: Pose      │
-                    │  Model 4: OBB       │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │  GPU (A100/T4)      │
-                    │  TensorRT 引擎      │
-                    └─────────────────────┘
-
-```
+| Client / SDK |
+| --- |
+| (Python/REST/gRPC) |
+▼
+| API Gateway |
+| --- |
+| (负载均衡 + 限流) |
+▼
+| Triton Server |
+| --- |
+| (NVIDIA) |
+| Model 1: Detect |
+| Model 2: Segment |
+| Model 3: Pose |
+| Model 4: OBB |
+▼
+| GPU (A100/T4) |
+| --- |
+| TensorRT 引擎 |
 
 ```python
 """
@@ -19970,60 +19662,46 @@ class MultiTaskInferenceService:
 
 ```
 
-
 ### 6.6 A/B 测试框架
 
 在生产环境中，模型版本的迭代需要通过 A/B 测试来验证效果。YOLO 多任务模型的 A/B 测试需要考虑精度、延迟、资源消耗等多个维度。
 
 #### A/B 测试流程
 
-```
 YOLO 模型 A/B 测试流程:
-══════════════════════════════════════════════════════════════
 
 1. 实验设计
-   ┌────────────────────────────────────────────────────┐
-   │  · 定义实验组和对照组                              │
-   │  · 确定评估指标 (mAP, 延迟, 资源消耗)              │
-   │  · 确定样本量 (需要多少请求才能达到统计显著性)      │
-   │  · 确定实验周期 (通常需要 1-7 天)                  │
-   └────────────────────────────────────────────────────┘
-                         │
-                         ▼
+| · 定义实验组和对照组 |
+| --- |
+| · 确定评估指标 (mAP, 延迟, 资源消耗) |
+| · 确定样本量 (需要多少请求才能达到统计显著性) |
+| · 确定实验周期 (通常需要 1-7 天) |
+▼
 2. 流量分配
-   ┌────────────────────────────────────────────────────┐
-   │  · 随机分配用户到实验组/对照组                       │
-   │  · 保持用户级一致性 (同一用户始终使用同一模型)       │
-   │  · 流量比例: 对照组 50% / 实验组 50%                │
-   └────────────────────────────────────────────────────┘
-                         │
-                         ▼
+| · 随机分配用户到实验组/对照组 |
+| --- |
+| · 保持用户级一致性 (同一用户始终使用同一模型) |
+| · 流量比例: 对照组 50% / 实验组 50% |
+▼
 3. 数据采集
-   ┌────────────────────────────────────────────────────┐
-   │  · 记录每个请求的模型版本                           │
-   │  · 记录推理结果 (预测框、置信度)                    │
-   │  · 记录性能指标 (延迟、GPU 利用率)                  │
-   │  · 记录业务指标 (误报率、漏报率)                    │
-   └────────────────────────────────────────────────────┘
-                         │
-                         ▼
+| · 记录每个请求的模型版本 |
+| --- |
+| · 记录推理结果 (预测框、置信度) |
+| · 记录性能指标 (延迟、GPU 利用率) |
+| · 记录业务指标 (误报率、漏报率) |
+▼
 4. 统计分析
-   ┌────────────────────────────────────────────────────┐
-   │  · 计算两组指标的置信区间                           │
-   │  · 进行显著性检验 (t-test, Z-test)                  │
-   │  · 计算效应量 (Cohen's d)                          │
-   │  · 判断实验是否显著                                │
-   └────────────────────────────────────────────────────┘
-                         │
-                         ▼
+| · 计算两组指标的置信区间 |
+| --- |
+| · 进行显著性检验 (t-test, Z-test) |
+| · 计算效应量 (Cohen's d) |
+| · 判断实验是否显著 |
+▼
 5. 决策与部署
-   ┌────────────────────────────────────────────────────┐
-   │  · 实验组显著优于对照组 → 全量部署                  │
-   │  · 无显著差异 → 保持对照组                          │
-   │  · 实验组差于对照组 → 回滚到对照组                  │
-   └────────────────────────────────────────────────────┘
 
-```
+· 实验组显著优于对照组 → 全量部署
+· 无显著差异 → 保持对照组
+· 实验组差于对照组 → 回滚到对照组
 
 #### A/B 测试代码实现
 
@@ -20236,7 +19914,6 @@ class ModelMonitor:
                 scores.append(within_range / len(history[-100:]) * 100)
         return np.mean(scores) if scores else 0.0
 
-
 def run_ab_test(model_a_path, model_b_path, test_dataset, n_samples=1000):
     """
     简化版 A/B 测试运行器
@@ -20293,7 +19970,6 @@ def run_ab_test(model_a_path, model_b_path, test_dataset, n_samples=1000):
     }
 
 ```
-
 
 *参考资料：*
 - *[Ultralytics Multi-Task Documentation](https://docs.ultralytics.com/tasks/)*
@@ -20810,32 +20486,27 @@ class MultiModelEnsemble:
 
 #### 蓝绿部署策略
 
-```
 蓝绿部署流程:
-══════════════════════════════════════════════════════════════
 
 环境状态变化:
 
 Step 1 - 部署新版本 (绿色):
-  蓝色 (旧)  ──────────────────────────────► 正常运行
-  绿色 (新)  ─────── 部署中 ──────────────► 健康检查通过
+蓝色 (旧)  ► 正常运行
+绿色 (新)  部署中 ► 健康检查通过
 
 Step 2 - 逐步切换流量 (10% → 50% → 100%):
-  蓝色 (旧)  ──────────────────────► 正常运行 (100%)
-  绿色 (新)  ──────────────────────► 正常运行 (0% → 100%)
-                                       │
-                                       ▼
-  逐步增加绿色流量: 10% → 25% → 50% → 75% → 100%
+蓝色 (旧)  ► 正常运行 (100%)
+绿色 (新)  ► 正常运行 (0% → 100%)
+
+▼
+逐步增加绿色流量: 10% → 25% → 50% → 75% → 100%
 
 Step 3 - 全量切换到绿色:
-  蓝色 (旧)  ──────────────────────► 保留 (可回滚)
-  绿色 (新)  ──────────────────────► 全量生产
+蓝色 (旧)  ► 保留 (可回滚)
+绿色 (新)  ► 全量生产
 
 Step 4 - 回滚 (如发现问题):
-  立即切换回蓝色，零停机回滚
-══════════════════════════════════════════════════════════════
-
-```
+立即切换回蓝色，零停机回滚
 
 ```yaml
 # Kubernetes Deployment 蓝绿部署配置
@@ -20956,7 +20627,6 @@ variable "model_version"  { default = "v2.1" }
 variable "ssh_key"        { default = "my-key" }
 
 ```
-
 
 ### 6.14 监控仪表盘（Grafana + Prometheus）
 
@@ -21476,6 +21146,5 @@ Grafana 仪表盘功能总结:
 - *[Segment Anything Model (SAM)](https://segment-anything.com/)*
 - *[Prometheus Monitoring](https://prometheus.io/docs/)*
 - *[Grafana Dashboards](https://grafana.com/docs/)*
-
 
 > **📌 系列导航**：[← 上一篇：yolo系列模型分析](YOLO系列模型分析.md) · [📖 导读目录](README.md) · [下一篇：基础yolo模型训练与指标分析 →](基础YOLO模型训练与指标分析.md)

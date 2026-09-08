@@ -6,7 +6,6 @@
 
 > **参考来源**：[RKNN-Toolkit2 GitHub](https://github.com/airockchip/rknn-toolkit2) | [RKNN-Toolkit2 Documentation](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/02_rknn_user_guide/01_toolkit_user_guide.md)
 
-
 ## 一、RKNN-Toolkit2 概述
 
 ### 1.1 支持的平台
@@ -21,32 +20,25 @@
 
 ### 1.2 支持的模型格式
 
-```
 支持导入的框架格式:
-├── PyTorch (.pt)          ← 直接导入（部分算子限制）
-├── ONNX (.onnx)           ← 推荐，最通用
-├── Tensorflow SavedModel  ← 完整支持
-├── Tensorflow GraphDef (.pb)
-├── Tensorflow Lite (.tflite)
-├── Caffe (.caffemodel)
-└── Darknet (.weights)     ← YOLO 原生格式
+PyTorch (.pt)  ← 直接导入（部分算子限制）
+ONNX (.onnx)  ← 推荐，最通用
+Tensorflow SavedModel  ← 完整支持
+Tensorflow GraphDef (.pb)
+Tensorflow Lite (.tflite)
+Caffe (.caffemodel)
+Darknet (.weights)  ← YOLO 原生格式
 
 支持导出的格式:
-└── RKNN (.rknn)           ← 目标平台原生格式
-
-```
+RKNN (.rknn)  ← 目标平台原生格式
 
 ### 1.3 工具链组成
 
-```
 RKNN-Toolkit2 包含:
-├── rknn-toolkit2-python   # Python SDK（模型转换）
-├── rknn-server            # 推理服务（可选）
-├── rknn-track             # 目标跟踪服务（可选）
-└── examples               # 示例代码
-
-```
-
+rknn-toolkit2-python  # Python SDK（模型转换）
+rknn-server  # 推理服务（可选）
+rknn-track  # 目标跟踪服务（可选）
+examples  # 示例代码
 
 ## 二、环境配置
 
@@ -129,7 +121,6 @@ def check_npu_status():
 check_npu_status()
 
 ```
-
 
 ## 三、YOLO 模型导出为 ONNX
 
@@ -216,7 +207,6 @@ ultralytics_result = ultralytics_model.predict("test_image.jpg", verbose=False)
 print(f"Ultralytics 推理结果数量: {len(ultralytics_result[0].boxes)}")
 
 ```
-
 
 ## 四、ONNX 转换为 RKNN
 
@@ -389,7 +379,6 @@ INT8 (.rknn)   ~12MB        ~2-3x        ~0.5-1%
 
 ```
 
-
 ## 五、开发板端推理部署
 
 ### 5.1 Python 推理代码
@@ -454,7 +443,6 @@ print(f"平均推理时间: {avg_time:.2f} ms")
 print(f"推理速度: {fps:.1f} FPS")
 
 ```
-
 
 ## 六、常见问题与解决
 
@@ -532,7 +520,6 @@ print(f"推理速度: {fps:.1f} FPS")
 
 ```
 
-
 ## 总结
 
 YOLO 模型转换到 RKNN 的关键步骤：
@@ -549,10 +536,8 @@ YOLO 模型转换到 RKNN 的关键步骤：
 - 转换失败时优先检查算子支持情况
 - 推理前务必对比 PC 端和开发板端的输出结果
 
-
 *参考资料：*
 - *[RKNN-Toolkit2 GitHub](https://github.com/airockchip/rknn-toolkit2)*
 - *[RKNN-Toolkit2 User Guide](https://github.com/airockchip/rknn-toolkit2/blob/master/docs/en/02_rknn_user_guide/01_toolkit_user_guide.md)*
-
 
 > **📌 系列导航**：[← 上一篇：模型量化深度解析](模型量化深度解析.md) · [📖 导读目录](README.md) · [下一篇：yolo模型在npu的python部署 →](YOLO模型在npu的python部署.md)
