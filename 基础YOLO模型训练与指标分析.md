@@ -8331,18 +8331,15 @@ if st.checkbox("启用自动刷新"):
 
 ```
 可视化库对比:
-══════════════════════════════════════════════════════════════
-特性              Matplotlib              Plotly
-══════════════════════════════════════════════════════════════
-交互性            静态图片                交互式（缩放/悬停）
-导出格式          PNG, SVG, PDF           HTML, PNG, SVG, JSON
-集成难度          简单                    中等
-定制能力          极强（底层控制）         中等（基于 JSON schema）
-性能（大数据量）   较好                    一般（JS 渲染）
-Web 部署          需要额外框架             原生支持
-Jupyter 内嵌      直接显示                需要 %plotly 扩展
-══════════════════════════════════════════════════════════════
-
+| 特性 | Matplotlib | Plotly |
+| --- | --- | --- |
+| 交互性 | 静态图片 | 交互式（缩放/悬停） |
+| 导出格式 | PNG, SVG, PDF | HTML, PNG, SVG, JSON |
+| 集成难度 | 简单 | 中等 |
+| 定制能力 | 极强（底层控制） | 中等（基于 JSON schema） |
+| 性能（大数据量） | 较好 | 一般（JS 渲染） |
+| Web 部署 | 需要额外框架 | 原生支持 |
+| Jupyter 内嵌 | 直接显示 | 需要 %plotly 扩展 |
 推荐方案:
   · 论文/报告 → Matplotlib（高质量静态图）
   · 监控仪表盘 → Plotly + Streamlit（实时交互）
@@ -9313,22 +9310,16 @@ def detect_memory_leak(model, data_yaml, num_epochs=10):
 
 ```
 NCCL（NVIDIA Collective Communications Library）常见问题:
-════════════════════════════════════════════════════════════════════
-问题                        原因                    解决方案
-════════════════════════════════════════════════════════════════════
-NCCL timeout              网络带宽不足或           export NCCL_TIMEOUT=1800
-                          节点间通信慢             export NCCL_IB_DISABLE=1
-════════════════════════════════════════════════════════════════════
-NCCL error                GPU 间 NVLink             export NCCL_IB_HCA=mlx5
-                          连接断开                  export NCCL_SOCKET_IFNAME=eth0
-════════════════════════════════════════════════════════════════════
-hang/死锁                梯度同步阻塞             export NCCL_DEBUG=INFO
-                          或屏障不一致             查看日志定位卡住的 rank
-════════════════════════════════════════════════════════════════════
-CUDA error                显存不足或               nvidia-smi
-                          计算错误                 torch.cuda.memory.summary()
-════════════════════════════════════════════════════════════════════
-
+| 问题 | 原因 | 解决方案 |
+| --- | --- | --- |
+| NCCL timeout | 网络带宽不足或 | export NCCL_TIMEOUT=1800 |
+| 节点间通信慢 | export | NCCL_IB_DISABLE=1 |
+| NCCL error | GPU 间 NVLink | export NCCL_IB_HCA=mlx5 |
+| 连接断开 | export | NCCL_SOCKET_IFNAME=eth0 |
+| hang/死锁 | 梯度同步阻塞 | export NCCL_DEBUG=INFO |
+| 或屏障不一致 | 查看日志定位卡住的 | rank |
+| CUDA error | 显存不足或 | nvidia-smi |
+| 计算错误 | torch.cuda.memory.summary() |  |
 ```
 
 ```python
@@ -9497,17 +9488,14 @@ def run_distributed():
 
 ```
 分布式训练调试工具:
-══════════════════════════════════════════════════════════════
-工具                  用途                      安装
-══════════════════════════════════════════════════════════════
-nccl-tests           NCCL 性能测试             git clone https://github.com/NVIDIA/nccl-tests
-wandb distributed    多 GPU 实验追踪           pip install wandb
-tensorboard-d        分布式 TensorBoard        pip install tensorboard-d
-torch.distributed    PyTorch 内置调试          已集成
-nvidia-smi dmon     实时监控 GPU 指标         系统内置
-gpustat             轻量 GPU 状态监控         pip install gpustat
-══════════════════════════════════════════════════════════════
-
+| 工具 | 用途 | 安装 |
+| --- | --- | --- |
+| nccl-tests | NCCL 性能测试 | git clone https://github.com/NVIDIA/nccl-tests |
+| wandb distributed | 多 GPU 实验追踪 | pip install wandb |
+| tensorboard-d | 分布式 TensorBoard | pip install tensorboard-d |
+| torch.distributed | PyTorch 内置调试 | 已集成 |
+| nvidia-smi dmon | 实时监控 GPU 指标 | 系统内置 |
+| gpustat | 轻量 GPU 状态监控 | pip install gpustat |
 ```
 
 ---
@@ -10480,19 +10468,17 @@ def hyperparameter_search(data_yaml):
 
 ```
 模型注册工作流:
-══════════════════════════════════════════════════════════════
-
-  开发阶段 (Dev)                    测试阶段 (Staging)               生产阶段 (Production)
-       ▼                                  ▼                                ▼
-  ┌──────────┐                    ┌──────────┐                    ┌──────────┐
-  │ 实验训练  │ ──验证通过──→    │ 回归测试  │ ──审核通过──→    │ 线上部署  │
-  │ 本地/云  │                    │ GPU 集群  │                    │ 边缘设备  │
-  └────┬─────┘                    └────┬─────┘                    └────┬─────┘
-       │                               │                               │
-       ▼                               ▼                               ▼
-  model:v1.0-dev              model:v1.0-staging           model:v1.0-production
-  (mlflow登记)               (mlflow登记)                 (mlflow登记)
-
+| 开发阶段 (Dev) | 测试阶段 (Staging) | 生产阶段 | (Production) |  |  |
+| --- | --- | --- | --- | --- | --- |
+| ▼ | ▼ | ▼ |  |  |  |
+| ┌──────────┐ | ┌──────────┐ | ┌──────────┐ |  |  |  |
+| │ 实验训练 | │ ──验证通过──→ | │ 回归测试 | │ ──审核通过──→ | │ 线上部署 | │ |
+| │ 本地/云 | │ | │ GPU 集群 | │ | │ 边缘设备 | │ |
+| └────┬─────┘ | └────┬─────┘ | └────┬─────┘ |  |  |  |
+| │ | │ | │ |  |  |  |
+| ▼ | ▼ | ▼ |  |  |  |
+| model:v1.0-dev | model:v1.0-staging | model:v1.0-production |  |  |  |
+| (mlflow登记) | (mlflow登记) | (mlflow登记) |  |  |  |
 → 模型仓库 ←→ 模型仓库 ←
                   (MLflow Model Registry)
 ══════════════════════════════════════════════════════════════
@@ -11800,18 +11786,15 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
 
 ```
 边缘 AI 平台对比:
-════════════════════════════════════════════════════════════════════
-平台              算力(TOPS)    功耗(W)     推理格式        适用场景
-════════════════════════════════════════════════════════════════════
-Jetson Nano      0.47 FP16     5-10        TensorRT FP16   入门边缘
-Jetson Xavier    18 FP16       15-30       TensorRT FP16   中等边缘
-Jetson Orin NX   100 FP16      15-25       TensorRT FP16   高端边缘
-RK3588           6 TOPS INT8   5-10        RKNN INT8       国产边缘
-Snapdragon 8 Gen2  15 TOPS    5-15        SNPE/NNAPI      高端手机
-Apple A17 Pro    35 TOPS NP    3-8         CoreML          iPhone
-Google TPU (Edge) 15 TOPS     5-10        TFLite          智能摄像头
-════════════════════════════════════════════════════════════════════
-
+| 平台 | 算力(TOPS) | 功耗(W) | 推理格式 | 适用场景 |
+| --- | --- | --- | --- | --- |
+| Jetson Nano | 0.47 FP16 | 5-10 | TensorRT FP16 | 入门边缘 |
+| Jetson Xavier | 18 FP16 | 15-30 | TensorRT FP16 | 中等边缘 |
+| Jetson Orin NX | 100 FP16 | 15-25 | TensorRT FP16 | 高端边缘 |
+| RK3588 | 6 TOPS INT8 | 5-10 | RKNN INT8 | 国产边缘 |
+| Snapdragon 8 Gen2 | 15 TOPS | 5-15 | SNPE/NNAPI | 高端手机 |
+| Apple A17 Pro | 35 TOPS NP | 3-8 | CoreML | iPhone |
+| Google TPU (Edge) 15 TOPS | 5-10 | TFLite | 智能摄像头 |  |
 ```
 
 #### 8.10.2 TensorFlow Lite Edge TPU 部署
@@ -11992,17 +11975,14 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 
 ```
 边缘 AI 模型压缩技术:
-══════════════════════════════════════════════════════════════
-技术                加速比      精度损失      实现难度      适用场景
-══════════════════════════════════════════════════════════════
-模型剪枝            1.5-2x      1-3 mAP     中           通道级稀疏化
-结构重参数化        1.2-1.5x    <0.1 mAP    低           YOLOv8/v10 已内置
-量化 (FP16)         1.5-2x      <0.5 mAP    低           所有 GPU/边缘
-量化 (INT8)         2-4x        0.5-2 mAP   中           NPU/TPU 设备
-知识蒸馏            1-3x        0-2 mAP     高           模型压缩首选
-深度压缩 (channel)  1.5-3x      2-5 mAP     中           极度受限设备
-══════════════════════════════════════════════════════════════
-
+| 技术 | 加速比 | 精度损失 | 实现难度 | 适用场景 |
+| --- | --- | --- | --- | --- |
+| 模型剪枝 | 1.5-2x | 1-3 mAP | 中 | 通道级稀疏化 |
+| 结构重参数化 | 1.2-1.5x | <0.1 mAP | 低 | YOLOv8/v10 已内置 |
+| 量化 (FP16) | 1.5-2x | <0.5 mAP | 低 | 所有 GPU/边缘 |
+| 量化 (INT8) | 2-4x | 0.5-2 mAP | 中 | NPU/TPU 设备 |
+| 知识蒸馏 | 1-3x | 0-2 mAP | 高 | 模型压缩首选 |
+| 深度压缩 (channel) | 1.5-3x | 2-5 mAP | 中 | 极度受限设备 |
 推荐组合:
   · 资源极度受限（< 1W 功耗）: 剪枝 + INT8 量化 + 小尺寸输入
   · 资源受限（1-10W 功耗）: FP16 量化 + 小尺寸输入
@@ -12014,18 +11994,15 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 
 ```
 边缘推理 vs 云端推理对比:
-══════════════════════════════════════════════════════════════
-维度              边缘推理                  云端推理
-══════════════════════════════════════════════════════════════
-延迟              1-50 ms（本地处理）      50-500 ms（网络传输）
-隐私              数据不出设备              数据上传服务器
-带宽              无需网络                  需要稳定网络
-成本              一次性硬件成本             持续云端费用
-精度              受限于算力（小模型）      可用大模型（高精度）
-可扩展性          每设备独立部署             集中式水平扩展
-实时性            极高（适合控制环路）      中等
-══════════════════════════════════════════════════════════════
-
+| 维度 | 边缘推理 | 云端推理 |
+| --- | --- | --- |
+| 延迟 | 1-50 ms（本地处理） | 50-500 ms（网络传输） |
+| 隐私 | 数据不出设备 | 数据上传服务器 |
+| 带宽 | 无需网络 | 需要稳定网络 |
+| 成本 | 一次性硬件成本 | 持续云端费用 |
+| 精度 | 受限于算力（小模型） | 可用大模型（高精度） |
+| 可扩展性 | 每设备独立部署 | 集中式水平扩展 |
+| 实时性 | 极高（适合控制环路） | 中等 |
 典型场景:
   · 边缘推理: 工业在线质检、自动驾驶、无人机巡检、人脸识别门禁
   · 云端推理: 批量离线分析、图像归档、模型训练、大规模数据分析

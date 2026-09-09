@@ -776,29 +776,25 @@ COCO Detection Challenge 官方指标体系：
 ══════════════════════════════════════════════════════════
 
 Yolo模型在COCO val2017上的典型对比：
-══════════════════════════════════════════════════════════
-
-  模型        mAP    mAP50  mAP75  AR@100  Params(M)  GFLOPs
-  ─────────────────────────────────────────────────────────
-  YOLOv5s     37.4   55.7   40.3   55.9    7.2       16.5
-  YOLOv5m     45.3   64.1   49.0   63.4    21.2      49.0
-  YOLOv5l     49.0   67.4   53.2   67.2    46.5      109.0
-  YOLOv8s     44.9   61.8   —      —      11.2      28.6
-  YOLOv8m     50.2   67.2   —      —      25.9      78.9
-  YOLOv8l     52.8   70.9   —      —      43.7      165.2
-  YOLOv8x     53.9   72.7   —      —      68.2      257.8
-  YOLOv10s    46.0   63.5   50.0   63.5    7.2       17.5
-  YOLOv10m    51.4   68.1   55.8   68.6    29.4      79.5
-  YOLO11n     39.5   57.2   42.8   57.8    2.6       6.5
-  YOLO11s     46.7   64.3   50.6   64.5    9.4       21.5
-  YOLO26n     40.1   57.8   43.5   58.3    2.4       7.2
-
-  注：YOLOv8 各尺寸的 mAP75 与 AR@100 官方基准表未直接公布，以 — 标记；
-      其余数值取自 Ultralytics 官方 COCO val2017 结果。
-  YOLO26s     48.2   66.1   52.1   66.4    10.8      25.6
-  YOLO26x     56.9   74.2   61.8   74.5    55.7      138.2
-══════════════════════════════════════════════════════════
-
+| 模型 | mAP | mAP50 | mAP75 | AR@100 | Params(M) | GFLOPs |
+| --- | --- | --- | --- | --- | --- | --- |
+| YOLOv5s | 37.4 | 55.7 | 40.3 | 55.9 | 7.2 | 16.5 |
+| YOLOv5m | 45.3 | 64.1 | 49.0 | 63.4 | 21.2 | 49.0 |
+| YOLOv5l | 49.0 | 67.4 | 53.2 | 67.2 | 46.5 | 109.0 |
+| YOLOv8s | 44.9 | 61.8 | — | — | 11.2 | 28.6 |
+| YOLOv8m | 50.2 | 67.2 | — | — | 25.9 | 78.9 |
+| YOLOv8l | 52.8 | 70.9 | — | — | 43.7 | 165.2 |
+| YOLOv8x | 53.9 | 72.7 | — | — | 68.2 | 257.8 |
+| YOLOv10s | 46.0 | 63.5 | 50.0 | 63.5 | 7.2 | 17.5 |
+| YOLOv10m | 51.4 | 68.1 | 55.8 | 68.6 | 29.4 | 79.5 |
+| YOLO11n | 39.5 | 57.2 | 42.8 | 57.8 | 2.6 | 6.5 |
+| YOLO11s | 46.7 | 64.3 | 50.6 | 64.5 | 9.4 | 21.5 |
+| YOLO26n | 40.1 | 57.8 | 43.5 | 58.3 | 2.4 | 7.2 |
+注：YOLOv8 各尺寸的 mAP75 与 AR@100 官方基准表未直接公布，以 — 标记；
+其余数值取自 Ultralytics 官方 COCO val2017 结果。
+| YOLO26s | 48.2 | 66.1 | 52.1 | 66.4 | 10.8 | 25.6 |
+| --- | --- | --- | --- | --- | --- | --- |
+| YOLO26x | 56.9 | 74.2 | 61.8 | 74.5 | 55.7 | 138.2 |
 说明：
   · 不同训练策略和数据增强会导致结果略有差异
   · 表格中数据来源于各模型官方论文/文档
@@ -812,26 +808,22 @@ Yolo模型在COCO val2017上的典型对比：
 
 ```
 检测任务评估指标汇总：
-══════════════════════════════════════════════════════════
-
-  指标              全称                      含义
-  ──────────────────────────────────────────────────────
-  mAP               Mean Average Precision     所有类别AP的平均
-  AP                Average Precision          单类别PR曲线下面积
-  AP@0.5            AP at IoU=0.5             IoU阈值0.5时的AP
-  AP@0.5:0.95       AP avg over [0.5,0.95]   10个阈值的平均AP
-  AP50              同AP@0.5
-  AP75              同AP@0.75                 IoU阈值0.75时的AP
-  APS (AP Small)    AP for small objects      小目标的AP
-  APM (AP Medium)   AP for medium objects     中目标的AP
-  APL (AP Large)    AP for large objects      大目标的AP
-  AR                Average Recall            平均召回率
-  AR@1              AR with max 1 detection    最多1个预测的召回率
-  AR@10             AR with max 10 detections  最多10个预测的召回率
-  AR@100            AR with max 100 detections 最多100个预测的召回率
-  ARs/ARm/ARl       Size-specific recall      分尺寸召回率
-══════════════════════════════════════════════════════════
-
+| 指标 | 全称 | 含义 |
+| --- | --- | --- |
+| mAP | Mean Average Precision | 所有类别AP的平均 |
+| AP | Average Precision | 单类别PR曲线下面积 |
+| AP@0.5 | AP at IoU=0.5 | IoU阈值0.5时的AP |
+| AP@0.5:0.95 | AP avg over [0.5,0.95] | 10个阈值的平均AP |
+| AP50 | 同AP@0.5 |  |
+| AP75 | 同AP@0.75 | IoU阈值0.75时的AP |
+| APS (AP Small) | AP for small objects | 小目标的AP |
+| APM (AP Medium) | AP for medium objects | 中目标的AP |
+| APL (AP Large) | AP for large objects | 大目标的AP |
+| AR | Average Recall | 平均召回率 |
+| AR@1 | AR with max 1 detection | 最多1个预测的召回率 |
+| AR@10 | AR with max 10 detections | 最多10个预测的召回率 |
+| AR@100 | AR with max 100 detections | 最多100个预测的召回率 |
+| ARs/ARm/ARl | Size-specific recall | 分尺寸召回率 |
 ```
 
 #### 实例分割
@@ -1086,22 +1078,19 @@ coco_eval.summarize()
 
 ```
 COCOeval.stats 详解（12 个统计值）：
-══════════════════════════════════════════════════════════════
-
-  stats[0]:  AP @IoU=0.50:0.95 | 面积=all      | 目标数=maxDets=100
-  stats[1]:  AP @IoU=0.50      | 面积=all      | 目标数=maxDets=100
-  stats[2]:  AP @IoU=0.75      | 面积=all      | 目标数=maxDets=100
-  stats[3]:  AP (small)        | 面积<32²      | 目标数=maxDets=100
-  stats[4]:  AP (medium)       | 32²≤面积<96²  | 目标数=maxDets=100
-  stats[5]:  AP (large)        | 面积≥96²      | 目标数=maxDets=100
-  stats[6]:  AR (maxDets=1)    | 面积=all      | 目标数=1
-  stats[7]:  AR (maxDets=10)   | 面积=all      | 目标数=10
-  stats[8]:  AR (maxDets=100)  | 面积=all      | 目标数=100
-  stats[9]:  AR (small)        | 面积<32²      | 目标数=maxDets=100
-  stats[10]: AR (medium)       | 32²≤面积<96²  | 目标数=maxDets=100
-  stats[11]: AR (large)        | 面积≥96²      | 目标数=maxDets=100
-══════════════════════════════════════════════════════════════
-
+| stats[0]: | AP @IoU=0.50:0.95 | 面积=all | | | 目标数=maxDets=100 |
+| --- | --- | --- | --- |
+| stats[1]: | AP @IoU=0.50 | | 面积=all | | 目标数=maxDets=100 |
+| stats[2]: | AP @IoU=0.75 | | 面积=all | | 目标数=maxDets=100 |
+| stats[3]: | AP (small) | | 面积<32² | | 目标数=maxDets=100 |
+| stats[4]: | AP (medium) | | 32²≤面积<96² | | 目标数=maxDets=100 |
+| stats[5]: | AP (large) | | 面积≥96² | | 目标数=maxDets=100 |
+| stats[6]: | AR (maxDets=1) | | 面积=all | | 目标数=1 |
+| stats[7]: | AR (maxDets=10) | | 面积=all | | 目标数=10 |
+| stats[8]: | AR (maxDets=100) | | 面积=all | | 目标数=100 |
+| stats[9]: | AR (small) | | 面积<32² | | 目标数=maxDets=100 |
+| stats[10]: AR (medium) | | 32²≤面积<96² | | | 目标数=maxDets=100 |
+| stats[11]: AR (large) | | 面积≥96² | | | 目标数=maxDets=100 |
 ```
 
 #### COCO 匹配算法详解
