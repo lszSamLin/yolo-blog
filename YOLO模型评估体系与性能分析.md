@@ -565,9 +565,8 @@ COCO 评测不仅给出整体 mAP，还按目标大小分类统计。
 · 大目标：边长 > 96px 的物体（如近处的人）
 
 报告格式：
-| mAP@0.5:0.95  mAP@0.5  mAP_s  mAP_m  mAP_l |
-| --- |
-| 44.9      63.2    27.8   48.5   60.4 |
+mAP@0.5:0.95  mAP@0.5  mAP_s  mAP_m  mAP_l
+44.9      63.2    27.8   48.5   60.4
 
 解读：
 · mAP_s=27.8% 远小于 mAP_l=60.4%
@@ -705,17 +704,16 @@ DETRAC 数据集特点：
 · 挑战: 严重遮挡、密集人群、夜间低光照
 
 DETRAC 评测指标：
-| MOTA (Multi-Object Tracking Accuracy) |
-| --- |
-| = 1 - (FN + FP + ID Switches) / GT总数 |
-| MOTP (Multi-Object Tracking Precision) |
-| = 平均 IoU（匹配成功的预测-GT对） |
-| IDF1 (Id-F1 Score) |
-| = 2×IDTP / (2×IDTP + IDFP + IDFN) |
-| HOTA |
-| = sqrt(HOTA_id × HOTA_loc) |
-| Count (检测数量) |
-| = 正确检测的轨迹数 |
+MOTA (Multi-Object Tracking Accuracy)
+= 1 - (FN + FP + ID Switches) / GT总数
+MOTP (Multi-Object Tracking Precision)
+= 平均 IoU（匹配成功的预测-GT对）
+IDF1 (Id-F1 Score)
+= 2×IDTP / (2×IDTP + IDFP + IDFN)
+HOTA
+= sqrt(HOTA_id × HOTA_loc)
+Count (检测数量)
+= 正确检测的轨迹数
 
 #### LVIS指标
 
@@ -856,12 +854,11 @@ mask IoU计算：
 IoU_mask = |M_pred ∩ M_gt| / |M_pred ∪ M_gt|
 
 YOLOv8分割模型典型结果（COCO val）：
-| 模型      mAP_box   mAP_mask   Params(M)  Speed(ms) |
-| --- |
-| YOLOv8s   44.9      36.7       11.2       1.8 |
-| YOLOv8m   53.2      44.1       43.7       3.2 |
-| YOLOv8l   56.3      47.0       86.7       5.1 |
-| YOLOv8x   58.6      49.7       68.2       8.3 |
+模型      mAP_box   mAP_mask   Params(M)  Speed(ms)
+YOLOv8s   44.9      36.7       11.2       1.8
+YOLOv8m   53.2      44.1       43.7       3.2
+YOLOv8l   56.3      47.0       86.7       5.1
+YOLOv8x   58.6      49.7       68.2       8.3
 
 注意：mask AP 通常比 box AP 低 8~10 个百分点，
 因为像素级对齐比边界框对齐更难。
@@ -901,12 +898,11 @@ COCO Keypoints 数据集的17个关键点：
 8  Left Knee
 
 YOLOv8姿态估计典型结果（COCO Keypoints val）：
-| 模型       AP      AP@.5   AP@.75  APm   APl |
-| --- |
-| YOLOv8s    65.8    87.2    71.4   60.2  72.1 |
-| YOLOv8m    71.3    90.1    77.8   66.4  78.2 |
-| YOLOv8l    74.2    91.5    80.6   69.1  81.3 |
-| YOLOv8x    76.0    92.3    82.1   71.0  83.5 |
+模型       AP      AP@.5   AP@.75  APm   APl
+YOLOv8s    65.8    87.2    71.4   60.2  72.1
+YOLOv8m    71.3    90.1    77.8   66.4  78.2
+YOLOv8l    74.2    91.5    80.6   69.1  81.3
+YOLOv8x    76.0    92.3    82.1   71.0  83.5
 
 #### 旋转目标检测（OBB）
 
@@ -917,11 +913,10 @@ YOLOv8姿态估计典型结果（COCO Keypoints val）：
 · OBB（Oriented Bounding Box）：边界框可以旋转，更好地贴合斜向物体
 
 OBB评估指标：
-| 指标        含义 |
-| --- |
-| mAP         旋转框的平均AP |
-| mAP50       IoU=0.5时的mAP |
-| mAP75       IoU=0.75时的mAP |
+指标        含义
+mAP         旋转框的平均AP
+mAP50       IoU=0.5时的mAP
+mAP75       IoU=0.75时的mAP
 
 OBB IoU计算（旋转矩形相交）：
 1. 使用分离轴定理（SAT）判断两旋转矩形是否相交
@@ -965,12 +960,11 @@ Top-1 Accuracy: 错误（预测为cat，但真实为dog）
 Top-5 Accuracy: 正确（dog在前5中）
 
 YOLO分类模型典型结果（ImageNet）：
-| 模型        Top-1     Top-5    Params(M)  FLOPs(G) |
-| --- |
-| YOLO-cls s  78.2%     94.1%    8.6        2.5 |
-| YOLO-cls m  81.5%     95.6%    30.8       7.8 |
-| YOLO-cls l  83.1%     96.3%    58.6       15.2 |
-| YOLO-cls x  84.2%     96.8%    78.9       20.5 |
+模型        Top-1     Top-5    Params(M)  FLOPs(G)
+YOLO-cls s  78.2%     94.1%    8.6        2.5
+YOLO-cls m  81.5%     95.6%    30.8       7.8
+YOLO-cls l  83.1%     96.3%    58.6       15.2
+YOLO-cls x  84.2%     96.8%    78.9       20.5
 
 #### 语义分割
 
@@ -1025,10 +1019,9 @@ YOLO分类模型典型结果（ImageNet）：
 δ<1.25 比例越高，深度估计越精确
 
 YOLO深度估计（YOLO-Depth）典型结果（KITTI）：
-| 模型      AbsRel   SqRel   RMSE   δ<1.25   δ<1.25² |
-| --- |
-| YOLO-D    0.142    0.782   4.321  0.785    0.932 |
-| YOLO-M    0.118    0.621   3.845  0.823    0.951 |
+模型      AbsRel   SqRel   RMSE   δ<1.25   δ<1.25²
+YOLO-D    0.142    0.782   4.321  0.785    0.932
+YOLO-M    0.118    0.621   3.845  0.823    0.951
 
 ### 1.5 COCO 评估协议详解
 
@@ -1253,11 +1246,10 @@ LVIS 数据集特点：
 · 16,731 张图片
 
 长尾分布:
-| 类别分组     类别数    平均实例数    占比 |
-| --- |
-| Frequent    253      ≥ 100         21% |
-| Common      543      10-99         45% |
-| Rare        407      < 10          34% |
+类别分组     类别数    平均实例数    占比
+Frequent    253      ≥ 100         21%
+Common      543      10-99         45%
+Rare        407      < 10          34%
 
 关键洞察:
 · 34% 的类别只有不到 10 个训练实例

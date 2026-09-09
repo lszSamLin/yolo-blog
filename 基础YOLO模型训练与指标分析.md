@@ -4500,12 +4500,11 @@ YOLOv8 使用 Task-Aligned Assigner 进行智能正负样本分配，综合考�
 
 Task-Aligned Assigner 核心思想：
 
-| 传统分配：基于 IoU 阈值（正样本 IoU > 0.5） |
-| --- |
-| Task-Aligned 分配：IoU + 分类质量感知 |
-| - 对小目标降低 IoU 阈值（更宽松的 positive 定义） |
-| - 对大目标提高 IoU 阈值（更严格的 positive 定义） |
-| - 结合预测质量（cls score）进行动态调整 |
+传统分配：基于 IoU 阈值（正样本 IoU > 0.5）
+Task-Aligned 分配：IoU + 分类质量感知
+- 对小目标降低 IoU 阈值（更宽松的 positive 定义）
+- 对大目标提高 IoU 阈值（更严格的 positive 定义）
+- 结合预测质量（cls score）进行动态调整
 
 #### 8. 完整训练命令示例
 

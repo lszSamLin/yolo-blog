@@ -72,17 +72,16 @@ One-to-One 解码 (YOLO26 e2e):
 3. 无需 NMS！
 
 ▼
-| STEP 4: 后处理 (Post-processing) |
-| --- |
-| ──────────────────────── |
-| 1. 坐标还原: 将归一化坐标转回原始图像坐标 |
-| x1 = (cx - w/2) / scale - pad_w/width |
-| y1 = (cy - h/2) / scale - pad_h/height |
-| x2 = (cx + w/2) / scale - pad_w/width |
-| y2 = (cy + h/2) / scale - pad_h/height |
-| 2. 格式化输出: |
-| [x1, y1, x2, y2, conf, class_id] |
-| 3. 可视化 (可选): 绘制边界框、标签、掩码/关键点 |
+STEP 4: 后处理 (Post-processing)
+────────────────────────
+1. 坐标还原: 将归一化坐标转回原始图像坐标
+x1 = (cx - w/2) / scale - pad_w/width
+y1 = (cy - h/2) / scale - pad_h/height
+x2 = (cx + w/2) / scale - pad_w/width
+y2 = (cy + h/2) / scale - pad_h/height
+2. 格式化输出:
+[x1, y1, x2, y2, conf, class_id]
+3. 可视化 (可选): 绘制边界框、标签、掩码/关键点
 
 ### 1.2 Letterbox 预处理详解
 
@@ -2141,11 +2140,10 @@ NCNN 特性：
 · 模型格式：原生支持 NCNN 格式（可自行转换）
 
 性能对比（YOLOv8s, 640×640, Android 12, Snapdragon 8 Gen 2）：
-| 后端              延迟(ms)   FPS    功耗(mW) |
-| --- |
-| CPU (NEON)        ~8.5      ~118    450 |
-| OpenCL GPU        ~4.2      ~238    680 |
-| Vulkan GPU        ~3.8      ~263    720 |
+后端              延迟(ms)   FPS    功耗(mW)
+CPU (NEON)        ~8.5      ~118    450
+OpenCL GPU        ~4.2      ~238    680
+Vulkan GPU        ~3.8      ~263    720
 
 ```cpp
 // NCNN C++ 推理示例
@@ -2421,29 +2419,27 @@ SNPE（Snapdragon Neural Processing Engine）是高通推出的移动端 NPU 推
 SNPE 架构：
 
 SNPE Runtime
-| Preprocessing |
-| --- |
-| ───────────────────── |
-| · 图像缩放/裁剪 |
-| · 归一化 |
-| · 通道转换 |
-| SNPE Runtime |
-| ───────────────────── |
-| · Graph 优化 |
-| · 算子调度 |
-| · 内存管理 |
-| Hardware Accelerators |
-| ───────────────────── |
-| · Hexagon DSP (主要加速后端) |
-| · Adreno GPU |
-| · CPU |
+Preprocessing
+─────────────────────
+· 图像缩放/裁剪
+· 归一化
+· 通道转换
+SNPE Runtime
+─────────────────────
+· Graph 优化
+· 算子调度
+· 内存管理
+Hardware Accelerators
+─────────────────────
+· Hexagon DSP (主要加速后端)
+· Adreno GPU
+· CPU
 
 性能对比（Snapdragon 8 Gen 2, YOLOv8s, 640×640）：
-| 后端              延迟(ms)   FPS    功耗(mW) |
-| --- |
-| Hexagon DSP     ~6.5      ~154    380 |
-| Adreno GPU      ~8.2      ~122    520 |
-| CPU             ~25.0     ~40     200 |
+后端              延迟(ms)   FPS    功耗(mW)
+Hexagon DSP     ~6.5      ~154    380
+Adreno GPU      ~8.2      ~122    520
+CPU             ~25.0     ~40     200
 
 ```python
 # SNPE Python API 推理示例
@@ -2497,24 +2493,23 @@ QNN（Qualcomm AI Runtime）是 SNPE 的继任者，提供更灵活的插件架�
 QNN 架构：
 
 QNN Runtime
-| QNN API Layer |
-| --- |
-| ───────────────────── |
-| · Context Management |
-| · Graph Compilation |
-| · Memory Management |
-| QNN Backend |
-| ───────────────────── |
-| · Hexagon HVX (Vector DSP) |
-| · Adreno GPU (OpenCL/Vulkan) |
-| · AI Engine Direct (Hexagon) |
-| · CPU |
-| Compilation Pipeline |
-| ───────────────────── |
-| · ONNX/TFLite 解析 |
-| · 算子映射到后端 |
-| · 图优化 (算子融合, 常量折叠) |
-| · 代码生成 (Hexagon HIDL) |
+QNN API Layer
+─────────────────────
+· Context Management
+· Graph Compilation
+· Memory Management
+QNN Backend
+─────────────────────
+· Hexagon HVX (Vector DSP)
+· Adreno GPU (OpenCL/Vulkan)
+· AI Engine Direct (Hexagon)
+· CPU
+Compilation Pipeline
+─────────────────────
+· ONNX/TFLite 解析
+· 算子映射到后端
+· 图优化 (算子融合, 常量折叠)
+· 代码生成 (Hexagon HIDL)
 
 ```cpp
 // QNN C++ 推理示例
@@ -2686,14 +2681,13 @@ Edge TPU（Coral）是 Google 推出的专用 AI 加速芯片，专为边缘设�
 Edge TPU 架构：
 
 Edge TPU 硬件：
-| Edge TPU Core (MXU: Matrix Multiplication Unit) |
-| --- |
-| ───────────────────────────────────────────────── |
-| · 1 TOPS 算力 (Coral Dev Board) |
-| · 8 TOPS 算力 (Coral Accelerator) |
-| · INT8 量化推理 |
-| · 低延迟 (~10ms 推理) |
-| · 低功耗 (~2-4W) |
+Edge TPU Core (MXU: Matrix Multiplication Unit)
+─────────────────────────────────────────────────
+· 1 TOPS 算力 (Coral Dev Board)
+· 8 TOPS 算力 (Coral Accelerator)
+· INT8 量化推理
+· 低延迟 (~10ms 推理)
+· 低功耗 (~2-4W)
 
 部署流程：
 ONNX/YOLO → TFLite → Edge TPU Compiler → .tflite_edgetpu
@@ -3082,15 +3076,14 @@ Triton 并发策略配置：
 模型预热  warmup  冷启动优化
 
 推荐配置（生产环境）：
-| 参数                    推荐值           说明 |
-| --- |
-| max_batch_size          32              GPU 利用率最佳 |
-| dynamic_batching        enabled         自动批处理 |
-| max_queue_delay_us      5000           最大等待 5ms |
-| instance_count          2-4             多实例并行 |
-| concurrency             32              并发请求数 |
-| request_timeout_ms      30000           请求超时 30s |
-| warmup                true              服务启动预热 |
+参数                    推荐值           说明
+max_batch_size          32              GPU 利用率最佳
+dynamic_batching        enabled         自动批处理
+max_queue_delay_us      5000           最大等待 5ms
+instance_count          2-4             多实例并行
+concurrency             32              并发请求数
+request_timeout_ms      30000           请求超时 30s
+warmup                true              服务启动预热
 
 #### 4.4.4 Triton 性能调优
 
