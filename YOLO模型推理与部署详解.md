@@ -73,7 +73,6 @@ One-to-One 解码 (YOLO26 e2e):
 
 ▼
 STEP 4: 后处理 (Post-processing)
-────────────────────────
 1. 坐标还原: 将归一化坐标转回原始图像坐标
 x1 = (cx - w/2) / scale - pad_w/width
 y1 = (cy - h/2) / scale - pad_h/height
@@ -2412,17 +2411,14 @@ SNPE 架构：
 
 SNPE Runtime
 Preprocessing
-─────────────────────
 · 图像缩放/裁剪
 · 归一化
 · 通道转换
 SNPE Runtime
-─────────────────────
 · Graph 优化
 · 算子调度
 · 内存管理
 Hardware Accelerators
-─────────────────────
 · Hexagon DSP (主要加速后端)
 · Adreno GPU
 · CPU
@@ -2486,18 +2482,15 @@ QNN 架构：
 
 QNN Runtime
 QNN API Layer
-─────────────────────
 · Context Management
 · Graph Compilation
 · Memory Management
 QNN Backend
-─────────────────────
 · Hexagon HVX (Vector DSP)
 · Adreno GPU (OpenCL/Vulkan)
 · AI Engine Direct (Hexagon)
 · CPU
 Compilation Pipeline
-─────────────────────
 · ONNX/TFLite 解析
 · 算子映射到后端
 · 图优化 (算子融合, 常量折叠)
@@ -2674,7 +2667,6 @@ Edge TPU 架构：
 
 Edge TPU 硬件：
 Edge TPU Core (MXU: Matrix Multiplication Unit)
-─────────────────────────────────────────────────
 · 1 TOPS 算力 (Coral Dev Board)
 · 8 TOPS 算力 (Coral Accelerator)
 · INT8 量化推理

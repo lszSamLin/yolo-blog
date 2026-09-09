@@ -2922,11 +2922,9 @@ class CurriculumLearning:
 | YOLOv8s + DINOv2 | 自监督预训练 | 46.2% (+1.3pp) |
 import torch
 
-# ═══════════════════════════════════════════════════════════
 
 # 方法 1: 使用 DINOv2 预训练的 backbone
 
-# ═══════════════════════════════════════════════════════════
 
 # 下载 DINOv2 权重
 
@@ -2956,11 +2954,9 @@ def load_dinov2_backbone(model_path, dinov2_weight_path):
     print(f"成功映射 {mapped_keys} 个权重参数")
     return model
 
-# ═══════════════════════════════════════════════════════════
 
 # 方法 2: 使用 MAE 预训练
 
-# ═══════════════════════════════════════════════════════════
 
 def fine_tune_with_mae(model_path, data_yaml, epochs=100):
     """使用 MAE 预训练进行微调"""
@@ -5027,7 +5023,6 @@ SGD（Stochastic Gradient Descent）是最基础的优化器，加上动量项�
 
 ```
 SGD with Momentum 更新公式:
-══════════════════════════════════════════════════════════════
 
 v_t = μ × v_{t-1} + ∇L(θ_{t-1})
 θ_t = θ_{t-1} - lr × v_t
@@ -5087,7 +5082,6 @@ optimizer_no_wd = torch.optim.SGD(
 
 ```
 Adam 优化器公式:
-══════════════════════════════════════════════════════════════
 
 一阶矩估计（指数加权移动平均）:
   m_t = β₁ × m_{t-1} + (1 - β₁) × g_t
@@ -5112,7 +5106,6 @@ Adam 优化器公式:
 
 ```
 SGD vs AdamW 对比:
-══════════════════════════════════════════════════════════════
 
 维度              SGD + Momentum          AdamW
 
@@ -5167,7 +5160,6 @@ model.train(
 
 ```
 AdamW 优于 SGD 的场景:
-══════════════════════════════════════════════════════════════
 场景                              原因
 
 | 小数据集快速实验 | AdamW | 收敛快，不需要精细调参 |
@@ -5190,7 +5182,6 @@ AdamW 优于 SGD 的场景:
 
 ```
 Warmup 的数学原理:
-══════════════════════════════════════════════════════════════
 
 线性 Warmup:
   lr(t) = lr0 × (t / T_warmup)    for t < T_warmup
@@ -5240,7 +5231,6 @@ scheduler = OneCycleLR(
 
 ```
 混合精度训练（Mixed Precision Training）原理:
-══════════════════════════════════════════════════════════════
 
 数据类型对比:
 | 类型 | 位数 | 范围 | 精度 | 显存占用 |
@@ -5312,7 +5302,6 @@ for epoch in range(100):
 
 ```
 混合精度训练的原理:
-══════════════════════════════════════════════════════════════════════════
 
 FP32 (单精度):
   · 存储: 32 bits (1 sign + 8 exponent + 23 mantissa)
@@ -5338,7 +5327,6 @@ BF16 (Bfloat16):
   · 反向传播: FP16
   · 权重更新: FP32 (保持精度)
   · Loss Scaling: 防止 FP16 下溢
-══════════════════════════════════════════════════════════════════════════
 
 ```
 
@@ -5391,9 +5379,7 @@ import torch
 import torch.nn as nn
 from torch.cuda.amp import autocast, GradScaler
 
-# ═══════════════════════════════════════════════════════════════
 # 方法1: Ultralytics 内置 AMP (推荐)
-# ═══════════════════════════════════════════════════════════════
 from ultralytics import YOLO
 
 model = YOLO("yolov8s.pt")
@@ -5404,9 +5390,7 @@ model.train(
     device=0,
 )
 
-# ═══════════════════════════════════════════════════════════════
 # 方法2: 自定义 AMP 训练循环
-# ═══════════════════════════════════════════════════════════════
 def train_with_amp(model, dataloader, optimizer, device='cuda'):
     """自定义 AMP 训练循环"""
     scaler = GradScaler(enabled=(device != 'cpu'))
@@ -5433,9 +5417,7 @@ def train_with_amp(model, dataloader, optimizer, device='cuda'):
             scaler.step(optimizer)
             scaler.update()
 
-# ═══════════════════════════════════════════════════════════════
 # 方法3: BF16 训练 (A100/H100 推荐)
-# ═══════════════════════════════════════════════════════════════
 def train_with_bf16(model, dataloader, optimizer, device='cuda'):
     """BF16 训练 (不需要 GradScaler)"""
     # BF16 动态范围与 FP32 相同，不需要 Loss Scaling
@@ -5485,7 +5467,6 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
 
 ```
 梯度累积（Gradient Accumulation）原理:
-══════════════════════════════════════════════════════════════
 
 问题: 显存不足以支持大 batch 训练
 
@@ -5546,7 +5527,6 @@ for epoch in range(100):
 
 ```
 多 GPU + 梯度累积的等效 batch 计算:
-══════════════════════════════════════════════════════════════
 
 等效 Batch = batch_per_gpu × num_gpus × accumulation_steps
 
@@ -7810,7 +7790,6 @@ model.train(
 
 ```
 优化器选择决策树：
-──────────────────────────────────────────────────────────────
                     开始微调
               ▼                 ▼
          数据集规模          推理延迟敏感？
@@ -7821,7 +7800,6 @@ model.train(
   快速收敛         稳定收敛             或 AdamW
                    或 AdamW            (如果SGD
                    (GPU显存不足时)     效果不佳时)
-──────────────────────────────────────────────────────────────
 
 SGD 适用场景：
   ✓ 标准 GPU 训练（显存充足）
@@ -7834,7 +7812,6 @@ AdamW 适用场景：
   ✓ Windows 平台（SGD 完全兼容）
   ✓ 多 GPU 训练（SGD DDP 完整支持）
   ✓ 需要更精细的学习率控制
-──────────────────────────────────────────────────────────────
 
 ```
 
@@ -8151,14 +8128,12 @@ def plot_gradcam_interactive(heatmap, original_image, title="Grad-CAM"):
     fig.show()
 """
 Plotly 交互式图表优势:
-══════════════════════════════════════════════════════════════
   · 悬停查看精确数值
   · 缩放聚焦特定区域
   · 筛选特定 epoch 范围
   · 导出为 HTML/PNG/SVG
   · 嵌入 Web 应用
   · 支持动画和交互
-══════════════════════════════════════════════════════════════
 
 ```
 
@@ -8957,7 +8932,6 @@ TensorBoard 高级技巧：
 
 ```
 分布式训练问题排查清单:
-══════════════════════════════════════════════════════════════════════════
 
 问题1: NCCL 超时
   症状: 训练卡在某个 epoch，最终报 NCCL timeout
@@ -8990,7 +8964,6 @@ TensorBoard 高级技巧：
   解决:
     · lr0 *= world_size (线性缩放)
     · 或使用 Ultralytics 自动缩放 (device=[0,1,2,3])
-══════════════════════════════════════════════════════════════════════════
 
 ```
 
@@ -9107,7 +9080,6 @@ mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
 
 ```
 分布式训练性能分析:
-══════════════════════════════════════════════════════════════════════════
 
 1. 通信开销分析
    · NCCL 通信时间 = 参数大小 / 带宽 × 2 (all_reduce)
@@ -9128,7 +9100,6 @@ mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
 
    注意: 加速比 < GPU 数量，因为存在通信和同步开销
    推荐使用 4-8 GPU，效率最高
-══════════════════════════════════════════════════════════════════════════
 
 ```
 
@@ -9379,7 +9350,6 @@ def diagnose_distributed_training(model, dataloader):
 
 ```
 分布式训练的学习率缩放规则:
-══════════════════════════════════════════════════════════════
 
 线性缩放规则（Lion et al., 2017）:
   lr_distributed = lr_single × (batch_distributed / batch_single)
@@ -9399,7 +9369,6 @@ def diagnose_distributed_training(model, dataloader):
   等效 batch = 32 × 8 = 256
   lr0 = 0.01 × (256/64) = 0.04（线性缩放）
   但实际建议 lr0 = 0.02（0.5× 线性缩放，更稳定）
-══════════════════════════════════════════════════════════════
 
 ```
 
@@ -9407,7 +9376,6 @@ def diagnose_distributed_training(model, dataloader):
 
 ```
 分布式训练调试检查清单:
-══════════════════════════════════════════════════════════════
 [ ] 1. 确认所有 GPU 可见: nvidia-smi 在每卡上运行
 [ ] 2. 确认 NCCL 正常: 运行 nccl-tests 示例
 [ ] 3. 确认网络带宽: iperf3 测试节点间带宽
@@ -9418,7 +9386,6 @@ def diagnose_distributed_training(model, dataloader):
 [ ] 8. 检查数据一致性: 各 rank 的数据不重叠
 [ ] 9. 检查输出路径: 避免多进程写同一文件
 [ ] 10. 保存 best.pt: 仅在 rank 0 上保存
-══════════════════════════════════════════════════════════════
 
 ```
 
@@ -9506,7 +9473,6 @@ def run_distributed():
 
 ```
 分布式训练调试进阶技巧:
-══════════════════════════════════════════════════════════════
 
 1. NCCL 调试:
   · 设置环境变量:
@@ -9547,7 +9513,6 @@ def run_distributed():
   · nvidia-smi dmon -s u  # 监控 GPU 利用率
   · ibstat  # 检查 InfiniBand 状态
   · iperf3  # 测试网络带宽
-══════════════════════════════════════════════════════════════
 
 ```
 
@@ -10481,7 +10446,6 @@ def hyperparameter_search(data_yaml):
 | (mlflow登记) | (mlflow登记) | (mlflow登记) |  |  |  |
 → 模型仓库 ←→ 模型仓库 ←
                   (MLflow Model Registry)
-══════════════════════════════════════════════════════════════
 
 ```
 
@@ -10656,7 +10620,6 @@ def run_hyperparameter_search(n_trials=30):
 
 ```
 模型注册表设计:
-══════════════════════════════════════════════════════════════
 
 模型元数据结构:
   {
@@ -10699,7 +10662,6 @@ def run_hyperparameter_search(n_trials=30):
     "status": "registered",
     "url": "https://hub.ultralytics.com/models/mdo_xyz789"
   }
-══════════════════════════════════════════════════════════════
 
 ```
 
@@ -10707,7 +10669,6 @@ def run_hyperparameter_search(n_trials=30):
 
 ```
 实验自动化流水线:
-══════════════════════════════════════════════════════════════
 
 1. 自动超参搜索:
   from ultralytics import YOLO
@@ -10773,7 +10734,6 @@ def run_hyperparameter_search(n_trials=30):
       if (( $(echo "$mAP > 0.45" | bc -l) )); then
         yolo export model=runs/train/exp001/weights/best.pt format=onnx
       fi
-══════════════════════════════════════════════════════════════
 ---
 
 | develop | 集成开发分支 | 从 | main | 创建 |
