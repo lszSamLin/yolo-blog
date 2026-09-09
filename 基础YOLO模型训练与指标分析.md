@@ -101,12 +101,10 @@ nvidia-smi
 
 输出示例（关注右上角）：
 
-```
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 550.54.02    Driver Version: 550.54.02    CUDA Version: 12.5     |
 |-------------------------------+----------------------+----------------------+
 
-```
 
 **驱动版本与 CUDA 版本的对应关系**：
 
@@ -184,7 +182,7 @@ print(torch.backends.cudnn.version())  # 输出 cuDNN 版本（如 8902 表示 8
 2. 按系统解压并复制文件：
 
    ```bash
-   # ── Windows ──
+  #  Windows
    # 假设 CUDA 安装在 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1
    # conda 环境内则使用 %CONDA_PREFIX%
    set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1
@@ -195,7 +193,7 @@ print(torch.backends.cudnn.version())  # 输出 cuDNN 版本（如 8902 表示 8
    xcopy /E /I cudnn-*-win64-x64\* "%CONDA_PREFIX%\Library\include\"
    xcopy /E /I cudnn-*-win64-x64\* "%CONDA_PREFIX%\Library\lib\"
 
-   # ── Linux ──
+  #  Linux
    # CUDA 12.x 典型路径（conda 环境内）
    unzip cudnn-linux-x86_64-*.zip -d $CONDA_PREFIX/
    # 或系统级 CUDA 路径
@@ -203,7 +201,7 @@ print(torch.backends.cudnn.version())  # 输出 cuDNN 版本（如 8902 表示 8
    sudo cp cudnn-*-lib/libcudnn* /usr/local/cuda/lib64/
    sudo chmod +r /usr/local/cuda/include/*.h /usr/local/cuda/lib64/libcudnn*
 
-   # ── macOS（Apple Silicon / M 系列）──
+  #  macOS（Apple Silicon / M 系列）
    # macOS 上 cuDNN 安装路径与 Linux 类似，需指定 arm64 包
    unzip cudnn-macos-arm64-*.zip -d $CONDA_PREFIX/
    # 或 Intel Mac
@@ -2330,7 +2328,7 @@ Mosaic 增强是 YOLO 系列的标志性技术，通过随机拼接 4 张图像�
 
 ```
 Mosaic 增强的数学原理:
-══════════════════════════════════════════════════════════════
+
 
 给定 4 张图像 I₁, I₂, I₃, I₄ 和对应的标注 B₁, B₂, B₃, B₄
 
@@ -2532,7 +2530,7 @@ Copy-Paste 增强将一张图像中的目标随机粘贴到另一张图像中，
 
 ```
 Copy-Paste 增强原理:
-══════════════════════════════════════════════════════════════
+
 
 输入: 图像 I_src（源图像，提供目标） + 图像 I_dst（目标图像，接受粘贴）
 
@@ -2681,9 +2679,9 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 import numpy as np
 
-# ═══════════════════════════════════════════════════════════
+#
 # 1. 基础增强管道
-# ═══════════════════════════════════════════════════════════
+#
 base_transform = A.Compose([
     A.HorizontalFlip(p=0.5),                    # 水平翻转
     A.RandomBrightnessContrast(p=0.2),           # 随机亮度/对比度
@@ -2695,9 +2693,9 @@ base_transform = A.Compose([
     ToTensorV2(),                                # 转换为 Tensor
 ], bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
 
-# ═══════════════════════════════════════════════════════════
+#
 # 2. 高级增强管道（适合数据量较小的场景）
-# ═══════════════════════════════════════════════════════════
+#
 advanced_transform = A.Compose([
     # 几何变换
     A.ShiftScaleRotate(
@@ -4274,9 +4272,9 @@ yolo detect train --data data.yaml --epochs 100 --imgsz 640 --batch 16
 
 ```python
 model.train(
-    # ═══════════════════════════════════════════════════════════
+  #
     # 数据相关
-    # ═══════════════════════════════════════════════════════════
+  #
     data="data.yaml",       # 数据集配置文件路径（必需）
     imgsz=640,              # 输入图片尺寸（像素），支持 [320, 416, 512, 640, 736, 832, 960, 1024, 1280, 1536, 1920]
                             # YOLOv8 默认 640，YOLOv5 支持多尺度
@@ -4286,9 +4284,9 @@ model.train(
     cache=False,            # True=在RAM中缓存图片（加速小数据集训练）
                             # "disk"=缓存到磁盘
 
-    # ═══════════════════════════════════════════════════════════
+  #
     # 优化器与学习率
-    # ═══════════════════════════════════════════════════════════
+  #
     optimizer="SGD",        # 优化器选择: "SGD" | "Adam" | "AdamW"
     lr0=0.01,               # 初始学习率（SGD/Adam）
     lrf=0.01,               # 最终学习率 = lr0 × lrf（余弦衰减目标值）
@@ -4298,9 +4296,9 @@ model.train(
     warmup_momentum=0.8,    # 预热阶段动量值
     warmup_bias_lr=0.1,     # 预热阶段 bias 的学习率（通常较高）
 
-    # ═══════════════════════════════════════════════════════════
+  #
     # 数据增强
-    # ═══════════════════════════════════════════════════════════
+  #
     hsv_h=0.015,            # HSV色调增强（±1.5%）
     hsv_s=0.7,              # HSV饱和度增强（×[0.3, 1.7]）
     hsv_v=0.4,              # HSV亮度增强（×[0.6, 1.4]）
@@ -4316,18 +4314,18 @@ model.train(
     copy_paste=0.0,         # Copy-Paste增强概率
     close_mosaic=10,        # 最后N轮关闭mosaic/mixup/copy_paste
 
-    # ═══════════════════════════════════════════════════════════
+  #
     # 损失函数权重
-    # ═══════════════════════════════════════════════════════════
+  #
     box=7.5,                # bbox回归损失（CIoU）权重
     cls=0.5,                # 分类损失（Varifocal）权重
     dfl=1.5,                # 分布焦点损失（DFL）权重
     label_smoothing=0.0,    # 标签平滑系数（0~1，缓解过拟合）
     nbs=64,                 # 名义批次大小（用于学习率线性缩放规则）
 
-    # ═══════════════════════════════════════════════════════════
+  #
     # 其他配置
-    # ═══════════════════════════════════════════════════════════
+  #
     close_mosaic=10,        # 最后N轮关闭mosaic（默认10）
     amp=True,               # 自动混合精度（AMP）训练
                             # True=自动选择FP16/BF16
@@ -4505,11 +4503,11 @@ Task-Aligned 分配：IoU + 分类质量感知
 #### 8. 完整训练命令示例
 
 ```bash
-# ═══════════════════════════════════════════════════════════════
+#
 # YOLOv8 完整训练命令（推荐配置）
-# ═══════════════════════════════════════════════════════════════
+#
 
-# ── 基础训练（单 GPU，nano 模型）─
+#  基础训练（单 GPU，nano 模型）
 yolo detect train \
     data=data.yaml \
     model=yolov8n.pt \
@@ -4534,7 +4532,7 @@ yolo detect train \
     name=yolov8_exp1 \
     verbose=True
 
-# ── 大模型训练（s 模型，端到端模式）─
+#  大模型训练（s 模型，端到端模式）
 yolo detect train \
     data=data.yaml \
     model=yolov8s.pt \
@@ -4553,7 +4551,7 @@ yolo detect train \
     project=runs/detect \
     name=yolov8s_end2end
 
-# ── 端到端模式（移除 NMS）─
+#  端到端模式（移除 NMS）
 yolo detect train \
     data=data.yaml \
     model=yolov8n.pt \
@@ -4573,7 +4571,7 @@ yolo detect train \
     project=runs/detect \
     name=yolov8_end2end
 
-# ── 参数解释 ──
+#  参数解释
 # data          : 数据集配置文件路径
 # model         : 预训练模型权重（yolov8n/s/m/l/x.pt）
 # epochs        : 总训练轮数（YOLOv8 建议 300 轮）
@@ -4763,7 +4761,7 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 
 ```
 梯度爆炸的原因：
-──────────────────────────────────────────────────────────────
+
 在深层网络中，反向传播通过链式法则逐层传递梯度：
 
 ∂L/∂θ_layer1 = ∂L/∂θ_layerN × ∏(∂θ_layer(i+1)/∂θ_layer(i))
@@ -4773,7 +4771,7 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
   50 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^50 ≈ 117 倍
 
 后果：参数更新步长过大 → 训练发散 → Loss 变为 NaN
-──────────────────────────────────────────────────────────────
+
 
 ```
 
@@ -4873,7 +4871,7 @@ FP8 (八位浮点, 新兴):
 
 ```
 梯度累积 (Gradient Accumulation) 详解:
-══════════════════════════════════════════════════════════════
+
 
 核心思想: 用时间换空间
   · 显存不足时，使用小 batch + 梯度累积
@@ -4922,7 +4920,7 @@ FP8 (八位浮点, 新兴):
       if step % accumulate_steps == 0:
           optimizer.step()
           optimizer.zero_grad()
-══════════════════════════════════════════════════════════════
+
 
 ```
 
@@ -5104,7 +5102,6 @@ Adam 优化器公式:
 
 ```
 
-```
 SGD vs AdamW 对比:
 
 维度              SGD + Momentum          AdamW
@@ -5124,7 +5121,6 @@ SGD vs AdamW 对比:
   · 但 AdamW（解耦 weight decay）改善了对策
   · 目标检测领域普遍偏好 SGD（YOLO 系列默认 SGD）
 
-```
 
 ```python
 """
@@ -5158,7 +5154,6 @@ model.train(
 
 **AdamW 何时优于 SGD**：
 
-```
 AdamW 优于 SGD 的场景:
 场景                              原因
 
@@ -5176,7 +5171,6 @@ AdamW 优于 SGD 的场景:
 | 显存受限（AdamW | 需 | 2x |
 | 追求 | SOTA | 精度 |
 
-```
 
 #### 3.12.3 学习率 Warmup 策略
 
@@ -5332,7 +5326,6 @@ BF16 (Bfloat16):
 
 **FP16 vs BF16 详细对比**：
 
-```
 | FP16 vs BF16 对比 |  |  |
 | --- | --- | --- |
 | 维度 | FP16 | BF16 |
@@ -5346,7 +5339,6 @@ BF16 (Bfloat16):
 | 精度损失 | < 0.1% mAP | < 0.1% mAP |
 | 推荐: A100/H100 使用 BF16，旧 GPU 使用 FP16 |  |  |
 
-```
 
 **Loss Scaling 机制**：
 
@@ -5600,7 +5592,6 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
 
 #### 基于损失曲线的自适应调优
 
-```
 损失权重调优决策流程：
 
 | 观察 | train_loss | 和 | val_loss | 的比例关系： |
@@ -5619,7 +5610,6 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
 | 3. | 如果 | mAP50 | 高但 | mAP50-95 |
 | 4. | 每轮调整后进行验证，记录 | mAP50-95 | 变化 |
 
-```
 
 ---
 
@@ -5770,7 +5760,6 @@ DFL 方法（分布建模）：
 
 #### 三种 Loss 的相互作用
 
-```
 | 总损失 = box_loss + cls_loss + dfl_loss |  |  |
 | --- | --- | --- |
 | (带权重：box=7.5, cls=0.5, dfl=1.5) |  |  |
@@ -5780,7 +5769,6 @@ DFL 方法（分布建模）：
 | Cls Loss | 分类判别 | 0.5（最小） |
 | (Varifocal) | 决定目标的类别 | 单类别场景下权重可降低 |
 
-```
 
 **权重调优指南**：
 
@@ -5999,7 +5987,6 @@ YOLOv8 → YOLOv8 损失函数变化：
 
 DFL（Distribution Focal Loss）在 YOLOv8 中用于对边界框的四个偏移量进行分布建模，将离散的概率分布转换为连续的坐标预测。YOLOv8 移除了 DFL，改用更简洁的 L1 距离损失直接回归边界框偏移：
 
-```
 DFL 的作用（YOLOv8）：
 
 | 1. | 将边界框偏移预测从"单值"改为"概率分布"
@@ -6014,7 +6001,6 @@ DFL 的作用（YOLOv8）：
 | 4. | 优点：计算更简单，参数更少，收敛更快
 | 5. | 缺点：移除了 |
 
-```
 
 **为什么移除 DFL？**
 - 实验表明，L1 回归在大多数场景下已能达到与 DFL 相当的定位精度
@@ -6033,7 +6019,6 @@ YOLOv8 标准损失权重配置：
 
 YOLOv8 的训练过程中，损失权重会随训练进度动态变化：
 
-```
 Progressive Loss 权重演化：
 
 | 训练阶段 | box权重 | cls权重 | 说明 |
@@ -6045,7 +6030,6 @@ Progressive Loss 权重演化：
 | Late期(60-90%) | 最高 | 较低 | 精细化定位 |
 | Final期(90-100%)稳定 | 最低 | 微调阶段 |
 
-```
 
 ```python
 # close_mosaic 参数用于训练后期行为调整
@@ -6329,7 +6313,7 @@ mAP50-95 = 10个不同严格程度下的 mAP 取平均
 ```
 
 为什么需要统计显著性检验？
-══════════════════════════════════════════════════════════════════════════
+
 
 场景: 模型 A mAP=44.9%, 模型 B mAP=45.2%
 问题: B 比 A 好 0.3pp，这是真实提升还是随机波动？
@@ -6337,7 +6321,7 @@ mAP50-95 = 10个不同严格程度下的 mAP 取平均
 答案: 通过统计显著性检验来判断
   · 如果 p-value < 0.05: 差异显著，B 确实优于 A
   · 如果 p-value ≥ 0.05: 差异不显著，可能是随机波动
-══════════════════════════════════════════════════════════════════════════
+
 
 ```
 
@@ -6701,9 +6685,9 @@ model = YOLO("yolov8s.yaml")  # 仅用于从头训练（不推荐小数据集使
 #### 从头训练 vs 迁移学习
 
 ```python
-# ═══════════════════════════════════════════════════════════
+#
 # 迁移学习（推荐：99% 的场景）
-# ═══════════════════════════════════════════════════════════
+#
 model = YOLO("yolov8s.pt")          # 加载 COCO 预训练权重
 model.train(data="my_data.yaml",    # 使用自己的数据集
             epochs=100,
@@ -6712,9 +6696,9 @@ model.train(data="my_data.yaml",    # 使用自己的数据集
 # 预训练权重会自动适配类别数（如果自定义类别数≠80）
 # Ultralytics 会自动裁剪/扩展 head 层的权重
 
-# ═══════════════════════════════════════════════════════════
+#
 # 从头训练（仅适用于：数据量充足 >10000 张 / 特殊领域）
-# ═══════════════════════════════════════════════════════════
+#
 model = YOLO("yolov8s.yaml")        # 仅加载网络结构
 model.train(data="my_data.yaml",
             epochs=300,             # 通常需要更多轮次
@@ -6875,7 +6859,6 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 
 #### 逐类别指标解读
 
-```
 逐类别分析维度：
 | 指标 | 含义 | 诊断价值 |
 | --- | --- | --- |
@@ -6889,7 +6872,6 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 | P | 低 | R |
 | P | 高 | R |
 
-```
 
 #### 类别性能分层策略
 
@@ -6983,7 +6965,6 @@ optimal_conf = find_optimal_threshold(
 
 #### 场景化阈值选择
 
-```
 不同场景的阈值选择策略：
 | 场景 | 目标阈值 | 推荐 | conf | 推荐 | iou |
 | --- | --- | --- | --- | --- |
@@ -6993,7 +6974,6 @@ optimal_conf = find_optimal_threshold(
 | 通用检测 | 平衡 | P/R | 0.25~0.45 | 0.45 |
 | 实时视频流 | 低延迟优先 | 0.3~0.5 | 0.5~0.7 |
 
-```
 
 ---
 
@@ -7003,7 +6983,6 @@ optimal_conf = find_optimal_threshold(
 
 #### 不平衡场景下的评估指标
 
-```
 不平衡数据集评估指标：
 | 指标 | 公式 | 适用场景 |
 | --- | --- | --- |
@@ -7016,7 +6995,6 @@ optimal_conf = find_optimal_threshold(
 | detection_rate | TP | / |
 **更强调漏检代价**
 
-```
 
 ```python
 def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
@@ -7050,7 +7028,6 @@ def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
 
 #### 4.12.1 为什么需要统计显著性检验
 
-```
 常见误区:
 | 实验结果 | 统计结论
 | --- | --- |
@@ -7065,7 +7042,6 @@ def compute_imbalanced_metrics(results_df, class_counts, rare_threshold=50):
       单次评估的 mAP 本身就有置信区间。
       0.4% 的差距可能完全在随机波动范围内。
 
-```
 
 #### 4.12.2 Bootstrap 置信区间
 
@@ -7390,7 +7366,7 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
 
 ```
 统计显著性检验方法:
-══════════════════════════════════════════════════════════════
+
 
 方法 1: Bootstrap 置信区间
   · 从验证集中有放回地采样 N 次
@@ -7449,7 +7425,7 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
   print(f"p-value: {result['p_value']:.4f}")
   print(f"95% CI: [{result['ci_95'][0]:.4f}, {result['ci_95'][1]:.4f}]")
   print(f"显著: {result['significant']}")
-══════════════════════════════════════════════════════════════
+
 ---
 | 维度 | mAP50-95 | AOP@0.5:0.95 |
 | --- | --- | --- |
@@ -7635,7 +7611,6 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 
 ### 7.4 早停 vs 手动停止
 
-```
 | 早停 vs 手动停止 对比 |  |  |
 | --- | --- | --- |
 | 维度 | 早停（patience） | 手动停止 |
@@ -7644,7 +7619,6 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 | 适用场景 | 快速迭代、实验探索 | 生产环境、追求最优性能 |
 | 推荐 patience | 50~100 | - |
 
-```
 
 **推荐策略**：
 
@@ -7693,7 +7667,7 @@ model.model.summary()
 #### 小数据集微调（<1000 张图片）
 
 ```python
-# ── 小数据集微调配置（推荐）─
+#  小数据集微调配置（推荐）
 model.train(
     data="small_dataset.yaml",
     epochs=100,              # 小数据集不需要太多轮
@@ -7732,7 +7706,7 @@ model.train(
 #### 大数据集微调（>50000 张图片）
 
 ```python
-# ── 大数据集微调配置（推荐）─
+#  大数据集微调配置（推荐）
 model.train(
     data="large_dataset.yaml",
     epochs=300,              # 大数据集需要更多轮
@@ -8767,7 +8741,6 @@ def create_live_dashboard(results_history):
 
 **Plotly 与 TensorBoard 对比**：
 
-```
 | Plotly vs TensorBoard 对比 |  |  |
 | --- | --- | --- |
 | 维度 | Plotly | TensorBoard |
@@ -8780,7 +8753,6 @@ def create_live_dashboard(results_history):
 | 集成难度 | 中 | 低 |
 | 推荐: TensorBoard 用于训练监控, Plotly 用于结果展示和报告 |  |  |
 
-```
 
 ---
 
@@ -9279,7 +9251,6 @@ def detect_memory_leak(model, data_yaml, num_epochs=10):
 
 #### 6.8.1 NCCL 通信问题排查
 
-```
 NCCL（NVIDIA Collective Communications Library）常见问题:
 | 问题 | 原因 | 解决方案 |
 | --- | --- | --- |
@@ -9291,7 +9262,6 @@ NCCL（NVIDIA Collective Communications Library）常见问题:
 | 或屏障不一致 | 查看日志定位卡住的 | rank |
 | CUDA error | 显存不足或 | nvidia-smi |
 | 计算错误 | torch.cuda.memory.summary() |  |
-```
 
 ```python
 """
@@ -9453,7 +9423,6 @@ def run_distributed():
 
 #### 6.8.4 调试工具推荐
 
-```
 分布式训练调试工具:
 | 工具 | 用途 | 安装 |
 | --- | --- | --- |
@@ -9463,7 +9432,6 @@ def run_distributed():
 | torch.distributed | PyTorch 内置调试 | 已集成 |
 | nvidia-smi dmon | 实时监控 GPU 指标 | 系统内置 |
 | gpustat | 轻量 GPU 状态监控 | pip install gpustat |
-```
 
 ---
 
@@ -9868,7 +9836,6 @@ YOLOv8 实验追踪重点关注：
 
 AOP 是衡量模型在最优置信度阈值下的平均预测质量指标，反映模型在置信度校准方面的表现：
 
-```
 AOP 计算方法：
 
 | 1. | 对每个置信度阈值 | t | ∈ | [0, | 1]，计算该阈值下的 | AP |
@@ -9884,7 +9851,6 @@ AOP 计算方法：
 | 敏感度 | 对框质量敏感 | 对置信度校准敏感 |
 | 适用场景 | 模型对比 | 部署调参 |
 
-```
 
 ```python
 # 在 Ultralytics 中查看 AOP 指标
@@ -9901,7 +9867,6 @@ print(f"AOP@0.5:0.95:{results.box.aop@0.5_0.95:.4f}")
 
 #### 对比 end2end=False vs end2end=False
 
-```
 end2end 模式对比追踪：
 
 | 维度 | end2end=False | end2end=False |
@@ -9914,7 +9879,6 @@ end2end 模式对比追踪：
 | 大目标mAP | 基准 | 相当 |
 | 部署便利度 | 需NMS | plugin |
 
-```
 
 ```python
 # 同时追踪两种模式的实验
@@ -10829,7 +10793,7 @@ import cv2
 
 model = YOLO("runs/detect/exp1/weights/best.pt")
 
-# ── 单张图片推理 ──
+#  单张图片推理
 results = model.predict(
     source="test_image.jpg",
     conf=0.25,          # 置信度阈值
@@ -10853,10 +10817,10 @@ for result in results:
 
         print(f"{class_name}: {conf:.2f} [{x1},{y1},{x2},{y2}]")
 
-# ── 批量推理 ──
+#  批量推理
 results = model.predict(source="test_images/", conf=0.25, save=True)
 
-# ── 视频推理 ──
+#  视频推理
 results = model.predict(
     source="video.mp4",
     save=True,           # 保存到 runs/predict/
@@ -10864,7 +10828,7 @@ results = model.predict(
     stream=False,        # 非流式处理
 )
 
-# ── 摄像头实时推理 ──
+#  摄像头实时推理
 results = model.predict(
     source=0,            # 摄像头ID
     show=True,           # 显示结果
@@ -10956,7 +10920,6 @@ detector.process_video(0)  # 0 = 摄像头
 
 #### 流式推理性能优化
 
-```
 流式推理优化技巧：
 | 技巧 | 效果 | 实现方式 |
 | --- | --- | --- |
@@ -10967,7 +10930,6 @@ detector.process_video(0)  # 0 = 摄像头
 | 使用 | TensorRT | 引擎 |
 | 多线程流水线 | 隐藏预处理延迟 | 生产者-消费者模式 |
 
-```
 
 ```python
 # 多线程流水线示例
@@ -11215,7 +11177,7 @@ print(f"FP16 mAP50-95: {results_fp16.box.map:.3f}")
 
 ```
 YOLOv8 end2end=False 推理优化:
-══════════════════════════════════════════════════════════════
+
 
 1. 移除 NMS 的加速效果:
   · 传统 YOLO: 推理 = Backbone + Neck + Head + NMS
@@ -11241,14 +11203,13 @@ YOLOv8 end2end=False 推理优化:
           # 无需 NMS，300 个预测已经过最优匹配
 
 3. 性能对比:
-  ┌────────────────┬───────────┬───────────┬──────────┐
-  │     模式      │  延迟(ms) │   FPS     │  精度    │
-  ├────────────────┼───────────┼───────────┼──────────┤
-  │ YOLOv8s + NMS │   11.0    │   91      │  44.9%   │
-  │ YOLOv8s e2e   │    5.0    │  200      │  48.6%   │
-  │ YOLOv8s non-e2e│   8.0    │  125      │  48.7%   │
-  └────────────────┴───────────┴───────────┴──────────┘
-══════════════════════════════════════════════════════════════
+
+  模式  延迟(ms)  FPS  精度
+
+  YOLOv8s + NMS  11.0  91  44.9%
+  YOLOv8s e2e  5.0  200  48.6%
+  YOLOv8s non-e2e  8.0  125  48.7%
+
 
 ```
 
@@ -11273,21 +11234,21 @@ from ultralytics import YOLO
 
 model = YOLO("yolov8n.pt")
 
-# ── 方式1：end2end=False（传统模式，含NMS）─
+#  方式1：end2end=False（传统模式，含NMS）
 # 适合需要灵活调整 NMS 阈值的场景
 model.export(format="onnx", end2end=False, simplify=True)
 # 导出的 ONNX 包含 NMS 节点，可在任何推理框架中使用
 
-# ── 方式2：end2end=False（端到端模式）─
+#  方式2：end2end=False（端到端模式）
 # 推理更快，无需后处理，适合部署
 model.export(format="onnx", end2end=False, simplify=True)
 # 导出的 ONNX 不包含 NMS 节点，模型直接输出最终预测
 
-# ── TensorRT 导出 ──
+#  TensorRT 导出
 # end2end=False 时 TensorRT 构建更快（无需 NMS plugin）
 model.export(format="engine", end2end=False, half=True, imgsz=640)
 
-# ── OpenVINO 导出 ──
+#  OpenVINO 导出
 # 注意：end2end=False 时部分 OpenVINO 版本可能不兼容
 # 建议使用 end2end=False 或更新 OpenVINO 至 2024+
 model.export(format="openvino", end2end=False)
@@ -11683,7 +11644,7 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
 
 ```
 边缘 AI 优化策略:
-══════════════════════════════════════════════════════════════
+
 
 策略 1: 模型裁剪 (Pruning)
   · 结构化剪枝: 移除整个通道/滤波器
@@ -11724,17 +11685,16 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
   · 效果: 减少 20-30% 的内存访问延迟
 
 边缘 AI 优化效果对比:
-  ┌─────────────────┬──────────┬──────────┬──────────┐
-  │     优化手段     │  参数量  │  FLOPs   │  mAP 变化 │
-  ├─────────────────┼──────────┼──────────┼──────────┤
-  │  基准 (YOLOv8s)  │  9.5M    │  20.7G   │  48.6%   │
-  │  INT8 量化       │  9.5M    │  20.7G   │  48.2%   │
-  │  FP16 量化       │  9.5M    │  20.7G   │  48.6%   │
-  │  30% 剪枝        │  6.7M    │  14.5G   │  47.1%   │
-  │  蒸馏 (→n)       │  2.4M    │  5.4G    │  46.5%   │
-  │  组合优化        │  2.4M    │  5.4G    │  45.8%   │
-  └─────────────────┴──────────┴──────────┴──────────┘
-══════════════════════════════════════════════════════════════
+
+  优化手段  参数量  FLOPs  mAP 变化
+
+  基准 (YOLOv8s)  9.5M  20.7G  48.6%
+  INT8 量化  9.5M  20.7G  48.2%
+  FP16 量化  9.5M  20.7G  48.6%
+  30% 剪枝  6.7M  14.5G  47.1%
+  蒸馏 (→n)  2.4M  5.4G  46.5%
+  组合优化  2.4M  5.4G  45.8%
+
 
 ```
 
@@ -11744,7 +11704,6 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
 
 #### 8.10.1 各边缘平台部署方案
 
-```
 边缘 AI 平台对比:
 | 平台 | 算力(TOPS) | 功耗(W) | 推理格式 | 适用场景 |
 | --- | --- | --- | --- | --- |
@@ -11755,7 +11714,6 @@ def soft_nms(boxes, scores, sigma=0.5, iou_threshold=0.45):
 | Snapdragon 8 Gen2 | 15 TOPS | 5-15 | SNPE/NNAPI | 高端手机 |
 | Apple A17 Pro | 35 TOPS NP | 3-8 | CoreML | iPhone |
 | Google TPU (Edge) 15 TOPS | 5-10 | TFLite | 智能摄像头 |  |
-```
 
 #### 8.10.2 TensorFlow Lite Edge TPU 部署
 
@@ -11952,7 +11910,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 
 #### 8.10.6 边缘 vs 云端推理对比
 
-```
 边缘推理 vs 云端推理对比:
 | 维度 | 边缘推理 | 云端推理 |
 | --- | --- | --- |
@@ -11968,8 +11925,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 · 云端推理: 批量离线分析、图像归档、模型训练、大规模数据分析
 · 混合方案: 边缘检测 + 云端复核（边缘快速过滤，云端精细验证）
 
-
-```
 
 ---
 
@@ -12122,7 +12077,6 @@ YOLO 架构演进方向：
 
 #### 应用领域扩展
 
-```
 YOLO 应用领域扩展：
 | 领域 | 应用案例 | 技术挑战 |
 | --- | --- | --- |
@@ -12138,7 +12092,6 @@ YOLO 应用领域扩展：
 | 遥感 | 船舶/飞机/建筑物检测 | 小目标密集、 |
 **多角度**
 
-```
 
 #### 技术趋势展望
 
