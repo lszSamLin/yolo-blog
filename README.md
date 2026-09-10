@@ -44,10 +44,9 @@ flowchart LR
 
 ### 第 1 章 · 认知篇：理解 YOLO（预计 60–90 分钟）
 
-| 序号 | 文章 | 内容概要 |
-|-----|------|---------|
-| 1 | [YOLO系列模型分析](YOLO系列模型分析.md) | YOLOv1 → YOLOv8/YOLO11/YOLO26 的演进脉络、各版本架构差异与选型建议 |
-| 2 | [YOLOv8多任务模型详解](YOLOv8多任务模型详解.md) | 检测 / 分割 / 分类 / 姿态 / OBB 五大任务的模型结构与头设计 |
+序号  文章  内容概要
+1  [YOLO系列模型分析](YOLO系列模型分析.md)  YOLOv1 → YOLOv8/YOLO11/YOLO26 的演进脉络、各版本架构差异与选型建议
+2  [YOLOv8多任务模型详解](YOLOv8多任务模型详解.md)  检测 / 分割 / 分类 / 姿态 / OBB 五大任务的模型结构与头设计
 
 ### 第 2 章 · 训练篇：炼出自己的模型（预计 60–90 分钟）
 
@@ -65,10 +64,9 @@ flowchart LR
 
 ### 第 4 章 · 部署准备篇：压缩与转换（预计 30–45 分钟）
 
-| 序号 | 文章 | 内容概要 |
-|-----|------|---------|
-| 7 | [模型量化深度解析](模型量化深度解析.md) | PTQ/QAT 原理、INT8/FP16 数学表示、TensorFlow/PyTorch/RKNN 实战 |
-| 8 | [YOLO模型的转换与rknn-toolkit相关工具链的使用](YOLO模型的转换与rknn-toolkit相关工具链的使用.md) | ONNX → RKNN 完整流程、Toolkit1/Toolkit2 参数对照、常见报错排查 |
+序号  文章  内容概要
+7  [模型量化深度解析](模型量化深度解析.md)  PTQ/QAT 原理、INT8/FP16 数学表示、TensorFlow/PyTorch/RKNN 实战
+8  [YOLO模型的转换与rknn-toolkit相关工具链的使用](YOLO模型的转换与rknn-toolkit相关工具链的使用.md)  ONNX → RKNN 完整流程、Toolkit1/Toolkit2 参数对照、常见报错排查
 
 ### 第 5 章 · 边缘部署篇：跑在真实硬件上（预计 90–120 分钟）
 

@@ -438,15 +438,14 @@ WBF 多模型融合算法:
 传统预处理（Letterbox Resize、归一化、通道转换）通常在 CPU 上逐帧执行，成为推理流水线的瓶颈。将预处理卸载到 GPU 上可以显著降低整体延迟。
 
 CPU 预处理 vs GPU 预处理延迟对比（1920×1080 图像, RTX 4090）
-| 操作 | CPU (ms) | GPU (ms) | 加速比 |
-| --- | --- | --- | --- |
-| Resize (INTER_LINEAR) | 2.1 | 0.15 | 14x |
-| Letterbox Padding | 0.8 | 0.05 | 16x |
-| BGR→RGB 转换 | 0.3 | 0.02 | 15x |
-| 归一化 (/255.0) | 0.1 | 0.01 | 10x |
-| HWC→CHW 转置 | 0.5 | 0.03 | 17x |
-| DMA 传输到 GPU | — | 0.25 | — |
-| 合计 | 3.8 | 0.51 | ~7.5x |
+操作  CPU (ms)  GPU (ms)  加速比
+Resize (INTER_LINEAR)  2.1  0.15  14x
+Letterbox Padding  0.8  0.05  16x
+BGR→RGB 转换  0.3  0.02  15x
+归一化 (/255.0)  0.1  0.01  10x
+HWC→CHW 转置  0.5  0.03  17x
+DMA 传输到 GPU  —  0.25  —
+合计  3.8  0.51  ~7.5x
 
 **CUDA 预处理 Kernel 实现**：
 
@@ -575,11 +574,10 @@ def gpu_letterbox(image, target_size=640):
 在 CPU 端，利用 SIMD 指令集（x86 的 AVX2/AVX-512，ARM 的 NEON）可以显著加速预处理操作。
 
 SIMD 向量化加速效果（1920×1080 预处理, Intel Xeon Gold 6248R）
-| 操作 | 标量实现 | AVX2 | NEON(ARM) | 加速比 |
-| --- | --- | --- | --- | --- |
-| 像素归一化 | 0.45ms | 0.12ms | 0.15ms | 3.8x |
-| BGR→RGB 通道交换 | 0.30ms | 0.08ms | 0.10ms | 3.7x |
-| Resize 插值 | 2.10ms | 0.55ms | 0.65ms | 3.8x |
+操作  标量实现  AVX2  NEON(ARM)  加速比
+像素归一化  0.45ms  0.12ms  0.15ms  3.8x
+BGR→RGB 通道交换  0.30ms  0.08ms  0.10ms  3.7x
+Resize 插值  2.10ms  0.55ms  0.65ms  3.8x
 
 **使用 OpenCV 的 SIMD 优化**：
 
@@ -758,15 +756,14 @@ class ZeroCopyPipeline:
 流水线并行架构：
 
 时间 →
-| Frame 1 |  |  |  |
-| --- | --- | --- | --- |
-| Preproc | Inference |  |  |
-| Frame 2 |  |  |  |
-| Preproc | Inference |  |  |
-| Frame 3 |  |  |  |
-| Preproc | Inference |  |  |
-| Frame 4 |  |  |  |
-| Preproc |  |  |  |
+Frame 1
+Preproc  Inference
+Frame 2
+Preproc  Inference
+Frame 3
+Preproc  Inference
+Frame 4
+Preproc
 
 效果：预处理和推理重叠执行，总体吞吐提升 ~2x
 

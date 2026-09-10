@@ -695,12 +695,11 @@ NVIDIA 驱动版本与 CUDA 运行时兼容性：
 
 #### 常见问题排查
 
-| 症状 | 可能原因 | 排查命令 |
-|------|---------|---------|
-| `torch.cuda.is_available()` = False | 驱动版本过低 | `nvidia-smi` / `pip show torch` / `python -c "import torch; print(torch.version.cuda)"` |
-| `RuntimeError: CUDA error: compute mode mismatch` | CUDA 版本不匹配或驱动/PyTorch版本不一致 | `python -c "import torch; print(torch.version.cuda)"` / `nvidia-smi \| grep CUDA` |
-| `cuDNN error: CUDNN_STATUS_NOT_SUPPORTED` | cuDNN 版本过低 | `python -c "import torch; print(torch.backends.cudnn.version())"` |
-| OOM during training | 显存不足 或 batch 过大 | `nvidia-smi` / `python -c "import torch; print(torch.cuda.get_device_properties(0).total_mem/1e9)"` |
+症状  可能原因  排查命令
+`torch.cuda.is_available()` = False  驱动版本过低  `nvidia-smi` / `pip show torch` / `python -c "import torch; print(torch.version.cuda)"`
+`RuntimeError: CUDA error: compute mode mismatch`  CUDA 版本不匹配或驱动/PyTorch版本不一致  `python -c "import torch; print(torch.version.cuda)"` / `nvidia-smi \  grep CUDA`
+`cuDNN error: CUDNN_STATUS_NOT_SUPPORTED`  cuDNN 版本过低  `python -c "import torch; print(torch.backends.cudnn.version())"`
+OOM during training  显存不足 或 batch 过大  `nvidia-smi` / `python -c "import torch; print(torch.cuda.get_device_properties(0).total_mem/1e9)"`
 
 #### 多版本 CUDA 管理（Advanced）
 
@@ -2201,11 +2200,10 @@ val/img001.png
 
 当需要同时训练多个任务时（如同时检测+分割+姿态），可采用以下策略：
 
-| 策略 | 适用场景 | 实现方式 |
-|------|---------|---------|
-| 单模型多任务头 | 任务间共享特征；独立任务头 | `task="detect+segment+pose"`；`data.yaml` 配置多个头 |
-| 分阶段训练 | 逐步细化各任务精度 | Step1: 检测头 → Step2: 分割头 → Step3: 姿态头 |
-| 任务优先级加权 | 各任务重要性不同 | `loss_weight={"detect": 1.0, "segment": 0.5, "pose": 0.3}` |
+策略  适用场景  实现方式
+单模型多任务头  任务间共享特征；独立任务头  `task="detect+segment+pose"`；`data.yaml` 配置多个头
+分阶段训练  逐步细化各任务精度  Step1: 检测头 → Step2: 分割头 → Step3: 姿态头
+任务优先级加权  各任务重要性不同  `loss_weight={"detect": 1.0, "segment": 0.5, "pose": 0.3}`
 
 #### 数据格式转换脚本
 
@@ -3582,12 +3580,11 @@ def diversity_sampling(model, unlabeled_dir, n_samples=50, embedding_dim=256):
 
 主动学习迭代流程：
 
-| Step | 1: | 用初始标注集（约 | 20% | 数据）训练基线模型 |
-| --- | --- | --- | --- | --- |
-| Step | 2: | 在剩余未标注数据上计算不确定性/多样性分数 |
-| Step | 3: | 选择 | Top-K | 最有价值的样本进行人工标注 |
-| Step | 4: | 将新标注样本加入训练集，重新训练 |
-| Step | 5: | 重复 | Step | 2~4，直到达到目标性能或标注预算耗尽 |
+Step  1:  用初始标注集（约  20%  数据）训练基线模型
+Step  2:  在剩余未标注数据上计算不确定性/多样性分数
+Step  3:  选择  Top-K  最有价值的样本进行人工标注
+Step  4:  将新标注样本加入训练集，重新训练
+Step  5:  重复  Step  2~4，直到达到目标性能或标注预算耗尽
 **典型效果：**
 
 | 全量标注 | 10000 | 张 | → | 主动学习仅需标注 |
@@ -3989,15 +3986,14 @@ class ClassWeightedFocalLoss(nn.Module):
 
 数据集平衡策略矩阵：
 
-| 策略 | 适用场景 | 实现复杂度 | 效果 |
-| --- | --- | --- | --- |
-| 过采样（Over-sampling） | 少数类 | < | 100 |
-| - | 简单复制 | 少数类 | 100~500 |
-| - | 旋转/翻转复制 | 任何场景 | 低 |
-| 欠采样（Under-sampling） | 多数类 >> 1000 张 | — | 随机丢弃多数类样本 | 低 | 可能丢失信息 |
-| 合成数据（SMOTE） | 极度稀缺类 | — | 对少数类目标做轻微形变 | 中 | 好（需人工验证） |
-| 代价敏感学习 | 任何不平衡场景 | — | 修改损失函数权重 | 高 | 好（需改模型代码） |
-| Focal Loss | 难分类样本少 | 低 | 自动降低易分类样本权重 | Ultralytics 内置 | 好 |
+策略  适用场景  实现复杂度  效果
+过采样（Over-sampling）  少数类  <  100
+-  简单复制  少数类  100~500
+-  旋转/翻转复制  任何场景  低
+欠采样（Under-sampling）  多数类 >> 1000 张  —  随机丢弃多数类样本  低  可能丢失信息
+合成数据（SMOTE）  极度稀缺类  —  对少数类目标做轻微形变  中  好（需人工验证）
+代价敏感学习  任何不平衡场景  —  修改损失函数权重  高  好（需改模型代码）
+Focal Loss  难分类样本少  低  自动降低易分类样本权重  Ultralytics 内置  好
 
 ### 2.22 合成数据生成
 
@@ -4106,12 +4102,11 @@ def generate_synthetic_data(
 
 主流仿真平台对比：
 
-| 平台 | 特点 | 标注质量 | 学习曲线 |
-| --- | --- | --- | --- |
-| CARLA | 自动驾驶仿真 | ★★★★★ | 中等 | 支持 LiDAR/相机/雷达 |
-| AirSim | 微软开源仿真 | ★★★★ | 较易 | 支持无人机视角 |
-| Unity | ML-Agents | 游戏引擎仿真 | ★★★★ | 灵活场景定制 |
-| Blender | Python | 开源 | ★★★ | 完全可控 |
+平台  特点  标注质量  学习曲线
+CARLA  自动驾驶仿真  ★★★★★  中等  支持 LiDAR/相机/雷达
+AirSim  微软开源仿真  ★★★★  较易  支持无人机视角
+Unity  ML-Agents  游戏引擎仿真  ★★★★  灵活场景定制
+Blender  Python  开源  ★★★  完全可控
 
 ---
 
@@ -4394,11 +4389,10 @@ YOLOv8 默认使用 SGD（随机梯度下降）优化器，也支持 Adam 和 Ad
 
 SGD 工作原理（YOLOv8 默认）：
 
-| Step | 1: | 计算当前批次梯度 | g_t |
-| --- | --- | --- | --- |
-| Step | 2: | 更新动量 | v_t |
-| Step | 3: | 参数更新：θ | = |
-| 其中 | α | 为学习率，配合余弦退火调度衰减 |
+Step  1:  计算当前批次梯度  g_t
+Step  2:  更新动量  v_t
+Step  3:  参数更新：θ  =
+其中  α  为学习率，配合余弦退火调度衰减
 
 **SGD vs AdamW 对比**：
 
@@ -4471,12 +4465,11 @@ YOLOv8 数据增强配置：
 
 end2end=False（传统模式）：
 
-| 模型输出 | → | NMS后处理 | → | 最终检测结果 |
-| --- | --- | --- | --- | --- |
+模型输出  →  NMS后处理  →  最终检测结果
 - （模型输出大量候选框，NMS 去重）
 - end2end=True（端到端模式）：
-| 模型输出 | → | 直接得到最优预测（无NMS） |
-| （模型内部实现Deformable | DETR式的一一匹配预测） |
+模型输出  →  直接得到最优预测（无NMS）
+（模型内部实现Deformable  DETR式的一一匹配预测）
 
 **end2end 模式的优势**：
 - 推理时不需要 NMS，减少后处理耗时
@@ -4963,12 +4956,11 @@ FP8 (八位浮点, 新兴):
 
 BF16（Bfloat16）vs FP16（Float16）：
 
-| 特性 | FP16 | BF16 |
-| --- | --- | --- |
-| 精度范围 | 较小（溢出风险高） | 与 FP32 相同（23位尾数→7位指数） |
-| 需要 GradScaler | 是 | 否（梯度不会下溢） |
-| 硬件支持 | 所有 Tensor Core | A100/H100/RTX 40系 |
-| 数值稳定性 | 需要额外保护 | 更稳定（推荐用于新硬件） |
+特性  FP16  BF16
+精度范围  较小（溢出风险高）  与 FP32 相同（23位尾数→7位指数）
+需要 GradScaler  是  否（梯度不会下溢）
+硬件支持  所有 Tensor Core  A100/H100/RTX 40系
+数值稳定性  需要额外保护  更稳定（推荐用于新硬件）
 
 Ultralytics 默认选择：
   - 检测 NVIDIA 驱动和 GPU 架构
@@ -5108,12 +5100,11 @@ SGD vs AdamW 对比:
 
 | 收敛速度 | 较慢（需要仔细调 | lr） | 较快（自适配 | lr） |
 
-| --- | --- | --- | --- | --- |
-| 最终精度 | 更高（泛化更好） | 略低（泛化稍差） |
-| 超参数敏感度 | 高（lr, | momentum | 重要） | 低（默认参数即可） |
-| 显存占用 | 低（仅需 | 1 | 个速度缓存） | 高（2 |
-| 训练稳定性 | 需要 | warmup | 更稳定 |
-| 适用场景 | 目标检测（YOLO | 默认） | 快速实验 |
+最终精度  更高（泛化更好）  略低（泛化稍差）
+超参数敏感度  高（lr,  momentum  重要）  低（默认参数即可）
+显存占用  低（仅需  1  个速度缓存）  高（2
+训练稳定性  需要  warmup  更稳定
+适用场景  目标检测（YOLO  默认）  快速实验
 
 关键发现（Goyal et al., 2017）:
   · SGD with momentum 在大 batch 训练下泛化性能更好
@@ -5594,19 +5585,18 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
 
 | 观察 | train_loss | 和 | val_loss | 的比例关系： |
 
-| --- | --- | --- | --- | --- |
-| 现象 | 诊断 | 调整方案 |
-| box_loss | 占比过高（>80%） | 定位主导训练 | 降低 | box |
-| val_box_loss | 持续高于 | train | 定位过拟合 | 增大 |
-| cls_loss | 下降缓慢 | 分类困难 | 增大 | cls |
-| cls_loss | 已接近 | 0 | 但 | mAP |
-| dfl_loss | 不下降 | DFL | 失效 | 检查标注质量或移除 |
+现象  诊断  调整方案
+box_loss  占比过高（>80%）  定位主导训练  降低  box
+val_box_loss  持续高于  train  定位过拟合  增大
+cls_loss  下降缓慢  分类困难  增大  cls
+cls_loss  已接近  0  但  mAP
+dfl_loss  不下降  DFL  失效  检查标注质量或移除
 **自适应调整策略：**
 
-| 1. | 先用默认权重训练 | 20 | 轮，观察各 | loss |
-| 2. | 如果 | box_loss | 占比 | > |
-| 3. | 如果 | mAP50 | 高但 | mAP50-95 |
-| 4. | 每轮调整后进行验证，记录 | mAP50-95 | 变化 |
+1.  先用默认权重训练  20  轮，观察各  loss
+2.  如果  box_loss  占比  >
+3.  如果  mAP50  高但  mAP50-95
+4.  每轮调整后进行验证，记录  mAP50-95  变化
 
 
 ---
@@ -5972,11 +5962,10 @@ YOLOv8 → YOLOv8 损失函数变化：
 
 | 损失类型 | YOLOv8 | YOLOv8 | 变化 |
 
-| --- | --- | --- | --- |
-| Box | Loss | CIoU | Loss |
-| Cls | Loss | Varifocal | Varifocal（相同） |
-| DFL | Loss | DFL（必需） | 移除 |
-| (分布焦点损失) | 改用L1直接回归 | ★ |
+Box  Loss  CIoU  Loss
+Cls  Loss  Varifocal  Varifocal（相同）
+DFL  Loss  DFL（必需）  移除
+(分布焦点损失)  改用L1直接回归  ★
 
 
 #### DFL 的移除与 L1 距离回归
@@ -6019,12 +6008,11 @@ Progressive Loss 权重演化：
 
 | 训练阶段 | box权重 | cls权重 | 说明 |
 
-| --- | --- | --- | --- |
-| Warmup期 | 较低 | 较高 | 先稳定分类能力 |
-| Early期(0-30%) | 逐渐升高 | 中等 | 开始加强定位 |
-| Mid期(30-60%) | 较高 | 中等 | 定位分类并重 |
-| Late期(60-90%) | 最高 | 较低 | 精细化定位 |
-| Final期(90-100%)稳定 | 最低 | 微调阶段 |
+Warmup期  较低  较高  先稳定分类能力
+Early期(0-30%)  逐渐升高  中等  开始加强定位
+Mid期(30-60%)  较高  中等  定位分类并重
+Late期(60-90%)  最高  较低  精细化定位
+Final期(90-100%)稳定  最低  微调阶段
 
 
 ```python
@@ -6045,11 +6033,10 @@ Task-Aligned Assigner 不仅影响标签分配，还直接影响损失计算：
 
 Task-Aligned 对损失计算的影响：
 
-| 影响方面 | 说明 |
-| --- | --- |
-| 正样本定义 | 对小目标降低 IoU 阈值，增加正样本数量 → box_loss 的正样本更多，训练信号更强 |
-| 负样本过滤 | 对高质量负样本施加更高的分类惩罚 → cls_loss 对难样本更敏感 |
-| 质量感知分配 | 根据预测质量动态调整标签分配 → 训练初期聚焦易样本，后期聚焦难样本 |
+影响方面  说明
+正样本定义  对小目标降低 IoU 阈值，增加正样本数量 → box_loss 的正样本更多，训练信号更强
+负样本过滤  对高质量负样本施加更高的分类惩罚 → cls_loss 对难样本更敏感
+质量感知分配  根据预测质量动态调整标签分配 → 训练初期聚焦易样本，后期聚焦难样本
 
 **Task-Aligned + DFL 的组合效应**（YOLOv8）：
 - Task-Aligned Assigner 有效平衡了分类和定位任务
@@ -6065,12 +6052,11 @@ YOLOv8 多任务损失函数：
 
 | 任务类型 | Box | Loss | Cls | Loss | 其他损失 | 权重 |
 
-| --- | --- | --- | --- | --- | --- |
-| Detect | CIoU+L1 | Varifocal | - | 9.83/0.5 |
-| Segment | CIoU+L1 | Varifocal | Mask | L1 | + | Dice |
-| Pose | CIoU+L1 | Varifocal | KP | L1 | + | Weight |
-| OBB | CIoU+L1 | Varifocal | OBB | IoU | 9.83/0.5/1.0 |
-| Classify | - | Varifocal | - | /0.5 |
+Detect  CIoU+L1  Varifocal  -  9.83/0.5
+Segment  CIoU+L1  Varifocal  Mask  L1  +  Dice
+Pose  CIoU+L1  Varifocal  KP  L1  +  Weight
+OBB  CIoU+L1  Varifocal  OBB  IoU  9.83/0.5/1.0
+Classify  -  Varifocal  -  /0.5
 
 | Depth | - | - | Depth | L1 | 1.0 |
 
@@ -6098,15 +6084,14 @@ YOLOv8 多任务损失函数：
 
 **逐项解释**：
 
-| 指标 | 含义 | 健康范围 | 异常信号 |
-|------|------|---------|---------|
-| `epoch` | 当前训练轮次 | 1 ~ epochs | - |
-| `gpu_mem` | GPU 显存占用 | 不超过显存上限 | 接近上限会 OOM |
-| `box_loss` | CIoU 边界框回归损失 | 逐步下降并趋于平稳 | 不降 → 学习率过高或数据标注有误 |
-| `cls_loss` | Varifocal 分类损失 | 逐步下降并趋于平稳 | 不降 → 类别不平衡或标签错误 |
-| `dfl_loss` | 分布焦点损失（DFL） | 逐步下降并趋于平稳 | 不降 → 定位精度遇到瓶颈 |
-| `Instances` | 本批次内标注目标总数 | 50 ~ 500 | 过少 → 数据集太小或标注大量遗漏 |
-| `Size` | 当前输入分辨率 | 与 imgsz 一致 | - |
+指标  含义  健康范围  异常信号
+`epoch`  当前训练轮次  1 ~ epochs  -
+`gpu_mem`  GPU 显存占用  不超过显存上限  接近上限会 OOM
+`box_loss`  CIoU 边界框回归损失  逐步下降并趋于平稳  不降 → 学习率过高或数据标注有误
+`cls_loss`  Varifocal 分类损失  逐步下降并趋于平稳  不降 → 类别不平衡或标签错误
+`dfl_loss`  分布焦点损失（DFL）  逐步下降并趋于平稳  不降 → 定位精度遇到瓶颈
+`Instances`  本批次内标注目标总数  50 ~ 500  过少 → 数据集太小或标注大量遗漏
+`Size`  当前输入分辨率  与 imgsz 一致  -
 
 > **观察重点**：loss 曲线应该**持续下降后趋于平稳**，而不是直线下降或剧烈震荡。若训练集 loss 已接近 0 但验证集 loss 开始上升，说明模型已过拟合。
 
@@ -6545,14 +6530,13 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
 
 **指标异常诊断速查表**：
 
-| 现象 | 诊断 | 解决方案 |
-|------|------|---------|
-| mAP50 高，mAP50-95 极低 | 定位精度差（框不够准） | 增大 imgsz（640→1280），增大 box 权重（7.5→10） |
-| P 高，R 低 | 漏检严重 | 增大 scale 增强，降低 conf 阈值，增加小目标样本 |
-| P 低，R 高 | 误检严重 | 增大 cls 权重，减少增强强度，增加难负样本 |
-| 某个类别 Recall 极低 | 该类样本不足或标注问题 | 增加该类数据，检查标注质量 |
-| 小目标 mAP 极低 | 输入分辨率不足 | 增大 imgsz，增大 mosaic |
-| 大目标 mAP 极低 | 下采样过多丢失信息 | 减小 imgsz，检查 backbone 感受野 |
+现象  诊断  解决方案
+mAP50 高，mAP50-95 极低  定位精度差（框不够准）  增大 imgsz（640→1280），增大 box 权重（7.5→10）
+P 高，R 低  漏检严重  增大 scale 增强，降低 conf 阈值，增加小目标样本
+P 低，R 高  误检严重  增大 cls 权重，减少增强强度，增加难负样本
+某个类别 Recall 极低  该类样本不足或标注问题  增加该类数据，检查标注质量
+小目标 mAP 极低  输入分辨率不足  增大 imgsz，增大 mosaic
+大目标 mAP 极低  下采样过多丢失信息  减小 imgsz，检查 backbone 感受野
 
 **训练完成的评估决策流程**：
 
@@ -6791,9 +6775,8 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 | - | TN: |
 | 单类别检测的 | 2×2 |
 | 预测为正 | 预测为负
-| | 实际为正 | | | |
-| --- | --- |
-| | 实际为负 | | | |
+实际为正
+实际为负
 
 #### 混淆矩阵解读与改进方向
 
@@ -6805,9 +6788,9 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 | TP | 低 | FP | 低 | 召回率低误报也低 | 降低 |
 | TP | 低 | FP | 高 | 严重问题！ | 检查数据质量、标注、模型 |
 #### 多类别场景的混淆矩阵扩展
-| 行 | = | 真实类别，列 | = | 预测类别 |
-| 对角线元素 | = | 正确分类数（TP） |
-| 非对角线元素 | = | 误分类数（可看出哪些类别容易混淆） |
+行  =  真实类别，列  =  预测类别
+对角线元素  =  正确分类数（TP）
+非对角线元素  =  误分类数（可看出哪些类别容易混淆）
 
 
 ```python
@@ -6954,13 +6937,12 @@ optimal_conf = find_optimal_threshold(
 #### 场景化阈值选择
 
 不同场景的阈值选择策略：
-| 场景 | 目标阈值 | 推荐 | conf | 推荐 | iou |
-| --- | --- | --- | --- | --- |
-| 安全检测（烟火） | 零误报 | 0.6~0.8 | 0.45 |
-| 医疗筛查 | 零漏检 | 0.1~0.2 | 0.3~0.4 |
-| 工业质检 | 高精确率 | 0.5~0.7 | 0.5 |
-| 通用检测 | 平衡 | P/R | 0.25~0.45 | 0.45 |
-| 实时视频流 | 低延迟优先 | 0.3~0.5 | 0.5~0.7 |
+场景  目标阈值  推荐  conf  推荐  iou
+安全检测（烟火）  零误报  0.6~0.8  0.45
+医疗筛查  零漏检  0.1~0.2  0.3~0.4
+工业质检  高精确率  0.5~0.7  0.5
+通用检测  平衡  P/R  0.25~0.45  0.45
+实时视频流  低延迟优先  0.3~0.5  0.5~0.7
 
 
 ---
@@ -7250,9 +7232,9 @@ def mcnemar_test_detection(model_a_dets, model_b_dets, ground_truth, iou_thresho
 (每类一次评估)
 | McNemar | 检验 | 样本级预测一致性 | 配对数据 |
 比较
-| Wilcoxon | 符号秩 | 非正态差值的配对检验 | 无需正态假设 |
-| （非参数替代 | t | 检验） |
-| permutation | 检验 | 小样本、任意分布 | 无前提条件 |
+Wilcoxon  符号秩  非正态差值的配对检验  无需正态假设
+（非参数替代  t  检验）
+permutation  检验  小样本、任意分布  无前提条件
 
 
 ```python
@@ -7413,20 +7395,18 @@ def comprehensive_model_comparison(model_a_results, model_b_results, n_classes=8
   print(f"显著: {result['significant']}")
 
 ---
-| 维度 | mAP50-95 | AOP@0.5:0.95 |
-| --- | --- | --- |
-| 变化维度 | IoU | 阈值变化（0.5→0.95） |
-| 关注重点 | 定位精度 | 置信度校准质量 |
-| 部署意义 | 模型能力评估 | 阈值选择参考 |
+维度  mAP50-95  AOP@0.5:0.95
+变化维度  IoU  阈值变化（0.5→0.95）
+关注重点  定位精度  置信度校准质量
+部署意义  模型能力评估  阈值选择参考
 
 #### YOLOv8 新增指标表
 
 YOLOv8 完整评估指标体系：
-| 指标 | 含义 | 与 | YOLOv8 | 对比 |
-| --- | --- | --- | --- | --- |
-| mAP50-95 | 标准 | AP | 均值 | 基准指标 |
-| TaskAligned_stats | 正样本分配统计 | YOLOv8 | 记录（日志） |
-| end2end_speed | 端到端模式推理速度 | 可选指标 |
+指标  含义  与  YOLOv8  对比
+mAP50-95  标准  AP  均值  基准指标
+TaskAligned_stats  正样本分配统计  YOLOv8  记录（日志）
+end2end_speed  端到端模式推理速度  可选指标
 
 ---
 
@@ -7597,13 +7577,12 @@ label_smoothing: 0.1    # 0.0=关闭, 0.1=轻度, 0.2=重度
 
 ### 7.4 早停 vs 手动停止
 
-| 早停 vs 手动停止 对比 |  |  |
-| --- | --- | --- |
-| 维度 | 早停（patience） | 手动停止 |
-| 优点 | 自动，无需监控 | 可基于更多指标决策 |
-| 缺点 | 可能过早/过晚停止 | 需要人工判断，费时 |
-| 适用场景 | 快速迭代、实验探索 | 生产环境、追求最优性能 |
-| 推荐 patience | 50~100 | - |
+早停 vs 手动停止 对比
+维度  早停（patience）  手动停止
+优点  自动，无需监控  可基于更多指标决策
+缺点  可能过早/过晚停止  需要人工判断，费时
+适用场景  快速迭代、实验探索  生产环境、追求最优性能
+推荐 patience  50~100  -
 
 
 **推荐策略**：
@@ -7678,10 +7657,9 @@ model.train(
 **小数据集微调关键原则**：
 小数据集 (< 1000 张) 微调原则：
 
-| 1. | 降低学习率：lr0 | 从 | 0.005 | 降至 | 0.001~0.003 |
-| --- | --- | --- | --- | --- |
-| 2. | 减少增强强度：mosaic/mixup/copy_paste | 都降低 |
-| 3. | 增加正则化：weight_decay | 从 | 0.0005 | 增至 | 0.001 |
+1.  降低学习率：lr0  从  0.005  降至  0.001~0.003
+2.  减少增强强度：mosaic/mixup/copy_paste  都降低
+3.  增加正则化：weight_decay  从  0.0005  增至  0.001
 
 | 4. | 缩短训练轮数：50~100 | 轮足够 |
 
@@ -9820,16 +9798,15 @@ AOP 计算方法：
 
 | 1. | 对每个置信度阈值 | t | ∈ | [0, | 1]，计算该阈值下的 | AP |
 
-| --- | --- | --- | --- | --- | --- |
-| 2. | AOP@τ | = | 所有 | AP(t) | 在阈值 | τ |
-| 3. | AOP@0.5 | : | 关注高召回场景（低阈值） |
-| AOP@0.5:0.95: | 关注综合性能（与 | mAP50-95 | 类似） |
+2.  AOP@τ  =  所有  AP(t)  在阈值  τ
+3.  AOP@0.5  :  关注高召回场景（低阈值）
+AOP@0.5:0.95:  关注综合性能（与  mAP50-95  类似）
 **AOP vs mAP 对比：**
 
-| 维度 | mAP50-95 | AOP@0.5:0.95 |
-| 计算方式 | IoU | 阈值平均 | 置信度阈值平均 |
-| 敏感度 | 对框质量敏感 | 对置信度校准敏感 |
-| 适用场景 | 模型对比 | 部署调参 |
+维度  mAP50-95  AOP@0.5:0.95
+计算方式  IoU  阈值平均  置信度阈值平均
+敏感度  对框质量敏感  对置信度校准敏感
+适用场景  模型对比  部署调参
 
 
 ```python
@@ -10374,17 +10351,16 @@ def hyperparameter_search(data_yaml):
 #### 7.12.2 模型注册工作流
 
 模型注册工作流:
-| 开发阶段 (Dev) | 测试阶段 (Staging) | 生产阶段 | (Production) |  |  |
-| --- | --- | --- | --- | --- | --- |
-| ▼ | ▼ | ▼ |  |  |  |
-|  |  |  |  |  |  |
-|  实验训练 |  验证通过→ |  回归测试 |  审核通过→ |  线上部署 |  |
-|  本地/云 |  |  GPU 集群 |  |  边缘设备 |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-| ▼ | ▼ | ▼ |  |  |  |
-| model:v1.0-dev | model:v1.0-staging | model:v1.0-production |  |  |  |
-| (mlflow登记) | (mlflow登记) | (mlflow登记) |  |  |  |
+开发阶段 (Dev)  测试阶段 (Staging)  生产阶段  (Production)
+▼  ▼  ▼
+
+实验训练  验证通过→  回归测试  审核通过→  线上部署
+本地/云  GPU 集群  边缘设备
+
+
+▼  ▼  ▼
+model:v1.0-dev  model:v1.0-staging  model:v1.0-production
+(mlflow登记)  (mlflow登记)  (mlflow登记)
 → 模型仓库 ←→ 模型仓库 ←
 (MLflow Model Registry)
 
@@ -10684,9 +10660,9 @@ def run_hyperparameter_search(n_trials=30):
 | hotfix/bug | 紧急修复 | 从 | main | 创建 |
 **规范：**
 
-| 1. | 每个实验对应一个分支，实验完成后合并到 | develop |
-| 2. | 验证通过的实验合并到 | main |
-| 3. | 使用 | Pull | Request | 进行代码审查 |
+1.  每个实验对应一个分支，实验完成后合并到  develop
+2.  验证通过的实验合并到  main
+3.  使用  Pull  Request  进行代码审查
 
 #### 统一的环境配置
 
@@ -10738,19 +10714,19 @@ pandas==2.2.2
 **目录结构：**
 - project/
 
-|  | config/ | # | 统一配置 |
-|  |  | data.yaml | # |
-|  |  | default_args.yaml | # |
-|  | scripts/ | # | 训练脚本 |
-|  |  | train.py |
-|  |  | export.py |
-|  | experiments/ | # | 实验记录 |
-|  |  | exp001_baseline/ |
-|  |  |  | args.yaml |
-|  |  |  | metrics.json |
-|  |  |  | best.pt |
-|  |  | exp002_lr0.005/ |
-|  | models/ | # | 部署模型 |
+config/  #  统一配置
+data.yaml  #
+default_args.yaml  #
+scripts/  #  训练脚本
+train.py
+export.py
+experiments/  #  实验记录
+exp001_baseline/
+args.yaml
+metrics.json
+best.pt
+exp002_lr0.005/
+models/  #  部署模型
 |  | v1.0/
 
 ---
@@ -11003,12 +10979,11 @@ results = model.predict(source="image.jpg", conf=0.25, iou=0.45)
 
 #### NMS 参数调优
 
-| 参数 | 默认值 | 作用 | 调优建议 |
-|------|-------|------|---------|
-| `conf` | 0.25 | 置信度阈值 | 降低→召回率↑误报↑，提高→精确率↑漏检↑ |
-| `iou` | 0.45 | NMS IoU 阈值 | 降低→更严格去重，提高→允许更多重叠框 |
-| `max_det` | 300 | 最大检测数 | 减少→速度↑，但可能漏检多目标场景 |
-| `agnostic` | False | 是否类别无关 NMS | 单类别可设为 True，加速 NMS |
+参数  默认值  作用  调优建议
+`conf`  0.25  置信度阈值  降低→召回率↑误报↑，提高→精确率↑漏检↑
+`iou`  0.45  NMS IoU 阈值  降低→更严格去重，提高→允许更多重叠框
+`max_det`  300  最大检测数  减少→速度↑，但可能漏检多目标场景
+`agnostic`  False  是否类别无关 NMS  单类别可设为 True，加速 NMS
 
 > **技巧**：单类别检测时设置 `agnostic=True` 可跳过类别间的 NMS，加速约 10%~15%。
 
@@ -11139,11 +11114,10 @@ print(f"FP16 mAP50-95: {results_fp16.box.map:.3f}")
 
 #### 量化效果预估
 
-| 模型 | FP32 速度 | FP16 速度 | INT8 速度 | FP32→INT8 精度损失 |
-|------|----------|----------|----------|------------------|
-| YOLOv8n | 1× | ~2.5× | ~4× | < 0.5%（通常可接受） |
-| YOLOv8s | 1× | ~2.2× | ~3.5× | < 1.0% |
-| YOLOv8m | 1× | ~2.0× | ~3× | < 1.5% |
+模型  FP32 速度  FP16 速度  INT8 速度  FP32→INT8 精度损失
+YOLOv8n  1×  ~2.5×  ~4×  < 0.5%（通常可接受）
+YOLOv8s  1×  ~2.2×  ~3.5×  < 1.0%
+YOLOv8m  1×  ~2.0×  ~3×  < 1.5%
 
 > **注意**：INT8 量化需要 NVIDIA GPU 进行校准，校准后的 `.engine` 文件可在无 GPU 的 TensorRT 运行时上部署。对于单类别检测（如本实验），精度损失通常极小（< 0.1%），因为分类边界清晰。
 
@@ -11197,11 +11171,10 @@ YOLOv8 end2end=False 推理优化:
 
 | 优化维度 | 传统YOLO | YOLOv8 | (end2end) |
 
-| --- | --- | --- | --- |
-| ONNX导出 | 需保留NMS节点 | NMS已移除，导出更简单 |
-| TensorRT构建 | 需自定义NMS | plugin | 标准层即可，无需plugin |
-| 量化 | 标准流程 | 标准流程（无变化） |
-| 推理代码 | 模型+后处理代码 | 纯模型调用，无需后处理 |
+ONNX导出  需保留NMS节点  NMS已移除，导出更简单
+TensorRT构建  需自定义NMS  plugin  标准层即可，无需plugin
+量化  标准流程  标准流程（无变化）
+推理代码  模型+后处理代码  纯模型调用，无需后处理
 
 #### 导出策略对比
 
@@ -11286,11 +11259,10 @@ CPU 推理性能对比：
 
 | 模型 | GPU | FP16 | CPU | FP32 | CPU | 相对YOLO11 | 说明 |
 
-| --- | --- | --- | --- | --- | --- | --- |
-| YOLOv8n | 0.5ms | 12ms | 43% | 更快 | 架构优化 | + | 无NMS |
-| YOLOv8s | 0.8ms | 25ms | 40% | 更快 | 同上 |
-| YOLOv8m | 1.5ms | 50ms | 38% | 更快 | 同上 |
-| YOLO11n | 0.6ms | 20ms | 基准 | 参考 |
+YOLOv8n  0.5ms  12ms  43%  更快  架构优化  +  无NMS
+YOLOv8s  0.8ms  25ms  40%  更快  同上
+YOLOv8m  1.5ms  50ms  38%  更快  同上
+YOLO11n  0.6ms  20ms  基准  参考
 | CPU | 推理优化技巧：
 
 | 1. | 使用 | Intel | OpenVINO | 导出（.xml/.bin | 格式） |
@@ -11993,9 +11965,8 @@ gap 大  gap 小
 YOLO 训练常见错误与避免方法：
 | 错误类别 | 常见错误 | 后果 | 避免方法 |
 
-| --- | --- | --- | --- |
-| 环境类 | CUDA | 版本不匹配 | 无法使用 |
-| 与 | PyTorch | 版本 |
+环境类  CUDA  版本不匹配  无法使用
+与  PyTorch  版本
 
 **的兼容性**
 | 数据类 | 图片/标注文件名不匹配 | Instances=0 | 启动前运行 |

@@ -79,11 +79,10 @@ def is_true_positive(pred, gt_candidates, iou_thresh=0.5):
 
 IoU 的计算公式：
 
-| 预测框 |  | 真实框 |
-| --- | --- | --- |
-| (Predict) |  | (Ground Truth) |
-| 交集 |  |  |
-| (Inter) |  |  |
+预测框  真实框
+(Predict)  (Ground Truth)
+交集
+(Inter)
 
 IoU = |Prediction ∩ GroundTruth| / |Prediction ∪ GroundTruth|
 = 交集面积 / 并集面积
@@ -992,15 +991,14 @@ YOLO-cls x  84.2%     96.8%    78.9       20.5
 深度估计（Depth Estimation）评估指标：
 
 常用指标：
-| 指标         公式                               含义 |
-| --- |
-| Abs Rel    Σ|d-d̂|/d / N            平均绝对相对误差 |
-| Sq Rel     Σ(d-d̂)²/d / N           平方相对误差 |
-| RMSE       √(Σ(d-d̂)²/N)            均方根误差 |
-| log RMSE   exp(√(Σ(ln d - ln d̂)²/N)) 对数RMSE |
-| δ<1.25     Σ 1( max(d/d̂,d̂/d) < 1.25 )/N 精度指标 |
-| δ<1.25²    同上调高阈值 |
-| δ<1.25³    同上调高阈值 |
+指标         公式                               含义
+Abs Rel    Σ  d-d̂  /d / N            平均绝对相对误差
+Sq Rel     Σ(d-d̂)²/d / N           平方相对误差
+RMSE       √(Σ(d-d̂)²/N)            均方根误差
+log RMSE   exp(√(Σ(ln d - ln d̂)²/N)) 对数RMSE
+δ<1.25     Σ 1( max(d/d̂,d̂/d) < 1.25 )/N 精度指标
+δ<1.25²    同上调高阈值
+δ<1.25³    同上调高阈值
 
 δ<1.25 的含义：
 如果预测深度 d̂ 满足 1/1.25 < d/d̂ < 1.25
