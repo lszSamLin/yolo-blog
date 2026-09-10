@@ -2724,7 +2724,6 @@ edgetpu_demo --model yolo26n_edgetpu.tflite --input test.jpg
 
 ### 3.8 边缘设备综合性能对比
 
-```
 边缘设备 YOLO 推理性能综合对比（640×640 输入, 统一测试条件）
 | 设备 | 芯片/NPU | 精度 | 延迟(ms) | FPS | 功耗(W) | 内存(MB) |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -2743,7 +2742,6 @@ edgetpu_demo --model yolo26n_edgetpu.tflite --input test.jpg
   · 苹果生态：iPhone 15 Pro (83 FPS, 最佳用户体验)
   · 超低成本：Raspberry Pi 5 (2.9 FPS, 适合非实时场景)
 
-```
 
 ## 四、模型服务化部署
 

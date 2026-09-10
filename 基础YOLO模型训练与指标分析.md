@@ -5436,7 +5436,6 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
 
 **混合精度训练性能基准**：
 
-```
 | 混合精度训练性能对比 (YOLOv8s, COCO, T4 GPU) |  |  |  |  |
 | --- | --- | --- | --- | --- |
 | 精度模式 | 每轮时间 | 显存占用 | mAP50-95 | 速度提升 |
@@ -5451,7 +5450,6 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
   · A100/H100 推荐使用 BF16
   · 旧 GPU (V100/T4) 使用 FP16
 
-```
 
 ---
 
@@ -5970,7 +5968,6 @@ YOLOv8 在损失函数设计上做了多项重要改动，这些改动直接影�
 
 #### 主要变化概览
 
-```
 YOLOv8 → YOLOv8 损失函数变化：
 
 | 损失类型 | YOLOv8 | YOLOv8 | 变化 |
@@ -5981,7 +5978,6 @@ YOLOv8 → YOLOv8 损失函数变化：
 | DFL | Loss | DFL（必需） | 移除 |
 | (分布焦点损失) | 改用L1直接回归 | ★ |
 
-```
 
 #### DFL 的移除与 L1 距离回归
 
@@ -6047,7 +6043,6 @@ model.train(
 
 Task-Aligned Assigner 不仅影响标签分配，还直接影响损失计算：
 
-```
 Task-Aligned 对损失计算的影响：
 
 | 影响方面 | 说明 |
@@ -6065,7 +6060,6 @@ Task-Aligned 对损失计算的影响：
 
 除了检测任务，YOLOv8 还为分割、姿态、OBB 等任务定义了专门的损失函数：
 
-```
 
 YOLOv8 多任务损失函数：
 
@@ -6101,7 +6095,6 @@ YOLOv8 多任务损失函数：
    epoch   gpu_mem   box_loss   cls_loss   dfl_loss  Instances  Size
      100     4.2G     0.8543     0.1234     0.9876        342     640
 
-```
 
 **逐项解释**：
 
@@ -6121,7 +6114,6 @@ YOLOv8 多任务损失函数：
 
 以下是一次真实训练（YOLOv8n，**自行拍摄的单类别数据集**，153 轮）的早期与关键轮次输出：
 
-```
 
    epoch   gpu_mem   box_loss   cls_loss   dfl_loss  Instances  Size
        1     2.1G     1.0055     1.9296     0.9304       187     640
@@ -6805,7 +6797,6 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 
 #### 混淆矩阵解读与改进方向
 
-```
 混淆矩阵模式分析：
 | TP | 高 | FP | 低 | 模型表现优秀 | 保持当前配置 |
 
@@ -6818,7 +6809,6 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 | 对角线元素 | = | 正确分类数（TP） |
 | 非对角线元素 | = | 误分类数（可看出哪些类别容易混淆） |
 
-```
 
 ```python
 # 生成并分析混淆矩阵
@@ -6875,7 +6865,6 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 
 #### 类别性能分层策略
 
-```
 根据逐类别指标调整策略：
 | 类别层级 | 判断标准 | 应对策略 |
 
@@ -6890,7 +6879,6 @@ plt.savefig('confusion_matrix_custom.png', dpi=150)
 | - | 增强 | Mosaic（close_mosaic=0 |
 | - | 增大 | scale |
 
-```
 
 ---
 
@@ -7251,7 +7239,6 @@ def mcnemar_test_detection(model_a_dets, model_b_dets, ground_truth, iou_thresho
 
 #### 4.12.5 统计检验总结与解读
 
-```
 统计检验方法选择指南:
 
 
@@ -7267,7 +7254,6 @@ def mcnemar_test_detection(model_a_dets, model_b_dets, ground_truth, iou_thresho
 | （非参数替代 | t | 检验） |
 | permutation | 检验 | 小样本、任意分布 | 无前提条件 |
 
-```
 
 ```python
 """
@@ -7861,7 +7847,6 @@ args.yaml  # 本次训练的完整参数记录
 
 ### 8.2 results.png 图表解读
 
-```
 results.png 包含以下子图：
 | Box Loss | cls Loss |
 | --- | --- |
@@ -7877,7 +7862,6 @@ results.png 包含以下子图：
   ✗ Loss 上升 / mAP 下降 → 过拟合或学习率过高
   ✗ Loss 不下降 → 学习率过低或数据问题
 
-```
 
 ### 8.3 查看历史训练结果
 
@@ -8278,7 +8262,6 @@ if st.checkbox("启用自动刷新"):
 
 #### 5.6.3 Matplotlib vs Plotly 对比
 
-```
 可视化库对比:
 | 特性 | Matplotlib | Plotly |
 | --- | --- | --- |
@@ -8295,7 +8278,6 @@ if st.checkbox("启用自动刷新"):
   · 快速分析 → Matplotlib（简单快捷）
   · 网页展示 → Plotly（嵌入 HTML）
 
-```
 
 ---
 
@@ -9605,7 +9587,6 @@ with mlflow.start_run() as run:
 
 #### MLflow 界面解读
 
-```
 启动 MLflow UI：
   mlflow ui --port 5000
 
@@ -9621,7 +9602,6 @@ with mlflow.start_run() as run:
   对比功能：勾选多个 Run，在 Parameters/Metrics 面板
   中直接对比不同超参数组合的效果
 
-```
 
 ---
 
@@ -9975,7 +9955,6 @@ wandb.finish()
 
 ```
 
-```
 YOLOv8 实验追踪检查清单：
 
 | □ | 记录 | end2end | 模式（True/False） |
@@ -9988,7 +9967,6 @@ YOLOv8 实验追踪检查清单：
 | □ | 记录 | TaskAligned | 分配统计（日志中） |
 | □ | 使用 | W&B | 或 |
 
-```
 
 ---
 
@@ -10395,7 +10373,6 @@ def hyperparameter_search(data_yaml):
 
 #### 7.12.2 模型注册工作流
 
-```
 模型注册工作流:
 | 开发阶段 (Dev) | 测试阶段 (Staging) | 生产阶段 | (Production) |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -10411,7 +10388,6 @@ def hyperparameter_search(data_yaml):
 → 模型仓库 ←→ 模型仓库 ←
 (MLflow Model Registry)
 
-```
 
 ```python
 """
@@ -11891,7 +11867,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
 
 #### 8.10.5 模型压缩技术汇总
 
-```
 边缘 AI 模型压缩技术:
 | 技术 | 加速比 | 精度损失 | 实现难度 | 适用场景 |
 | --- | --- | --- | --- | --- |
@@ -11906,7 +11881,6 @@ def benchmark_jetson(engine_path, imgsz=320, n_runs=100):
   · 资源受限（1-10W 功耗）: FP16 量化 + 小尺寸输入
   · 资源充足（> 10W 功耗）: 原模型 + FP16 量化
 
-```
 
 #### 8.10.6 边缘 vs 云端推理对比
 
@@ -12058,7 +12032,6 @@ YOLO 系列自 2016 年诞生以来，已经历了近 10 年的快速演进。�
 
 #### 架构演进趋势
 
-```
 YOLO 架构演进方向：
 | 方向 | 说明 | 代表工作 |
 | --- | --- | --- |
@@ -12073,7 +12046,6 @@ YOLO 架构演进方向：
 | 轻量化 | 更小模型保持高性能 | YOLOv10/YOLOv8 |
 | （边缘设备部署） | nano | 版本持续优化 |
 
-```
 
 #### 应用领域扩展
 
@@ -12095,7 +12067,6 @@ YOLO 应用领域扩展：
 
 #### 技术趋势展望
 
-```
 未来 3~5 年技术趋势：
 | 趋势 | 说明
 | --- | --- |
@@ -12106,7 +12077,6 @@ YOLO 应用领域扩展：
 | 5. | 自动超参调优 |
 | 6. | 可解释性增强 |
 
-```
 
 ---
 

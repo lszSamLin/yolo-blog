@@ -949,7 +949,6 @@ class ImageCrawler:
 
 一份完整的标注标准文档应包含以下内容：
 
-```markdown
 # 标注标准文档 v1.0
 
 ## 1. 目标类别定义
@@ -971,7 +970,6 @@ class ImageCrawler:
 ### 2.2 COCO格式
 JSON格式，包含images、annotations、categories三个字段。
 
-```
 
 **标注规范示例（工业缺陷检测）：**
 

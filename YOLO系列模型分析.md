@@ -30,43 +30,22 @@ YOLO（You Only Look Once）系列自 2015 年 Joseph Redmon 提出以来，经�
 
 **YOLO 原始论文完整列表**：
 
-```
 YOLO 系列论文引用表:
+
 | 版本 | 论文标题 | 作者 | 年份 | 会议/期刊 |
 | --- | --- | --- | --- | --- |
-| YOLOv1 | You Only Look Once: Unified, Real-Time Object | Joseph Redmon | 2015 | arXiv:1506.02640 |
-| Detection | et | al. |  |  |
-| YOLOv2 | YOLO9000: Better, Faster, Stronger | Joseph Redmon | 2017 | CVPR 2017 |
-| (Real-Time Keyboard) | & Ali | Farhadi |  |  |
-| YOLOv3 | YOLOv3: An Incremental Improvement | Joseph Redmon | 2018 | arXiv:1804.02767 |
-& Ali Farhadi
-
-YOLOv4  YOLOv4: Optimal Speed and Accuracy  Alexey Bochkovskiy 2020  arXiv:2004.10934
-of Object Detection  et al.  (IJCNN)
-
-YOLOv5  (非正式论文, 工程实现)  Glenn Jocher  2020  GitHub
-Ultralytics YOLOv5  (ultralytics)
-
-YOLOv6  YOLOv6: A Benchmarks-Ready  Chuyi Li et al.  2022  arXiv:2209.15483
-Industrial-Grade Object Detection Framework  (美团)
-
-YOLOv7  YOLOv7: Trainable bag-of-freebies  Chien-Yao Wang  2022  arXiv:2207.02696
-for Real-Time Object Detector  et al.
-
-YOLOv8  (非正式论文) Ultralytics YOLOv8  Glenn Jocher  2023  GitHub
-Real-Time Object Detection Framework  (ultralytics)
-
-YOLOv9  YOLOv9: Learning What You Want to Learn  Chien-Yao Wang et al. 2024  arXiv:2402.13616
-Using Programmable Gradient Information
-
-| YOLOv10 | YOLOv10: Real-Time End-to-End Object | Ao Wang et al. | 2024 | arXiv:2405.14458 |
-| --- | --- | --- | --- | --- |
-| Detection | (清华大学) |  |  |  |
-| YOLO11 | (非正式论文) Ultralytics YOLO11 | Glenn Jocher | 2024 | GitHub |
-| et al. | (ultralytics) |  |  |  |
-| YOLO26 | Ultralytics YOLO26: Unified Real-Time | Glenn Jocher | 2026 | arXiv:2606.03748 |
-| End-to-End Vision Models | et al. | (Ultralytics) |  |  |
-```
+| YOLOv1 | You Only Look Once: Unified, Real-Time Object Detection | Joseph Redmon et al. | 2015 | arXiv:1506.02640 |
+| YOLOv2 | YOLO9000: Better, Faster, Stronger (Real-Time Keyboard) | Joseph Redmon & Ali Farhadi | 2017 | CVPR 2017 |
+| YOLOv3 | YOLOv3: An Incremental Improvement | Joseph Redmon & Ali Farhadi | 2018 | arXiv:1804.02767 |
+| YOLOv4 | YOLOv4: Optimal Speed and Accuracy of Object Detection | Alexey Bochkovskiy et al. | 2020 | arXiv:2004.10934 (IJCNN) |
+| YOLOv5 | (非正式论文，工程实现) Ultralytics YOLOv5 | Glenn Jocher | 2020 | GitHub (ultralytics) |
+| YOLOv6 | YOLOv6: A Benchmarks-Ready Industrial-Grade Object Detection Framework | Chuyi Li et al. | 2022 | arXiv:2209.15483 (美团) |
+| YOLOv7 | YOLOv7: Trainable bag-of-freebies for Real-Time Object Detector | Chien-Yao Wang et al. | 2022 | arXiv:2207.02696 |
+| YOLOv8 | (非正式论文) Ultralytics YOLOv8 — Real-Time Object Detection Framework | Glenn Jocher | 2023 | GitHub (ultralytics) |
+| YOLOv9 | YOLOv9: Learning What You Want to Learn Using Programmable Gradient Information | Chien-Yao Wang et al. | 2024 | arXiv:2402.13616 |
+| YOLOv10 | YOLOv10: Real-Time End-to-End Object Detection | Ao Wang et al. (清华大学) | 2024 | arXiv:2405.14458 |
+| YOLO11 | (非正式论文) Ultralytics YOLO11 | Glenn Jocher et al. | 2024 | GitHub (ultralytics) |
+| YOLO26 | Ultralytics YOLO26: Unified Real-Time End-to-End Vision Models | Glenn Jocher et al. (Ultralytics) | 2026 | arXiv:2606.03748 |
 
 **关键论文详细解读**：
 
@@ -147,7 +126,6 @@ YOLOv8 并非传统学术论文，而是 Ultralytics 的工程实现报告。
 
 **YOLOv1-V4 详细论文信息汇总**：
 
-```
 YOLO 版本与论文对照表:
 | 版本 | 论文名 | 作者 | 会议/年份 |
 | --- | --- | --- | --- |
@@ -179,8 +157,6 @@ Bag-of-Freebies  arXiv:2207.02696
 YOLOv8  YOLOv8 (Ultralytics)  Ultralytics  GitHub 2023
 (非论文，开源项目)
 
-
-```
 
 **各版本关键技术对比**：
 
@@ -377,7 +353,6 @@ YOLOv3 (基准)  33.1%  61  Darknet-53 + FPN
 
 #### 各版本核心指标演进
 
-```
 YOLO 系列核心指标演进趋势 (COCO val2017):
 | 版本 | 年份 | mAP50 | mAP50-95 | 参数量 | 速度(FPS) | 关键创新 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -394,7 +369,6 @@ YOLO 系列核心指标演进趋势 (COCO val2017):
 | YOLO11n | 2024 | 83.2 | 39.5 | 2.6M | 125 | 轻量化 |
 | YOLO26n | 2026 | 84.0 | 40.1 | 2.4M | 140 | 原生E2E+MuSGD |
 | YOLO26x | 2026 | 87.2 | 56.9 | 55.7M | 65 | 旗舰模型 |
-```
 
 #### 论文引用完整列表
 
@@ -1455,7 +1429,6 @@ Distribution Focal Loss 需要额外的分布建模
 
 #### 局限性总结
 
-```
 YOLO 各版本局限性 → 下一版本改进 映射表:
 | 版本 | 主要局限性 | 驱动的改进 |
 | --- | --- | --- |
@@ -1467,7 +1440,6 @@ YOLO 各版本局限性 → 下一版本改进 映射表:
 | v8 → v10 NMS依赖/DFL复杂/优化器一般 | CDA+NMS-Free+一致性双分配 |  |
 | v10→v11 | 参数量大/计算冗余 | 轻量化C2f+紧凑Backbone |
 | v11→v26 | 任务不统一/优化器局限/无开放词汇 | MuSGD+DFL-Free+7任务统一+YOLOE |
-```
 
 ### 1.5 全版本 COCO 性能对比表
 
@@ -1549,7 +1521,6 @@ YOLO11-V26 COCO val2017 性能对比:
 
 #### 全版本综合对比
 
-```
 YOLO 全版本 COCO val2017 性能汇总:
 | 版本 | 年份 | mAP50-95 | 参数量(M) | 速度(FPS) | 关键创新 | 相对提升 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1571,8 +1542,6 @@ YOLO 全版本 COCO val2017 性能汇总:
 注: * 表示同量级模型间的横向比较，主要看精度/速度权衡
 标注的是跨代际（v1→v2→v3→v4）的显著提升
 
-
-```
 
 #### 精度-速度 Pareto 前沿图
 
@@ -1795,7 +1764,6 @@ hsv_v               0.4      0.4      0.4      0.4      0.4
 flipup              0.01     0.01     0.01     0.01     0.01
 fliplef             0.5      0.5      0.5      0.5      0.5
 
-```
 
 ---
 
@@ -1824,7 +1792,6 @@ Backbone 是目标检测模型的"眼睛"，负责从原始图像中提取多层
 
 **CSP（Cross Stage Partial）网络**：
 
-```
 传统残差网络:  Input → [Conv → ResBlock × N] → Output
                    ↑ 全部梯度都通过这条路径
 
@@ -2351,7 +2318,6 @@ class ConvNeXtDETR(nn.Module):
 
 ### 2.3 SOTA 时间线与精度突破
 
-```
 COCO val2017 mAP50-95 SOTA 时间线 (2015-2026):
 | 年份 | 模型 | mAP50-95 | 速度(FPS) | 关键创新 | 论文 |
 | --- | --- | --- | --- | --- | --- |
@@ -2374,7 +2340,6 @@ COCO val2017 mAP50-95 SOTA 时间线 (2015-2026):
 | 2024 | YOLO11x | 56.6% | 22 | 进一步轻量化 | Jocher et al. |
 | 2026 | YOLO26s | 48.6% | 85 | End2end + MuSGD + 去DFL | Jocher et al. |
 | 2026 | YOLO26x | 57.5% | 18 | X 版本, 原生端到端 | Jocher et al. |
-```
 
 **精度-速度 Pareto 前沿演进**：
 
@@ -2931,7 +2896,6 @@ Vision Transformer vs CNN 检测对比:
 
 #### 2.2.6 检测领域 SOTA 时间线
 
-```
 目标检测 SOTA 时间线 (COCO val2017 mAP50-95):
 | 2015 | YOLOv1 | 26.2% | ← 开创性，实时检测 |
 | --- | --- | --- | --- |
@@ -2966,7 +2930,6 @@ ViT  vs  CNN 的现状:
   · 融合趋势: YOLO-World 等模型尝试结合两者优势
   · 未来方向: 高效 Transformer + CNN 混合架构
 
-```
 
 ### 2.5 损失函数演进详解
 
@@ -11663,7 +11626,6 @@ def debug_onnx_model(onnx_path):
 
 #### 6.6.3 多框架模型导出验证清单
 
-```
 多框架模型导出验证清单:
 | 框架 | 导出命令 | 常见问题 |
 | --- | --- | --- |
@@ -11678,8 +11640,6 @@ Netron 通用排查步骤:
 3. 对比原始 PyTorch 模型结构
 4. 检查是否有未支持的算子（红色标记）
 
-
-```
 
 ### 6.2 Netron 与多框架实战
 
