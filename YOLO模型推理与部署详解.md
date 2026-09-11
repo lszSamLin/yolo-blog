@@ -2585,11 +2585,12 @@ CoreMLNX:
 · 支持模型子图替换
 
 性能对比：
-| 模型            传统 CoreML   CoreMLNX    加速比 |  |
-| --- | --- |
-| YOLO26n 640×640 | 12.0ms      6.2ms       1.9x |
-| YOLO26s 640×640 | 28.5ms      14.8ms      1.9x |
-| YOLO26n 1280×1280 | 25.2ms   13.1ms      1.9x |
+
+| 模型 | 传统 CoreML | CoreMLNX | 加速比 |
+| --- | --- | --- | --- |
+| YOLO26n 640×640 | 12.0ms | 6.2ms | 1.9x |
+| YOLO26s 640×640 | 28.5ms | 14.8ms | 1.9x |
+| YOLO26n 1280×1280 | 25.2ms | 13.1ms | 1.9x |
 
 ```swift
 // CoreMLNX Swift 集成

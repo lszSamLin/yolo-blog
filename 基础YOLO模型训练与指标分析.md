@@ -5317,9 +5317,10 @@ BF16 (Bfloat16):
 
 **FP16 vs BF16 详细对比**：
 
-| FP16 vs BF16 对比 |  |  |
-| --- | --- | --- |
+**FP16 vs BF16 对比**
+
 | 维度 | FP16 | BF16 |
+| --- | --- | --- |
 | 存储 | 16 bits | 16 bits |
 | 动态范围 | ±65504 | ±3.4×10^38 (同 FP32) |
 | 精度 | ~3-4 位十进制 | ~2-3 位十进制 |
@@ -5328,7 +5329,8 @@ BF16 (Bfloat16):
 | 速度提升 | 1.5-2x | 1.5-2x |
 | 显存节省 | ~50% | ~50% |
 | 精度损失 | < 0.1% mAP | < 0.1% mAP |
-| 推荐: A100/H100 使用 BF16，旧 GPU 使用 FP16 |  |  |
+
+**推荐**：A100/H100 使用 BF16，旧 GPU 使用 FP16。
 
 
 **Loss Scaling 机制**：
@@ -5427,9 +5429,10 @@ def train_with_bf16(model, dataloader, optimizer, device='cuda'):
 
 **混合精度训练性能基准**：
 
-| 混合精度训练性能对比 (YOLOv8s, COCO, T4 GPU) |  |  |  |  |
-| --- | --- | --- | --- | --- |
+**混合精度训练性能对比 (YOLOv8s, COCO, T4 GPU)**
+
 | 精度模式 | 每轮时间 | 显存占用 | mAP50-95 | 速度提升 |
+| --- | --- | --- | --- | --- |
 | FP32 | 15.2s | 4.2 GB | 44.9% | 基准 |
 | FP16 | 8.1s | 2.1 GB | 44.9% | 1.87x |
 | BF16 | 7.5s | 2.1 GB | 44.9% | 2.03x |
@@ -5748,14 +5751,13 @@ DFL 方法（分布建模）：
 
 #### 三种 Loss 的相互作用
 
-| 总损失 = box_loss + cls_loss + dfl_loss |  |  |
-| --- | --- | --- |
-| (带权重：box=7.5, cls=0.5, dfl=1.5) |  |  |
+**总损失 = box_loss + cls_loss + dfl_loss**（带权重：box=7.5, cls=0.5, dfl=1.5）
+
 | Loss 类型 | 作用 | 权重 |
-| Box Loss (CIoU) | 定位精度 决定框的位置和大小 | 7.5（最大） 反映定位是首要任务 |
-| DFL Loss | 分布建模 提升定位稳定性 | 1.5（中等） 辅助 CIoU，提供平滑 |
-| Cls Loss | 分类判别 | 0.5（最小） |
-| (Varifocal) | 决定目标的类别 | 单类别场景下权重可降低 |
+| --- | --- | --- |
+| Box Loss (CIoU) | 定位精度：决定框的位置和大小 | 7.5（最大，反映定位是首要任务） |
+| DFL Loss | 分布建模：提升定位稳定性 | 1.5（中等，辅助 CIoU，提供平滑） |
+| Cls Loss (Varifocal) | 分类判别：决定目标的类别 | 0.5（最小，单类别场景下权重可降低） |
 
 
 **权重调优指南**：
@@ -8701,9 +8703,10 @@ def create_live_dashboard(results_history):
 
 **Plotly 与 TensorBoard 对比**：
 
-| Plotly vs TensorBoard 对比 |  |  |
-| --- | --- | --- |
+**Plotly vs TensorBoard 对比**
+
 | 维度 | Plotly | TensorBoard |
+| --- | --- | --- |
 | 交互性 | 高 (缩放/悬停) | 中 (缩放/范围选择) |
 | 导出格式 | HTML/PNG/JSON | TB 事件文件 |
 | 实时性 | 支持 (Jupyter) | 支持 (自动刷新) |
@@ -8711,7 +8714,8 @@ def create_live_dashboard(results_history):
 | 自定义程度 | 高 | 中 |
 | 与 Ultralytics | 需要手动记录 | 自动集成 |
 | 集成难度 | 中 | 低 |
-| 推荐: TensorBoard 用于训练监控, Plotly 用于结果展示和报告 |  |  |
+
+**推荐**：TensorBoard 用于训练监控，Plotly 用于结果展示和报告。
 
 
 ---

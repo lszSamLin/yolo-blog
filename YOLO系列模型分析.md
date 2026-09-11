@@ -558,9 +558,10 @@ YOLOv3 Neck: 多尺度 FPN (三尺度预测)
 
 YOLOv4 核心技术创新组合:
 
-| YOLOv4 技术栈 (Borjargar) |  |
-| --- | --- |
+**YOLOv4 技术栈 (Borjargar)**
+
 | Backbone | CSPDarknet53 + SAB (Spatial Attention) |
+| --- | --- |
 | Neck | PANet (Path Aggregation Network) |
 | Head | SPP + PAN + DBCSP (改进CSP) |
 | 数据增强 | Mosaic + CutMix + SAM + RandomShape + Coarse Augmentation |
@@ -9669,9 +9670,10 @@ Ultralytics 不仅提供 YOLO 模型库，还构建了一整套从数据标注�
 
 Ultralytics Platform 功能架构
 
-| Ultralytics Hub (云端) |  |  |  |
-| --- | --- | --- | --- |
+**Ultralytics Hub (云端)**
+
 | 数据管理 | 模型训练 | 模型部署 | 团队协作 |
+| --- | --- | --- | --- |
 | --- | --- | --- | --- |
 | • 数据集 | • 一键训练 | • API 部署 | • 多人协作 |
 | 上传/管理 | • 超参搜索 | • 边缘部署 | • 版本追踪 |
@@ -9965,9 +9967,10 @@ model.export(format="engine", half=True, imgsz=640)
 
 ### 7.4 平台优势总结
 
-| Ultralytics Platform 优势 |  |
-| --- | --- |
+**Ultralytics Platform 优势**
+
 | 上手门槛低 | 一条命令完成训练/推理/部署 model.train() / model.predict() / model.export() 即可覆盖全流程 |
+| --- | --- |
 | 模型生态丰富 | 支持 YOLOv5/v8/v10/v11/v26 支持检测/分割/姿态/OBB/分类 5 大任务 提供 100+ 预训练权重 |
 | 部署灵活 | 支持 ONNX/TensorRT/OpenVINO/ TFLite/CoreML 等 13+ 导出格式 支持云端 API 和边缘设备部署 |
 | 实验可追溯 | 自动记录超参数、指标、训练曲线 支持 MLflow/W&B/TensorBoard 集成 版本化管理模型和数据集 |
@@ -12510,9 +12513,10 @@ model.train(
 
 **分布式训练的性能对比**：
 
-| 训练配置对比 (COCO 数据集, YOLOv8s, 100 epochs) |  |  |  |
-| --- | --- | --- | --- |
+**训练配置对比 (COCO 数据集, YOLOv8s, 100 epochs)**
+
 | 配置 | 耗时 | mAP | 每卡 GPU 显存 |
+| --- | --- | --- | --- |
 | 1× T4 | ~25h | 44.9% | ~6GB |
 | 4× T4 (DDP) | ~7h | 44.9% | ~6GB |
 | 8× T4 (DDP) | ~4h | 44.9% | ~6GB |
