@@ -589,9 +589,11 @@ AP@0.75  AP@0.75
 AP(c)  = ∫ P(r)dr  (PR曲线下面积)
 = ΣP×ΔR
 
-Precision  TP/(TP+FP)
-Recall  TP/(TP+FN)
-F1  2PR/(P+R)
+| Precision | TP/(TP+FP) |
+| --- | --- |
+| Recall | TP/(TP+FN) |
+| F1 | 2PR/(P+R) |
+
 
 指标速查表：
 
@@ -787,25 +789,30 @@ LVIS（Large Vocabulary Instance Segmentation）是一个大规模长尾数据�
 
 指标  含义
 
-AP_box  边界框检测的AP（同检测任务）
-AP_mask  分割mask的AP
-mAP_box  所有类别box AP的平均
-mAP_mask  所有类别mask AP的平均
-AP50_box  IoU=0.5时的box AP
-AP50_mask  IoU=0.5时的mask AP
-AP75_box  IoU=0.75时的box AP
-AP75_mask  IoU=0.75时的mask AP
+| AP_box | 边界框检测的AP（同检测任务） |
+| --- | --- |
+| AP_mask | 分割mask的AP |
+| mAP_box | 所有类别box AP的平均 |
+| mAP_mask | 所有类别mask AP的平均 |
+| AP50_box | IoU=0.5时的box AP |
+| AP50_mask | IoU=0.5时的mask AP |
+| AP75_box | IoU=0.75时的box AP |
+| AP75_mask | IoU=0.75时的mask AP |
+
 
 mask IoU计算：
 与box IoU类似，但用mask（像素级二值图）替代bbox
 IoU_mask = |M_pred ∩ M_gt| / |M_pred ∪ M_gt|
 
 YOLOv8分割模型典型结果（COCO val）：
-模型      mAP_box   mAP_mask   Params(M)  Speed(ms)
-YOLOv8s   44.9      36.7       11.2       1.8
-YOLOv8m   53.2      44.1       43.7       3.2
-YOLOv8l   56.3      47.0       86.7       5.1
-YOLOv8x   58.6      49.7       68.2       8.3
+
+| 模型 | mAP_box | mAP_mask | Params(M) | Speed(ms) |
+| --- | --- | --- | --- | --- |
+| YOLOv8s | 44.9 | 36.7 | 11.2 | 1.8 |
+| YOLOv8m | 53.2 | 44.1 | 43.7 | 3.2 |
+| YOLOv8l | 56.3 | 47.0 | 86.7 | 5.1 |
+| YOLOv8x | 58.6 | 49.7 | 68.2 | 8.3 |
+
 
 注意：mask AP 通常比 box AP 低 8~10 个百分点，
 因为像素级对齐比边界框对齐更难。
@@ -816,12 +823,14 @@ YOLOv8x   58.6      49.7       68.2       8.3
 
 指标  含义
 
-AP  基于PCK或OKS的AP
-AP@0.5  OKS阈值=0.5时的AP
-AP@0.75  OKS阈值=0.75时的AP
-APm  中目标的姿态AP
-APl  大目标的姿态AP
-APS  小目标的姿态AP
+| AP | 基于PCK或OKS的AP |
+| --- | --- |
+| AP@0.5 | OKS阈值=0.5时的AP |
+| AP@0.75 | OKS阈值=0.75时的AP |
+| APm | 中目标的姿态AP |
+| APl | 大目标的姿态AP |
+| APS | 小目标的姿态AP |
+
 
 OKS (Object Keypoint Similarity):
 OKS = exp(-Σ_d² × w_d / (2 × s² × k²)) / Σw_d
@@ -845,11 +854,14 @@ COCO Keypoints 数据集的17个关键点：
 8  Left Knee
 
 YOLOv8姿态估计典型结果（COCO Keypoints val）：
-模型       AP      AP@.5   AP@.75  APm   APl
-YOLOv8s    65.8    87.2    71.4   60.2  72.1
-YOLOv8m    71.3    90.1    77.8   66.4  78.2
-YOLOv8l    74.2    91.5    80.6   69.1  81.3
-YOLOv8x    76.0    92.3    82.1   71.0  83.5
+
+| 模型 | AP | AP@.5 | AP@.75 | APm | APl |
+| --- | --- | --- | --- | --- | --- |
+| YOLOv8s | 65.8 | 87.2 | 71.4 | 60.2 | 72.1 |
+| YOLOv8m | 71.3 | 90.1 | 77.8 | 66.4 | 78.2 |
+| YOLOv8l | 74.2 | 91.5 | 80.6 | 69.1 | 81.3 |
+| YOLOv8x | 76.0 | 92.3 | 82.1 | 71.0 | 83.5 |
+
 
 #### 旋转目标检测（OBB）
 
@@ -860,10 +872,13 @@ YOLOv8x    76.0    92.3    82.1   71.0  83.5
 · OBB（Oriented Bounding Box）：边界框可以旋转，更好地贴合斜向物体
 
 OBB评估指标：
-指标        含义
-mAP         旋转框的平均AP
-mAP50       IoU=0.5时的mAP
-mAP75       IoU=0.75时的mAP
+
+| 指标 | 含义 |
+| --- | --- |
+| mAP | 旋转框的平均AP |
+| mAP50 | IoU=0.5时的mAP |
+| mAP75 | IoU=0.75时的mAP |
+
 
 OBB IoU计算（旋转矩形相交）：
 1. 使用分离轴定理（SAT）判断两旋转矩形是否相交
@@ -907,11 +922,14 @@ Top-1 Accuracy: 错误（预测为cat，但真实为dog）
 Top-5 Accuracy: 正确（dog在前5中）
 
 YOLO分类模型典型结果（ImageNet）：
-模型        Top-1     Top-5    Params(M)  FLOPs(G)
-YOLO-cls s  78.2%     94.1%    8.6        2.5
-YOLO-cls m  81.5%     95.6%    30.8       7.8
-YOLO-cls l  83.1%     96.3%    58.6       15.2
-YOLO-cls x  84.2%     96.8%    78.9       20.5
+
+| 模型 | Top-1 | Top-5 | Params(M) | FLOPs(G) |
+| --- | --- | --- | --- | --- |
+| YOLO-cls s | 78.2% | 94.1% | 8.6 | 2.5 |
+| YOLO-cls m | 81.5% | 95.6% | 30.8 | 7.8 |
+| YOLO-cls l | 83.1% | 96.3% | 58.6 | 15.2 |
+| YOLO-cls x | 84.2% | 96.8% | 78.9 | 20.5 |
+
 
 #### 语义分割
 
@@ -965,9 +983,12 @@ log RMSE   exp(√(Σ(ln d - ln d̂)²/N)) 对数RMSE
 δ<1.25 比例越高，深度估计越精确
 
 YOLO深度估计（YOLO-Depth）典型结果（KITTI）：
-模型      AbsRel   SqRel   RMSE   δ<1.25   δ<1.25²
-YOLO-D    0.142    0.782   4.321  0.785    0.932
-YOLO-M    0.118    0.621   3.845  0.823    0.951
+
+| 模型 | AbsRel | SqRel | RMSE | δ<1.25 | δ<1.25² |
+| --- | --- | --- | --- | --- | --- |
+| YOLO-D | 0.142 | 0.782 | 4.321 | 0.785 | 0.932 |
+| YOLO-M | 0.118 | 0.621 | 3.845 | 0.823 | 0.951 |
+
 
 ### 1.5 COCO 评估协议详解
 
@@ -1185,10 +1206,13 @@ LVIS 数据集特点：
 · 16,731 张图片
 
 长尾分布:
-类别分组     类别数    平均实例数    占比
-Frequent    253      ≥ 100         21%
-Common      543      10-99         45%
-Rare        407      < 10          34%
+
+| 类别分组 | 类别数 | 平均实例数 | 占比 |
+| --- | --- | --- | --- |
+| Frequent | 253 | ≥ 100 | 21% |
+| Common | 543 | 10-99 | 45% |
+| Rare | 407 | < 10 | 34% |
+
 
 关键洞察:
 · 34% 的类别只有不到 10 个训练实例

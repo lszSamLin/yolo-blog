@@ -1959,10 +1959,13 @@ NCNN 特性：
 · 模型格式：原生支持 NCNN 格式（可自行转换）
 
 性能对比（YOLOv8s, 640×640, Android 12, Snapdragon 8 Gen 2）：
-后端              延迟(ms)   FPS    功耗(mW)
-CPU (NEON)        ~8.5      ~118    450
-OpenCL GPU        ~4.2      ~238    680
-Vulkan GPU        ~3.8      ~263    720
+
+| 后端 | 延迟(ms) | FPS | 功耗(mW) |
+| --- | --- | --- | --- |
+| CPU (NEON) | ~8.5 | ~118 | 450 |
+| OpenCL GPU | ~4.2 | ~238 | 680 |
+| Vulkan GPU | ~3.8 | ~263 | 720 |
+
 
 ```cpp
 // NCNN C++ 推理示例
@@ -2253,10 +2256,13 @@ Hardware Accelerators
 · CPU
 
 性能对比（Snapdragon 8 Gen 2, YOLOv8s, 640×640）：
-后端              延迟(ms)   FPS    功耗(mW)
-Hexagon DSP     ~6.5      ~154    380
-Adreno GPU      ~8.2      ~122    520
-CPU             ~25.0     ~40     200
+
+| 后端 | 延迟(ms) | FPS | 功耗(mW) |
+| --- | --- | --- | --- |
+| Hexagon DSP | ~6.5 | ~154 | 380 |
+| Adreno GPU | ~8.2 | ~122 | 520 |
+| CPU | ~25.0 | ~40 | 200 |
+
 
 ```python
 # SNPE Python API 推理示例
@@ -2868,20 +2874,25 @@ Triton 并发策略配置：
 
 策略  配置参数  适用场景
 
-最大并发请求数  max_concurrency  高并发服务器
-请求队列策略  queue_policy  流量控制
-超时策略  request_timeout  服务稳定性
-模型预热  warmup  冷启动优化
+| 最大并发请求数 | max_concurrency | 高并发服务器 |
+| --- | --- | --- |
+| 请求队列策略 | queue_policy | 流量控制 |
+| 超时策略 | request_timeout | 服务稳定性 |
+| 模型预热 | warmup | 冷启动优化 |
+
 
 推荐配置（生产环境）：
-参数                    推荐值           说明
-max_batch_size          32              GPU 利用率最佳
-dynamic_batching        enabled         自动批处理
-max_queue_delay_us      5000           最大等待 5ms
-instance_count          2-4             多实例并行
-concurrency             32              并发请求数
-request_timeout_ms      30000           请求超时 30s
-warmup                true              服务启动预热
+
+| 参数 | 推荐值 | 说明 |
+| --- | --- | --- |
+| max_batch_size | 32 | GPU 利用率最佳 |
+| dynamic_batching | enabled | 自动批处理 |
+| max_queue_delay_us | 5000 | 最大等待 5ms |
+| instance_count | 2-4 | 多实例并行 |
+| concurrency | 32 | 并发请求数 |
+| request_timeout_ms | 30000 | 请求超时 30s |
+| warmup | true | 服务启动预热 |
+
 
 #### 4.4.4 Triton 性能调优
 

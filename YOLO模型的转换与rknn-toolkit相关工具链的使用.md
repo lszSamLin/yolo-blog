@@ -35,10 +35,13 @@ RKNN (.rknn)  ← 目标平台原生格式
 ### 1.3 工具链组成
 
 RKNN-Toolkit2 包含:
-rknn-toolkit2-python  # Python SDK（模型转换）
-rknn-server  # 推理服务（可选）
-rknn-track  # 目标跟踪服务（可选）
-examples  # 示例代码
+
+| rknn-toolkit2-python | # Python SDK（模型转换） |
+| --- | --- |
+| rknn-server | # 推理服务（可选） |
+| rknn-track | # 目标跟踪服务（可选） |
+| examples | # 示例代码 |
+
 
 ## 二、环境配置
 
