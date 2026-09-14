@@ -476,8 +476,8 @@ success_criteria:
 - 快速标注（1-2天）
 - 训练 Baseline 模型
 - 评估初步精度
-  - mAP &gt; 60% → 数据可行
-  - mAP &lt; 40% → 数据不足，需补充采集
+  - mAP > 60% → 数据可行
+  - mAP < 40% → 数据不足，需补充采集
 
 **Step 2：算法可行性验证**
 
@@ -1013,8 +1013,8 @@ annotation_spec:
 **需要团队协作？**
 
 - 否 → 个人标注
-  - 数据量 &lt; 1000 张 → LabelImg
-  - 数据量 &gt; 1000 张 → Label Studio（本地部署）
+  - 数据量 < 1000 张 → LabelImg
+  - 数据量 > 1000 张 → Label Studio（本地部署）
 - 是 → 团队协作
   - 预算充足 → Supervisely / Roboflow
   - 需要本地部署 → CVAT

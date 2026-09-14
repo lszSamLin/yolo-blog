@@ -1235,15 +1235,15 @@ make qt5py3
 **Pascal VOC (.xml)**：
 
 ````xml
-&lt;annotation&gt;
-  &lt;object&gt;
-    &lt;name&gt;person&lt;/name&gt;
-    &lt;bndbox&gt;
-      &lt;xmin&gt;200&lt;/xmin&gt;&lt;ymin&gt;100&lt;/ymin&gt;
-      &lt;xmax&gt;400&lt;/xmax&gt;&lt;ymax&gt;300&lt;/ymax&gt;
-    &lt;/bndbox&gt;
-  &lt;/object&gt;
-&lt;/annotation&gt;
+<annotation>
+  <object>
+    <name>person</name>
+    <bndbox>
+      <xmin>200</xmin><ymin>100</ymin>
+      <xmax>400</xmax><ymax>300</ymax>
+    </bndbox>
+  </object>
+</annotation>
 
 ````
 
@@ -3585,13 +3585,13 @@ def diversity_sampling(model, unlabeled_dir, n_samples=50, embedding_dim=256):
 
 #### 主动学习迭代流程
 
-主动学习迭代流程：
+**主动学习迭代流程**：
 
-Step  1:  用初始标注集（约  20%  数据）训练基线模型
-Step  2:  在剩余未标注数据上计算不确定性/多样性分数
-Step  3:  选择  Top-K  最有价值的样本进行人工标注
-Step  4:  将新标注样本加入训练集，重新训练
-Step  5:  重复  Step  2~4，直到达到目标性能或标注预算耗尽
+1. **Step 1**：用初始标注集（约 20% 数据）训练基线模型
+2. **Step 2**：在剩余未标注数据上计算不确定性/多样性分数
+3. **Step 3**：选择 Top-K 最有价值的样本进行人工标注
+4. **Step 4**：将新标注样本加入训练集，重新训练
+5. **Step 5**：重复 Step 2~4，直到达到目标性能或标注预算耗尽
 **典型效果：**
 
 全量标注 10000 张 → 主动学习仅需标注
@@ -3991,16 +3991,15 @@ class ClassWeightedFocalLoss(nn.Module):
 
 #### 数据层面的平衡策略
 
-数据集平衡策略矩阵：
+**数据集平衡策略矩阵**：
 
-策略  适用场景  实现复杂度  效果
-过采样（Over-sampling）  少数类  <  100
--  简单复制  少数类  100~500
--  旋转/翻转复制  任何场景  低
-欠采样（Under-sampling）  多数类 >> 1000 张  —  随机丢弃多数类样本  低  可能丢失信息
-合成数据（SMOTE）  极度稀缺类  —  对少数类目标做轻微形变  中  好（需人工验证）
-代价敏感学习  任何不平衡场景  —  修改损失函数权重  高  好（需改模型代码）
-Focal Loss  难分类样本少  低  自动降低易分类样本权重  Ultralytics 内置  好
+- **过采样（Over-sampling）** — 适用：少数类 < 100
+  - 简单复制：少数类 100~500
+  - 旋转/翻转复制：任何场景，低复杂度
+- **欠采样（Under-sampling）** — 适用：多数类 >> 1000 张；实现：随机丢弃多数类样本；复杂度低；可能丢失信息
+- **合成数据（SMOTE）** — 适用：极度稀缺类；实现：对少数类目标做轻微形变；复杂度中；效果好（需人工验证）
+- **代价敏感学习** — 适用：任何不平衡场景；实现：修改损失函数权重；复杂度高；效果好（需改模型代码）
+- **Focal Loss** — 适用：难分类样本少；复杂度低；实现：自动降低易分类样本权重；Ultralytics 内置；效果好
 
 ### 2.22 合成数据生成
 
@@ -4109,11 +4108,12 @@ def generate_synthetic_data(
 
 主流仿真平台对比：
 
-平台  特点  标注质量  学习曲线
-CARLA  自动驾驶仿真  ★★★★★  中等  支持 LiDAR/相机/雷达
-AirSim  微软开源仿真  ★★★★  较易  支持无人机视角
-Unity  ML-Agents  游戏引擎仿真  ★★★★  灵活场景定制
-Blender  Python  开源  ★★★  完全可控
+| 平台 | 特点 | 标注质量 | 学习曲线 | 备注 |
+| --- | --- | --- | --- | --- |
+| CARLA | 自动驾驶仿真 | ★★★★★ | 中等 | 支持 LiDAR/相机/雷达 |
+| AirSim | 微软开源仿真 | ★★★★ | 较易 | 支持无人机视角 |
+| Unity | ML-Agents 游戏引擎仿真 | ★★★★ | — | 灵活场景定制 |
+| Blender | Python 开源 | ★★★ | — | 完全可控 |
 
 ---
 
@@ -4759,7 +4759,7 @@ $$L = -(1-\varepsilon) \times \log(p_{\text{target}}) - \frac{\varepsilon \times
 
 $$\frac{\partial L}{\partial \theta_{\text{layer1}}} = \frac{\partial L}{\partial \theta_{\text{layerN}}} \times \prod_i \frac{\partial \theta_{\text{layer}(i+1)}}{\partial \theta_{\text{layer}(i)}}$$
 
-如果每层的雅可比矩阵特征值 &gt; 1，梯度会指数级放大：
+如果每层的雅可比矩阵特征值 > 1，梯度会指数级放大：
 
 - 30 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^30 ≈ 17.4 倍
 - 50 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^50 ≈ 117 倍
@@ -5081,15 +5081,14 @@ Adam 优化器公式:
 
 SGD vs AdamW 对比:
 
-维度              SGD + Momentum          AdamW
-
-收敛速度 较慢（需要仔细调 lr） 较快（自适配 lr）
-
-最终精度  更高（泛化更好）  略低（泛化稍差）
-超参数敏感度  高（lr,  momentum  重要）  低（默认参数即可）
-显存占用  低（仅需  1  个速度缓存）  高（2
-训练稳定性  需要  warmup  更稳定
-适用场景  目标检测（YOLO  默认）  快速实验
+| 维度 | SGD + Momentum | AdamW |
+| --- | --- | --- |
+| 收敛速度 | 较慢（需要仔细调 lr） | 较快（自适配 lr） |
+| 最终精度 | 更高（泛化更好） | 略低（泛化稍差） |
+| 超参数敏感度 | 高（lr, momentum 重要） | 低（默认参数即可） |
+| 显存占用 | 低（仅需 1 个速度缓存） | 高（2 |
+| 训练稳定性 | 需要 warmup | 更稳定 |
+| 适用场景 | 目标检测（YOLO 默认） | 快速实验 |
 
 关键发现（Goyal et al., 2017）:
   · SGD with momentum 在大 batch 训练下泛化性能更好
@@ -5559,12 +5558,13 @@ def grid_search_loss_weights(data_yaml, base_weights, grid_steps=3):
 
 观察 train_loss 和 val_loss 的比例关系：
 
-现象  诊断  调整方案
-box_loss  占比过高（>80%）  定位主导训练  降低  box
-val_box_loss  持续高于  train  定位过拟合  增大
-cls_loss  下降缓慢  分类困难  增大  cls
-cls_loss  已接近  0  但  mAP
-dfl_loss  不下降  DFL  失效  检查标注质量或移除
+| 现象 | 诊断 | 调整方案 |
+| --- | --- | --- |
+| box_loss 占比过高（>80%） | 定位主导训练 | 降低 box |
+| val_box_loss 持续高于 train | 定位过拟合 | 增大 |
+| cls_loss 下降缓慢 | 分类困难 | 增大 cls |
+| cls_loss 已接近 0 但 mAP | — | — |
+| dfl_loss 不下降 | DFL 失效 | 检查标注质量或移除 |
 **自适应调整策略：**
 
 1.  先用默认权重训练  20  轮，观察各  loss
@@ -6019,15 +6019,14 @@ Task-Aligned 对损失计算的影响：
 
 YOLOv8 多任务损失函数：
 
-任务类型 Box Loss Cls Loss 其他损失 权重
-
-Detect  CIoU+L1  Varifocal  -  9.83/0.5
-Segment  CIoU+L1  Varifocal  Mask  L1  +  Dice
-Pose  CIoU+L1  Varifocal  KP  L1  +  Weight
-OBB  CIoU+L1  Varifocal  OBB  IoU  9.83/0.5/1.0
-Classify  -  Varifocal  -  /0.5
-
-Depth - - Depth L1 1.0
+| 任务类型 | Box Loss | Cls Loss | 其他损失 | 权重 |
+| --- | --- | --- | --- | --- |
+| Detect | CIoU+L1 | Varifocal | - | 9.83/0.5 |
+| Segment | CIoU+L1 | Varifocal | Mask L1 + Dice | — |
+| Pose | CIoU+L1 | Varifocal | KP L1 + Weight | — |
+| OBB | CIoU+L1 | Varifocal | OBB IoU | 9.83/0.5/1.0 |
+| Classify | - | Varifocal | - | /0.5 |
+| Depth | - | - | Depth L1 | 1.0 |
 
 SemSeg - - Seg L1 + Dice
 
@@ -6068,7 +6067,7 @@ SemSeg - - Seg L1 + Dice
 
 以下是一次真实训练（YOLOv8n，**自行拍摄的单类别数据集**，153 轮）的早期与关键轮次输出：
 
-
+```text
    epoch   gpu_mem   box_loss   cls_loss   dfl_loss  Instances  Size
        1     2.1G     1.0055     1.9296     0.9304       187     640
        2     2.1G     0.9432     1.3285     0.9067       187     640
@@ -6750,15 +6749,19 @@ def plot_pr_curve(y_true, y_pred, thresholds=np.linspace(0.01, 0.99, 50)):
 #### 混淆矩阵解读与改进方向
 
 混淆矩阵模式分析：
-TP 高 FP 低 模型表现优秀 保持当前配置
 
-TP 高 FP 高 召回率高但误报多 提高
-TP 低 FP 低 召回率低误报也低 降低
-TP 低 FP 高 严重问题！ 检查数据质量、标注、模型
+| 现象 | 诊断 | 建议 |
+| --- | --- | --- |
+| TP 高, FP 低 | 模型表现优秀 | 保持当前配置 |
+| TP 高, FP 高 | 召回率高但误报多 | 提高 |
+| TP 低, FP 低 | 召回率低误报也低 | 降低 |
+| TP 低, FP 高 | 严重问题！ | 检查数据质量、标注、模型 |
+
 #### 多类别场景的混淆矩阵扩展
-行  =  真实类别，列  =  预测类别
-对角线元素  =  正确分类数（TP）
-非对角线元素  =  误分类数（可看出哪些类别容易混淆）
+
+- 行 = 真实类别，列 = 预测类别
+- 对角线元素 = 正确分类数（TP）
+- 非对角线元素 = 误分类数（可看出哪些类别容易混淆）
 
 
 ```python
@@ -6905,12 +6908,14 @@ optimal_conf = find_optimal_threshold(
 #### 场景化阈值选择
 
 不同场景的阈值选择策略：
-场景  目标阈值  推荐  conf  推荐  iou
-安全检测（烟火）  零误报  0.6~0.8  0.45
-医疗筛查  零漏检  0.1~0.2  0.3~0.4
-工业质检  高精确率  0.5~0.7  0.5
-通用检测  平衡  P/R  0.25~0.45  0.45
-实时视频流  低延迟优先  0.3~0.5  0.5~0.7
+
+| 场景 | 目标阈值 | 推荐 conf | 推荐 iou |
+| --- | --- | --- | --- |
+| 安全检测（烟火） | 零误报 | 0.6~0.8 | 0.45 |
+| 医疗筛查 | 零漏检 | 0.1~0.2 | 0.3~0.4 |
+| 工业质检 | 高精确率 | 0.5~0.7 | 0.5 |
+| 通用检测 | 平衡 P/R | 0.25~0.45 | 0.45 |
+| 实时视频流 | 低延迟优先 | 0.3~0.5 | 0.5~0.7 |
 
 
 ---
@@ -7193,18 +7198,13 @@ def mcnemar_test_detection(model_a_dets, model_b_dets, ground_truth, iou_thresho
 统计检验方法选择指南:
 
 
-检验方法  适用场景  前提条件
-
-| Bootstrap | CI | 单次评估的 | mAP | 无需正态分布 |
-| --- | --- | --- | --- | --- |
-**置信区间估计**
-配对 t 检验 多类别 AP
-(每类一次评估)
-McNemar 检验 样本级预测一致性 配对数据
-比较
-Wilcoxon  符号秩  非正态差值的配对检验  无需正态假设
-（非参数替代  t  检验）
-permutation  检验  小样本、任意分布  无前提条件
+| 检验方法 | 适用场景 | 前提条件 |
+| --- | --- | --- |
+| Bootstrap CI（置信区间估计） | 单次评估的 mAP | 无需正态分布 |
+| 配对 t 检验 | 多类别 AP（每类一次评估） | — |
+| McNemar 检验 | 样本级预测一致性比较 | 配对数据 |
+| Wilcoxon 符号秩（非参数替代 t 检验） | 非正态差值的配对检验 | 无需正态假设 |
+| permutation 检验 | 小样本、任意分布 | 无前提条件 |
 
 
 ```python
@@ -7703,8 +7703,8 @@ model.train(
 
 **分支1：数据集规模**
 
-- &lt; 1000 张 → SGD（推荐），快速收敛
-- &gt; 10000 张 → SGD，稳定收敛；或 AdamW（GPU 显存不足时）
+- < 1000 张 → SGD（推荐），快速收敛
+- > 10000 张 → SGD，稳定收敛；或 AdamW（GPU 显存不足时）
 
 **分支2：推理延迟敏感？**
 
@@ -8984,7 +8984,7 @@ mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
 | 8 | 128 | 16 | 6.2x | 77% |
 | 16 | 256 | 16 | 10.5x | 66% |
 
-注意: 加速比 &lt; GPU 数量，因为存在通信和同步开销。推荐使用 4-8 GPU，效率最高
+注意: 加速比 < GPU 数量，因为存在通信和同步开销。推荐使用 4-8 GPU，效率最高
 
 ---
 
@@ -9756,10 +9756,11 @@ AOP 计算方法：
 AOP@0.5:0.95:  关注综合性能（与  mAP50-95  类似）
 **AOP vs mAP 对比：**
 
-维度  mAP50-95  AOP@0.5:0.95
-计算方式  IoU  阈值平均  置信度阈值平均
-敏感度  对框质量敏感  对置信度校准敏感
-适用场景  模型对比  部署调参
+| 维度 | mAP50-95 | AOP@0.5:0.95 |
+| --- | --- | --- |
+| 计算方式 | IoU 阈值平均 | 置信度阈值平均 |
+| 敏感度 | 对框质量敏感 | 对置信度校准敏感 |
+| 适用场景 | 模型对比 | 部署调参 |
 
 
 ```python
@@ -10656,29 +10657,30 @@ pandas==2.2.2
 团队协作实验规范：
 
 1. 实验配置统一存储在 config/ 目录
-
-| --- | --- | --- | --- |
 2. 每个实验记录 args.yaml +
 3. 使用 MLflow/W&B 共享实验结果
 4. 最佳模型上传到共享存储（S3/NFS）
 5. 训练脚本使用参数化配置，避免硬编码
-**目录结构：**
-- project/
 
-config/  #  统一配置
-data.yaml  #
-default_args.yaml  #
-scripts/  #  训练脚本
-train.py
-export.py
-experiments/  #  实验记录
-exp001_baseline/
-args.yaml
-metrics.json
-best.pt
-exp002_lr0.005/
-models/  #  部署模型
-v1.0/
+**目录结构：**
+
+```text
+project/
+├── config/            # 统一配置
+│   ├── data.yaml      #
+│   └── default_args.yaml  #
+├── scripts/           # 训练脚本
+│   ├── train.py
+│   └── export.py
+├── experiments/       # 实验记录
+│   ├── exp001_baseline/
+│   │   ├── args.yaml
+│   │   ├── metrics.json
+│   │   └── best.pt
+│   └── exp002_lr0.005/
+└── models/            # 部署模型
+    └── v1.0/
+```
 
 ---
 
@@ -11121,12 +11123,12 @@ YOLOv8 end2end=False 推理优化:
 
 传统 YOLO（含NMS）vs YOLOv8（end2end）优化差异：
 
-| 优化维度 | 传统YOLO | YOLOv8 | (end2end) |
-
-ONNX导出  需保留NMS节点  NMS已移除，导出更简单
-TensorRT构建  需自定义NMS  plugin  标准层即可，无需plugin
-量化  标准流程  标准流程（无变化）
-推理代码  模型+后处理代码  纯模型调用，无需后处理
+| 优化维度 | 传统YOLO | YOLOv8 (end2end) |
+| --- | --- | --- |
+| ONNX导出 | 需保留NMS节点 | NMS已移除，导出更简单 |
+| TensorRT构建 | 需自定义NMS plugin | 标准层即可，无需plugin |
+| 量化 | 标准流程 | 标准流程（无变化） |
+| 推理代码 | 模型+后处理代码 | 纯模型调用，无需后处理 |
 
 #### 导出策略对比
 
@@ -11209,12 +11211,12 @@ YOLOv8 在 CPU 推理上有显著优势，相比 YOLO11 快 43%：
 
 CPU 推理性能对比：
 
-| 模型 | GPU | FP16 | CPU | FP32 | CPU | 相对YOLO11 | 说明 |
-
-YOLOv8n  0.5ms  12ms  43%  更快  架构优化  +  无NMS
-YOLOv8s  0.8ms  25ms  40%  更快  同上
-YOLOv8m  1.5ms  50ms  38%  更快  同上
-YOLO11n  0.6ms  20ms  基准  参考
+| 模型 | GPU FP16 | CPU FP32 | 相对YOLO11 | 说明 |
+| --- | --- | --- | --- | --- |
+| YOLOv8n | 0.5ms | 12ms | 43% | 更快，架构优化 + 无NMS |
+| YOLOv8s | 0.8ms | 25ms | 40% | 更快，同上 |
+| YOLOv8m | 1.5ms | 50ms | 38% | 更快，同上 |
+| YOLO11n | 0.6ms | 20ms | 基准 | 参考 |
 CPU 推理优化技巧：
 
 1. 使用 Intel OpenVINO 导出（.xml/.bin 格式）
