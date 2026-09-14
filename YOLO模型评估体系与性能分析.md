@@ -594,6 +594,7 @@ Recall  TP/(TP+FN)
 F1  2PR/(P+R)
 
 指标速查表：
+
 | 指标 | 含义 |
 | --- | --- |
 | mAP@0.5 | IoU=0.5时的平均AP（宽松定位要求） |
@@ -762,6 +763,7 @@ LVIS（Large Vocabulary Instance Segmentation）是一个大规模长尾数据�
 #### 目标检测
 
 检测任务评估指标汇总：
+
 | 指标 | 全称 | 含义 |
 | --- | --- | --- |
 | mAP | Mean Average Precision | 所有类别AP的平均 |
@@ -1029,19 +1031,21 @@ coco_eval.summarize()
 ```
 
 COCOeval.stats 详解（12 个统计值）：
-| stats[0]: | AP @IoU=0.50:0.95 | 面积=all | | | 目标数=maxDets=100 |
+
+| 统计索引 | 指标 | 面积 | 目标数 |
 | --- | --- | --- | --- |
-| stats[1]: | AP @IoU=0.50 | | 面积=all | | 目标数=maxDets=100 |
-| stats[2]: | AP @IoU=0.75 | | 面积=all | | 目标数=maxDets=100 |
-| stats[3]: | AP (small) | | 面积<32² | | 目标数=maxDets=100 |
-| stats[4]: | AP (medium) | | 32²≤面积<96² | | 目标数=maxDets=100 |
-| stats[5]: | AP (large) | | 面积≥96² | | 目标数=maxDets=100 |
-| stats[6]: | AR (maxDets=1) | | 面积=all | | 目标数=1 |
-| stats[7]: | AR (maxDets=10) | | 面积=all | | 目标数=10 |
-| stats[8]: | AR (maxDets=100) | | 面积=all | | 目标数=100 |
-| stats[9]: | AR (small) | | 面积<32² | | 目标数=maxDets=100 |
-| stats[10]: AR (medium) | | 32²≤面积<96² | | | 目标数=maxDets=100 |
-| stats[11]: AR (large) | | 面积≥96² | | | 目标数=maxDets=100 |
+| stats[0] | AP @IoU=0.50:0.95 | 面积=all | 目标数=maxDets=100 |
+| stats[1] | AP @IoU=0.50 | 面积=all | 目标数=maxDets=100 |
+| stats[2] | AP @IoU=0.75 | 面积=all | 目标数=maxDets=100 |
+| stats[3] | AP (small) | 面积<32² | 目标数=maxDets=100 |
+| stats[4] | AP (medium) | 32²≤面积<96² | 目标数=maxDets=100 |
+| stats[5] | AP (large) | 面积≥96² | 目标数=maxDets=100 |
+| stats[6] | AR (maxDets=1) | 面积=all | 目标数=1 |
+| stats[7] | AR (maxDets=10) | 面积=all | 目标数=10 |
+| stats[8] | AR (maxDets=100) | 面积=all | 目标数=100 |
+| stats[9] | AR (small) | 面积<32² | 目标数=maxDets=100 |
+| stats[10] | AR (medium) | 32²≤面积<96² | 目标数=maxDets=100 |
+| stats[11] | AR (large) | 面积≥96² | 目标数=maxDets=100 |
 
 #### COCO 匹配算法详解
 

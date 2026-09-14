@@ -2559,6 +2559,7 @@ edgetpu_demo --model yolo26n_edgetpu.tflite --input test.jpg
 ### 3.8 边缘设备综合性能对比
 
 边缘设备 YOLO 推理性能综合对比（640×640 输入, 统一测试条件）
+
 | 设备 | 芯片/NPU | 精度 | 延迟(ms) | FPS | 功耗(W) | 内存(MB) |
 | --- | --- | --- | --- | --- | --- | --- |
 | Jetson Orin Nano | Volta 1024CUDA | FP16 | ~8.0 | 125 | 15 | 4096 |
