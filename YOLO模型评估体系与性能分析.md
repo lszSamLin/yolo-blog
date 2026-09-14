@@ -843,15 +843,18 @@ OKS = exp(-Σ_d² × w_d / (2 × s² × k²)) / Σw_d
 · w_i = 1/(2×σ_i²) 关键点的权重（不同关键点重要性不同）
 
 COCO Keypoints 数据集的17个关键点：
-0  Nose  9  Left Eye
-1  Left Eye  10 Right Eye
-2  Right Eye  11 Left Ear
-3  Left Ear  12 Right Ear
-4  Left Shoulder  13 Right Shoulder
-5  Right Shoulder 14 Left Hip
-6  Left Hip  15 Right Hip
-7  Right Hip  16 Right Knee
-8  Left Knee
+
+| 索引 | 关键点 | 索引 | 关键点 |
+| --- | --- | --- | --- |
+| 0 | Nose | 9 | Left Eye |
+| 1 | Left Eye | 10 | Right Eye |
+| 2 | Right Eye | 11 | Left Ear |
+| 3 | Left Ear | 12 | Right Ear |
+| 4 | Left Shoulder | 13 | Right Shoulder |
+| 5 | Right Shoulder | 14 | Left Hip |
+| 6 | Left Hip | 15 | Right Hip |
+| 7 | Right Hip | 16 | Right Knee |
+| 8 | Left Knee | | |
 
 YOLOv8姿态估计典型结果（COCO Keypoints val）：
 
@@ -968,14 +971,16 @@ YOLO分类模型典型结果（ImageNet）：
 深度估计（Depth Estimation）评估指标：
 
 常用指标：
-指标         公式                               含义
-Abs Rel    Σ  d-d̂  /d / N            平均绝对相对误差
-Sq Rel     Σ(d-d̂)²/d / N           平方相对误差
-RMSE       √(Σ(d-d̂)²/N)            均方根误差
-log RMSE   exp(√(Σ(ln d - ln d̂)²/N)) 对数RMSE
-δ<1.25     Σ 1( max(d/d̂,d̂/d) < 1.25 )/N 精度指标
-δ<1.25²    同上调高阈值
-δ<1.25³    同上调高阈值
+
+| 指标 | 公式 | 含义 |
+| --- | --- | --- |
+| Abs Rel | Σ d-d̂ /d / N | 平均绝对相对误差 |
+| Sq Rel | Σ(d-d̂)²/d / N | 平方相对误差 |
+| RMSE | √(Σ(d-d̂)²/N) | 均方根误差 |
+| log RMSE | exp(√(Σ(ln d - ln d̂)²/N)) | 对数RMSE |
+| δ<1.25 | Σ 1( max(d/d̂,d̂/d) < 1.25 )/N | 精度指标 |
+| δ<1.25² | 同上调高阈值 | — |
+| δ<1.25³ | 同上调高阈值 | — |
 
 δ<1.25 的含义：
 如果预测深度 d̂ 满足 1/1.25 < d/d̂ < 1.25
