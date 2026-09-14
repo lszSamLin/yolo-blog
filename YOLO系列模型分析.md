@@ -10,21 +10,20 @@ YOLO（You Only Look Once）系列自 2015 年 Joseph Redmon 提出以来，经�
 
 ### 1.1 完整时间线
 
-```
-2015  YOLOv1  — 开创性提出"端到端"目标检测框架，将检测视为回归问题
-2016  YOLOv2  — YOLO9000，引入BN、锚框、维度聚类、多尺度训练
-2017  YOLOv3  — 多尺度预测、Darknet-53、Focal Loss、更多的锚框
-2018  YOLOv4  — CSPDarknet、PANet、Mosaic、CutMix、SAT
-2020  YOLOv5  — 工程化里程碑，PyTorch原生实现，极简化API
-2021  YOLOv6  — 美团，针对工业场景的优化，RepVGG风格
-2022  YOLOv7  — ELAN+、模型缩放、可并行训练
-2023  YOLOv8  — Ultralytics，C2f、Anchor-Free、解耦头
-2024  YOLOv9  — PGI 可编程梯度信息、GELAN
-2024  YOLOv10 — 无NMS设计，端到端优化，一致性双分配
-2024  YOLO11  — 更轻量的结构，多任务统一架构
-2026  YOLO26  — 原生端到端推理，无DFL，MuSGD优化器，7任务统一架构
-
-```
+| 年份 | 版本 | 核心创新 |
+| --- | --- | --- |
+| 2015 | YOLOv1 | 开创性提出"端到端"目标检测框架，将检测视为回归问题 |
+| 2016 | YOLOv2 | YOLO9000，引入 BN、锚框、维度聚类、多尺度训练 |
+| 2017 | YOLOv3 | 多尺度预测、Darknet-53、Focal Loss、更多的锚框 |
+| 2018 | YOLOv4 | CSPDarknet、PANet、Mosaic、CutMix、SAT |
+| 2020 | YOLOv5 | 工程化里程碑，PyTorch 原生实现，极简化 API |
+| 2021 | YOLOv6 | 美团，针对工业场景的优化，RepVGG 风格 |
+| 2022 | YOLOv7 | ELAN+、模型缩放、可并行训练 |
+| 2023 | YOLOv8 | Ultralytics，C2f、Anchor-Free、解耦头 |
+| 2024 | YOLOv9 | PGI 可编程梯度信息、GELAN |
+| 2024 | YOLOv10 | 无 NMS 设计，端到端优化，一致性双分配 |
+| 2024 | YOLO11 | 更轻量的结构，多任务统一架构 |
+| 2026 | YOLO26 | 原生端到端推理，无 DFL，MuSGD 优化器，7 任务统一架构 |
 
 #### 各版本详细架构与论文引用
 
@@ -98,11 +97,10 @@ YOLOv3 论文核心贡献 (Redmon & Farhadi, 2018):
 
 **YOLOv8 官方技术报告**：
 
-```
 YOLOv8 并非传统学术论文，而是 Ultralytics 的工程实现报告。
 参考来源: https://docs.ultralytics.com/models/yolov8/
 
-核心技术创新（基于 Ultralytics 官方文档）:
+**核心技术创新（基于 Ultralytics 官方文档）**：
 
 1. Backbone: CSPDarknet + C2f 模块
 2. Neck: PAN-FPN 双向特征融合
@@ -112,50 +110,32 @@ YOLOv8 并非传统学术论文，而是 Ultralytics 的工程实现报告。
 6. 回归损失: CIoU Loss + DFL (Distribution Focal Loss)
 7. 数据增强: Mosaic + Copy-Paste + HSV 增强
 
-官方验证指标 (COCO val2017):
-  YOLOv8n:  mAP50-95 = 37.3%, 参数量 = 3.2M
-  YOLOv8s:  mAP50-95 = 44.9%, 参数量 = 11.2M
-  YOLOv8m:  mAP50-95 = 50.2%, 参数量 = 25.9M
-  YOLOv8l:  mAP50-95 = 52.9%, 参数量 = 43.7M
-  YOLOv8x:  mAP50-95 = 53.9%, 参数量 = 68.2M
+**官方验证指标 (COCO val2017)**：
 
-
-```
+| 规格 | mAP50-95 | 参数量 |
+| --- | --- | --- |
+| YOLOv8n | 37.3% | 3.2M |
+| YOLOv8s | 44.9% | 11.2M |
+| YOLOv8m | 50.2% | 25.9M |
+| YOLOv8l | 52.9% | 43.7M |
+| YOLOv8x | 53.9% | 68.2M |
 
 #### 各版本详细架构与论文引用
 
 **YOLOv1-V4 详细论文信息汇总**：
 
 YOLO 版本与论文对照表:
+
 | 版本 | 论文名 | 作者 | 会议/年份 |
 | --- | --- | --- | --- |
-| YOLOv1 | You Only Look Once: | Redmon et al. | CVPR 2016 |
-| Unified, Real-Time | arXiv:1506.02640 | (2015) |  |
-Detectors
-
-YOLOv2  YOLO9000: Better, Faster, Redmon & Farhadi  CVPR 2017
-Stronger  arXiv:1612.08242  (2016)
-
-YOLOv3  YOLOv3: An Incremental  Redmon & Farhadi  ICCV 2018
-Improvement  arXiv:1804.02767
-
-YOLOv4  YOLOv4: Optimal Speed  Bochkovskiy et al.  IJCNN 2020
-and Accuracy of Real  arXiv:2004.10934
-Time Object Detection
-
-YOLOv5  YOLOv5 (Ultralytics)  Glenn Jocher  GitHub 2020
-(非论文，开源项目)
-
-YOLOv6  YOLOv6: A Stage-Wise  Chuyi Li et al.  arXiv 2022
-Architecture for  arXiv:2209.15483
-Object Detection  (Meituan)
-
-YOLOv7  YOLOv7: Trainable  Wang et al.  CVPR 2023
-Bag-of-Freebies  arXiv:2207.02696
-(Academia Sinica)
-
-YOLOv8  YOLOv8 (Ultralytics)  Ultralytics  GitHub 2023
-(非论文，开源项目)
+| YOLOv1 | You Only Look Once: Unified, Real-Time Detectors | Redmon et al. | CVPR 2016 (arXiv:1506.02640, 2015) |
+| YOLOv2 | YOLO9000: Better, Faster, Stronger | Redmon & Farhadi | CVPR 2017 (arXiv:1612.08242, 2016) |
+| YOLOv3 | YOLOv3: An Incremental Improvement | Redmon & Farhadi | ICCV 2018 (arXiv:1804.02767) |
+| YOLOv4 | YOLOv4: Optimal Speed and Accuracy of Real Time Object Detection | Bochkovskiy et al. | IJCNN 2020 (arXiv:2004.10934) |
+| YOLOv5 | YOLOv5 (Ultralytics)（非论文，开源项目） | Glenn Jocher | GitHub 2020 |
+| YOLOv6 | YOLOv6: A Stage-Wise Architecture for Object Detection | Chuyi Li et al. (Meituan) | arXiv 2022 (arXiv:2209.15483) |
+| YOLOv7 | YOLOv7: Trainable Bag-of-Freebies | Wang et al. (Academia Sinica) | CVPR 2023 (arXiv:2207.02696) |
+| YOLOv8 | YOLOv8 (Ultralytics)（非论文，开源项目） | Ultralytics | GitHub 2023 |
 
 
 **各版本关键技术对比**：
@@ -167,7 +147,7 @@ YOLOv1-V4 关键技术演进:
 | 锚框机制 | ✗ | ✓ | ✓ | ✓ |
 | 多尺度预测 | ✗ | ✗ | ✓ | ✓ |
 | 残差连接 | ✗ | ✗ | ✓ | ✓ |
-| Batch Normalization ✗ | ✓ | ✓ | ✓ |  |
+| Batch Normalization | ✗ | ✓ | ✓ | ✓ |
 | Focal Loss | ✗ | ✗ | ✓ | ✓ |
 | Mosaic 增强 | ✗ | ✗ | ✗ | ✓ |
 | CutMix 增强 | ✗ | ✗ | ✗ | ✓ |
@@ -235,55 +215,50 @@ K 值选择（轮廓系数）:
 
 **YOLOv3 多尺度检测数学**：
 
-YOLOv3 三尺度预测机制:
+**YOLOv3 三尺度预测机制**
 
-特征金字塔结构:
-P5 (13×13, 大目标) ← 深层特征，高语义，低分辨率
+**特征金字塔结构**：
 
-→ 上采样 2× → Concat P4 → Conv × 2 → P4_feat
+- `P5 (13×13, 大目标)` ← 深层特征，高语义，低分辨率 → 上采样 2× → Concat P4 → Conv × 2 → P4_feat
+- `P4 (26×26, 中目标)` ← 中层特征 → 上采样 2× → Concat P3 → Conv × 2 → P3_feat
+- `P3 (52×52, 小目标)` ← 浅层特征，高分辨率
 
-P4 (26×26, 中目标) ← 中层特征
+**每个尺度的锚框分配**：
 
-→ 上采样 2× → Concat P3 → Conv × 2 → P3_feat
+| 尺度 | 锚框 | 检测目标 |
+| --- | --- | --- |
+| P3 (52×52) | ≈ 18, 36, 54 | 10×10 ~ 40×40 像素的小目标 |
+| P4 (26×26) | ≈ 66, 90, 120 | 40×40 ~ 100×100 像素的中目标 |
+| P5 (13×13) | ≈ 160, 240, 360 | 100×100 ~ 256×256 像素的大目标 |
 
-P3 (52×52, 小目标) ← 浅层特征，高分辨率
+**预测输出形状**：
 
-每个尺度的锚框分配:
-P3 (52×52): 锚框 ≈ 18, 36, 54 → 检测 10×10 ~ 40×40 像素的小目标
-P4 (26×26): 锚框 ≈ 66, 90, 120 → 检测 40×40 ~ 100×100 像素的中目标
-P5 (13×13): 锚框 ≈ 160, 240, 360 → 检测 100×100 ~ 256×256 像素的大目标
-
-预测输出形状:
-P3: [B, 255, 52, 52] = [B, 3×85, 52, 52]
-P4: [B, 255, 26, 26] = [B, 3×85, 26, 26]
-P5: [B, 255, 13, 13] = [B, 3×85, 13, 13]
-总候选框数: 52×52×3 + 26×26×3 + 13×13×3 = 8199 个
+- P3：`[B, 255, 52, 52]` = `[B, 3×85, 52, 52]`
+- P4：`[B, 255, 26, 26]` = `[B, 3×85, 26, 26]`
+- P5：`[B, 255, 13, 13]` = `[B, 3×85, 13, 13]`
+- 总候选框数：52×52×3 + 26×26×3 + 13×13×3 = 8199 个
 
 **YOLOv4 技术组合验证实验（Borjargar 实验）**：
 
-```
-YOLOv4 作者系统地验证了 6 种技术的组合效应:
+**YOLOv4 作者系统地验证了 6 种技术的组合效应**：
 
-实验组  mAP  速度(FPS)  说明
+| 实验组 | mAP | 速度(FPS) | 说明 |
+| --- | --- | --- | --- |
+| YOLOv3 (基准) | 33.1% | 61 | Darknet-53 + FPN |
+| + BN | 33.4% | 60 | 添加 BatchNorm |
+| + CutMix | 34.7% | 59 | 数据增强 |
+| + CSPDarknet53 | 36.5% | 56 | 更高效的 Backbone |
+| + Mosaic | 38.2% | 54 | 更强的数据增强 |
+| + SiLU + Mish | 38.5% | 54 | 更好的激活函数 |
+| + CIoU Loss | 39.1% | 54 | 更好的边界框损失 |
+| + DBCSP + SPP + PANet | 43.5% | 62 | 完整 YOLOv4 |
 
-YOLOv3 (基准)  33.1%  61  Darknet-53 + FPN
-+ BN  33.4%  60  添加 BatchNorm
-+ CutMix  34.7%  59  数据增强
-+ CSPDarknet53  36.5%  56  更高效的 Backbone
-+ Mosaic  38.2%  54  更强的数据增强
-+ SiLU + Mish  38.5%  54  更好的激活函数
-+ CIoU Loss  39.1%  54  更好的边界框损失
-+ DBCSP + SPP + PANet  43.5%  62  完整 YOLOv4
+**关键发现**：
 
-
-关键发现:
-· CSPDarknet53 贡献最大 (+1.8pp)
-· Mosaic + CutMix 组合贡献 +1.7pp
-· PANet + SPP 组合贡献 +1.2pp
-· 所有技术组合后反而比单独使用更快 (62 FPS vs 54 FPS)
-原因: CSP 减少了冗余计算，抵消了额外操作的开销
-
-```
+- CSPDarknet53 贡献最大 (+1.8pp)
+- Mosaic + CutMix 组合贡献 +1.7pp
+- PANet + SPP 组合贡献 +1.2pp
+- 所有技术组合后反而比单独使用更快 (62 FPS vs 54 FPS)。原因：CSP 减少了冗余计算，抵消了额外操作的开销
 
 #### 各版本详细架构与论文引用
 
@@ -326,12 +301,10 @@ YOLOv3 (基准)  33.1%  61  Darknet-53 + FPN
 - **数据集**：COCO
 - **关键数据**：mAP@0.5:0.95 = 33.1%，速度 61 FPS (Titan X)
 - **Focal Loss 公式**：
-  ```
-  FL(p) = -α_t × (1-p)^γ × log(p)
-  其中 α_t 为类别平衡因子，γ 为聚焦参数(默认2.0)
-  当样本易分类时 (p→1)，(1-p)^γ → 0，降低权重
-  当样本难分类时 (p→0)，(1-p)^γ → 1，保持权重
-  ```
+
+  $$\text{FL}(p) = -\alpha_t \times (1-p)^{\gamma} \times \log(p)$$
+
+  其中 $\alpha_t$ 为类别平衡因子，$\gamma$ 为聚焦参数(默认2.0)。当样本易分类时 ($p \to 1$)，$(1-p)^{\gamma} \to 0$，降低权重；当样本难分类时 ($p \to 0$)，$(1-p)^{\gamma} \to 1$，保持权重。
 
 **YOLOv4 论文信息**：
 - **论文**：YOLOv4: Optimal Speed and Accuracy of Object Detection
@@ -341,15 +314,16 @@ YOLOv3 (基准)  33.1%  61  Darknet-53 + FPN
 - **数据集**：COCO
 - **关键数据**：mAP@0.5:0.95 = 43.5%，速度 62 FPS (V100)
 - **技术组合验证**：
-  ```
-  Backbone:    CSPDarknet53 + SAB
-  Neck:        PANet
-  数据增强:    Mosaic + CutMix + SAM + RandomShape + CoarseAug
-  激活函数:    Mish
-  边界框损失:  CIoU Loss
-  分类损失:    Label Smoothing + Focal Loss
-  训练策略:    Warmup + Cosine LR + MSA
-  ```
+
+  | 组件 | 配置 |
+  | --- | --- |
+  | Backbone | CSPDarknet53 + SAB |
+  | Neck | PANet |
+  | 数据增强 | Mosaic + CutMix + SAM + RandomShape + CoarseAug |
+  | 激活函数 | Mish |
+  | 边界框损失 | CIoU Loss |
+  | 分类损失 | Label Smoothing + Focal Loss |
+  | 训练策略 | Warmup + Cosine LR + MSA |
 
 #### 各版本核心指标演进
 
@@ -365,59 +339,25 @@ YOLO 系列核心指标演进趋势 (COCO val2017):
 | YOLOv7 | 2022 | 82.1 | 51.4 | 36.8M | 115 | ELAN+RepConv |
 | YOLOv8s | 2023 | 82.3 | 44.9 | 11.2M | 95 | C2f+Anchor-Free |
 | YOLOv8x | 2023 | 85.0 | 53.9 | 68.2M | 20 | 最大模型 |
-| YOLOv10s 2024 | 82.7 | ~45.0 | 11.8M | 98 | NMS-Free |  |
+| YOLOv10s | 2024 | 82.7 | ~45.0 | 11.8M | 98 | NMS-Free |
 | YOLO11n | 2024 | 83.2 | 39.5 | 2.6M | 125 | 轻量化 |
 | YOLO26n | 2026 | 84.0 | 40.1 | 2.4M | 140 | 原生E2E+MuSGD |
 | YOLO26x | 2026 | 87.2 | 56.9 | 55.7M | 65 | 旗舰模型 |
 
 #### 论文引用完整列表
 
-```
-YOLO 系列核心论文:
+**YOLO 系列核心论文**
 
-
-[1] Redmon et al. (2015). "You Only Look Once: Unified, Real-Time Object Detection"
-arXiv:1506.02640 | CVPR 2016
-→ 开创性论文，提出端到端检测框架
-
-[2] Redmon & Farhadi (2016). "YOLO9000: Better, Faster, Stronger"
-arXiv:1612.08242 | CVPR 2017
-→ 引入锚框、聚类、多尺度训练
-
-[3] Redmon & Farhadi (2018). "YOLOv3: An Incremental Improvement"
-arXiv:1804.02767
-→ Darknet-53、多尺度预测、Focal Loss
-
-[4] Bochkovskiy et al. (2020). "YOLOv4: Optimal Speed and Accuracy of Object Detection"
-arXiv:2004.10934
-→ 系统性技术组合优化
-
-[5] Jocher et al. (2020). "YOLOv5 by Ultralytics"
-https://github.com/ultralytics/yolov5
-→ 工程化里程碑，PyTorch原生实现
-
-[6] Wang et al. (2022). "YOLOv7: Trainable bag-of-freebies sets new state-of-the-art"
-arXiv:2207.02696
-→ ELAN、RepConv、可扩展并行训练
-
-[7] Jocher, Chaurasia, Qiu (2023). "YOLOv8 by Ultralytics"
-开源项目（无正式论文） | https://github.com/ultralytics/ultralytics
-→ C2f、Anchor-Free、解耦头
-
-[8] Yue et al. (2024). "YOLOv10: Real-Time End-to-End Object Detection"
-arXiv:2405.14458
-→ 一致性双分配，去除NMS
-
-[9] Jocher et al. (2024). "YOLO11 by Ultralytics"
-https://github.com/ultralytics/ultralytics
-→ 轻量化改进，多任务统一
-
-[10] Jocher et al. (2026). "YOLO26 by Ultralytics"
-arXiv:2606.03748
-→ 原生端到端、MuSGD、7任务统一
-
-
-```
+1. Redmon et al. (2015). "You Only Look Once: Unified, Real-Time Object Detection" — arXiv:1506.02640 | CVPR 2016 → 开创性论文，提出端到端检测框架
+2. Redmon & Farhadi (2016). "YOLO9000: Better, Faster, Stronger" — arXiv:1612.08242 | CVPR 2017 → 引入锚框、聚类、多尺度训练
+3. Redmon & Farhadi (2018). "YOLOv3: An Incremental Improvement" — arXiv:1804.02767 → Darknet-53、多尺度预测、Focal Loss
+4. Bochkovskiy et al. (2020). "YOLOv4: Optimal Speed and Accuracy of Object Detection" — arXiv:2004.10934 → 系统性技术组合优化
+5. Jocher et al. (2020). "YOLOv5 by Ultralytics" — https://github.com/ultralytics/yolov5 → 工程化里程碑，PyTorch原生实现
+6. Wang et al. (2022). "YOLOv7: Trainable bag-of-freebies sets new state-of-the-art" — arXiv:2207.02696 → ELAN、RepConv、可扩展并行训练
+7. Jocher, Chaurasia, Qiu (2023). "YOLOv8 by Ultralytics" — 开源项目（无正式论文） | https://github.com/ultralytics/ultralytics → C2f、Anchor-Free、解耦头
+8. Yue et al. (2024). "YOLOv10: Real-Time End-to-End Object Detection" — arXiv:2405.14458 → 一致性双分配，去除NMS
+9. Jocher et al. (2024). "YOLO11 by Ultralytics" — https://github.com/ultralytics/ultralytics → 轻量化改进，多任务统一
+10. Jocher et al. (2026). "YOLO26 by Ultralytics" — arXiv:2606.03748 → 原生端到端、MuSGD、7任务统一
 
 #### 各版本详细演进
 
@@ -1455,25 +1395,16 @@ YOLOv1-V4 COCO val2017 性能对比:
 
 **性能趋势分析**：
 
-```
-mAP50-95 演进趋势 (2015→2020):
+**mAP50-95 演进趋势 (2015→2020)**：
 
+| 版本 | mAP50-95 |
+| --- | --- |
+| YOLOv1 | 26.2 |
+| YOLOv2 | 32.1 |
+| YOLOv3 | 33.1 |
+| YOLOv4 | 43.5 |
 
-50  ╭v4(43.5)
-45  ╭
-40  ╭
-35  ╭
-30  ╭
-25  ╭
-20  ╭
-15
-→
-v1  v2  v3  v4
-
-五年间 mAP50-95 从 26.2 提升至 43.5 (+17.3pp)
-平均每年提升约 +4.3pp
-
-```
+五年间 mAP50-95 从 26.2 提升至 43.5 (+17.3pp)，平均每年提升约 +4.3pp。
 
 #### YOLOv5-V8 COCO 性能
 
@@ -1497,11 +1428,11 @@ YOLOv9-V10 COCO val2017 性能对比:
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | YOLOv9-C | C | 80.8 | 50.4 | 25.5 | 90.7 | 75 | A100 |
 | YOLOv9-E | E | 81.0 | 51.3 | 57.2 | 187.4 | 40 | A100 |
-| YOLOv10-B B | 80.6 | 53.5 | 22.0 | 65.1 | 88 | A100 |  |
-| YOLOv10-S S | 78.9 | ~45.0 | 11.8 | 32.4 | 98 | T4 |  |
-| YOLOv10-M M | 81.2 | ~50.0 | 30.5 | 88.7 | 65 | A100 |  |
-| YOLOv10-L L | 82.0 | ~52.0 | 50.2 | 142.3 | 45 | A100 |  |
-| YOLOv10-X X | 82.5 | ~53.5 | 78.4 | 225.6 | 28 | A100 |  |
+| YOLOv10-B | B | 80.6 | 53.5 | 22.0 | 65.1 | 88 | A100 |
+| YOLOv10-S | S | 78.9 | ~45.0 | 11.8 | 32.4 | 98 | T4 |
+| YOLOv10-M | M | 81.2 | ~50.0 | 30.5 | 88.7 | 65 | A100 |
+| YOLOv10-L | L | 82.0 | ~52.0 | 50.2 | 142.3 | 45 | A100 |
+| YOLOv10-X | X | 82.5 | ~53.5 | 78.4 | 225.6 | 28 | A100 |
 
 #### YOLO11-V26 COCO 性能
 
@@ -1602,43 +1533,44 @@ YOLO 损失函数权重对比:
 | 分类损失权重 | 1.0 | 1.0 | 1.0 | 1.0 | 0.5 | 0.5 | 0.5 |
 | DFL损失权重 | — | — | — | — | 1.5 | — | — |
 | IoU损失类型 | L2 | L2 | L2 | CIoU | CIoU | CIoU | L1 |
-| 分类损失类型 | MSE | MSE | Focal | Focal | Varifocal Varifocal | Varifocal |  |
+| 分类损失类型 | MSE | MSE | Focal | Focal | Varifocal | Varifocal | Varifocal |
 | NMS阈值 | 0.45 | 0.45 | — | 0.45 | 0.7 | — | — |
 
 **关键变化解读**：
 
-```
-损失函数演进关键点:
+**损失函数演进关键点**
 
+**1. v1 → v2：定位损失从 L2 改为直接预测偏移**
 
-1. v1 → v2: 定位损失从 L2 改为直接预测偏移
-   · v1: 预测绝对坐标 (x,y,w,h)
-   · v2: 预测偏移量 (t_x,t_y) 和缩放 (t_w,t_h)
-   · 原因: 绝对坐标对网格位置敏感，偏移量更稳定
+- v1：预测绝对坐标 (x,y,w,h)
+- v2：预测偏移量 (t_x,t_y) 和缩放 (t_w,t_h)
+- 原因：绝对坐标对网格位置敏感，偏移量更稳定
 
-2. v3: 引入 Focal Loss 替代 MSE 分类损失
-   · γ=2.0, α=0.25/0.75 (正负样本)
-   · 原因: 解决极端正负样本不平衡
+**2. v3：引入 Focal Loss 替代 MSE 分类损失**
 
-3. v4: 引入 CIoU Loss 替代基础 IoU
-   · 同时考虑重叠面积、中心点距离、长宽比
-   · 收敛更快，边界框回归更精确
+- γ=2.0, α=0.25/0.75 (正负样本)
+- 原因：解决极端正负样本不平衡
 
-4. v8: 引入 Varifocal Loss + DFL
-   · Varifocal: 同时考虑类别置信度和IoU质量
-   · DFL: 对边界框宽高建模为分布而非点估计
-   · 分类损失权重从 1.0 降至 0.5（相对定位损失）
+**3. v4：引入 CIoU Loss 替代基础 IoU**
 
-5. v10: 移除 NMS 相关的置信度阈值调优
-   · CDA 策略使置信度校准更自然
-   · 不再需要手工调整 NMS 阈值
+- 同时考虑重叠面积、中心点距离、长宽比
+- 收敛更快，边界框回归更精确
 
-6. v26: DFL 被移除，L1 损失替代
-   · 简化推理图，提升导出兼容性
-   · MuSGD 优化器弥补了 DFL 移除的性能损失
+**4. v8：引入 Varifocal Loss + DFL**
 
+- Varifocal：同时考虑类别置信度和IoU质量
+- DFL：对边界框宽高建模为分布而非点估计
+- 分类损失权重从 1.0 降至 0.5（相对定位损失）
 
-```
+**5. v10：移除 NMS 相关的置信度阈值调优**
+
+- CDA 策略使置信度校准更自然
+- 不再需要手工调整 NMS 阈值
+
+**6. v26：DFL 被移除，L1 损失替代**
+
+- 简化推理图，提升导出兼容性
+- MuSGD 优化器弥补了 DFL 移除的性能损失
 
 #### 数据增强策略演进
 
@@ -1658,112 +1590,116 @@ YOLO 损失函数权重对比:
 | RandomResize | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | HSV 增强 | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-```
-
 **增强策略演进解读**：
 
-```
-数据增强演进关键节点:
+**数据增强演进关键节点**
 
-v2 (2016): 首次引入色彩抖动 (HSV空间)
-  · 随机调整 hue(±15°), saturation(0.5-1.5), value(0.5-1.5)
-  · 提升对光照变化的鲁棒性
+**v2 (2016)：首次引入色彩抖动 (HSV空间)**
 
-v3 (2018): 引入多尺度训练
-  · 每10轮随机选择输入尺寸 (320-608, 步长32)
-  · 提升模型对不同分辨率的适应能力
+- 随机调整 hue(±15°), saturation(0.5-1.5), value(0.5-1.5)
+- 提升对光照变化的鲁棒性
 
-v4 (2020): 引入 Mosaic + CutMix
-  · Mosaic: 随机拼接4张图像，提升小目标检测 (+1.7pp)
-  · CutMix: 随机裁剪粘贴区域，增强上下文理解
-  · 同时引入 SAM (Spatial Augmentation) 和 Coarse Augmentation
+**v3 (2018)：引入多尺度训练**
 
-v5 (2020): 继承并优化
-  · 保留 Mosaic，降低使用轮次 (前10epoch)
-  · 引入 RandomPerspective 和 RandomResize
+- 每10轮随机选择输入尺寸 (320-608, 步长32)
+- 提升模型对不同分辨率的适应能力
 
-v8 (2023): 新增 Copy-Paste + MixUp
-  · Copy-Paste: 将目标复制粘贴到其他图像，显著提升小目标召回
-  · MixUp: 线性混合两张图像及其标签，提升泛化
+**v4 (2020)：引入 Mosaic + CutMix**
 
-v10 (2024): 继承 v8 增强策略
-  · 因 NMS-Free 设计，对边界框抖动更鲁棒
+- Mosaic：随机拼接4张图像，提升小目标检测 (+1.7pp)
+- CutMix：随机裁剪粘贴区域，增强上下文理解
+- 同时引入 SAM (Spatial Augmentation) 和 Coarse Augmentation
 
-v26 (2026): 新增 STAL (Small-Target-Aware Label Assignment)
-  · 非数据增强层面，但改进小目标的正样本覆盖
-  · Progressive Loss 将监督重心向推理头转移
+**v5 (2020)：继承并优化**
 
-```
+- 保留 Mosaic，降低使用轮次 (前10epoch)
+- 引入 RandomPerspective 和 RandomResize
+
+**v8 (2023)：新增 Copy-Paste + MixUp**
+
+- Copy-Paste：将目标复制粘贴到其他图像，显著提升小目标召回
+- MixUp：线性混合两张图像及其标签，提升泛化
+
+**v10 (2024)：继承 v8 增强策略**
+
+- 因 NMS-Free 设计，对边界框抖动更鲁棒
+
+**v26 (2026)：新增 STAL (Small-Target-Aware Label Assignment)**
+
+- 非数据增强层面，但改进小目标的正样本覆盖
+- Progressive Loss 将监督重心向推理头转移
 
 #### 模型缩放策略演进
 
-```
-YOLO 模型缩放策略对比:
-版本      缩放维度       缩放系数         规格           用途
-v1        无             —               单一模型        学术研究
-v2        无             —               单一模型        学术研究
-v3        无             —               单一模型        学术研究
-v4        无             —               单一模型        学术研究
-v5        深度×宽度      δ=0.25, τ=0.25  n/s/m/l/x       工业部署
-v6        深度×宽度      专用缩放系数      n/s/m/l         工业部署
-v7        深度×宽度      δ=0.25, τ=0.35  n/s/m/l/x       工业部署
-v8        深度×宽度      δ=0.25, τ=0.50  n/s/m/l/x       工业部署
-v9        深度×宽度      多种规格          C/E             工业部署
-v10       深度×宽度      多种规格          S/M/L/B/X       工业部署
-v11       深度×宽度      轻量化优先        n/s/m/l/x       工业部署
-v26       深度×宽度      更精细控制        n/s/m/l/x       工业部署
+**YOLO 模型缩放策略对比**：
 
-```
+| 版本 | 缩放维度 | 缩放系数 | 规格 | 用途 |
+| --- | --- | --- | --- | --- |
+| v1 | 无 | — | 单一模型 | 学术研究 |
+| v2 | 无 | — | 单一模型 | 学术研究 |
+| v3 | 无 | — | 单一模型 | 学术研究 |
+| v4 | 无 | — | 单一模型 | 学术研究 |
+| v5 | 深度×宽度 | δ=0.25, τ=0.25 | n/s/m/l/x | 工业部署 |
+| v6 | 深度×宽度 | 专用缩放系数 | n/s/m/l | 工业部署 |
+| v7 | 深度×宽度 | δ=0.25, τ=0.35 | n/s/m/l/x | 工业部署 |
+| v8 | 深度×宽度 | δ=0.25, τ=0.50 | n/s/m/l/x | 工业部署 |
+| v9 | 深度×宽度 | 多种规格 | C/E | 工业部署 |
+| v10 | 深度×宽度 | 多种规格 | S/M/L/B/X | 工业部署 |
+| v11 | 深度×宽度 | 轻量化优先 | n/s/m/l/x | 工业部署 |
+| v26 | 深度×宽度 | 更精细控制 | n/s/m/l/x | 工业部署 |
 
 **缩放系数解读**：
 
-```
-模型缩放公式 (v5/v8 标准):
+**模型缩放公式 (v5/v8 标准)**：
 
-depth_multiple = δ  (控制每个模块的重复次数)
-width_multiple = τ  (控制通道数缩放比例)
+- `depth_multiple = δ`（控制每个模块的重复次数）
+- `width_multiple = τ`（控制通道数缩放比例）
 
-各版本缩放系数:
-  v5:  δ=0.33, τ=0.25  →  n/s/m/l/x (5个规格)
-  v7:  δ=0.33, τ=0.50  →  n/s/m/l/x (5个规格)
-  v8:  δ=0.33, τ=0.50  →  n/s/m/l/x (5个规格)
-  v11: δ=0.33, τ=0.50  →  n/s/m/l/x (5个规格, 更紧凑)
-  v26: δ=0.33, τ=0.50  →  n/s/m/l/x (5个规格, 更高效)
+**各版本缩放系数**：
 
-规格对应关系:
-  n (nano):  δ×0.33, τ×0.25  → 最轻量, ~2-3M 参数
-  s (small): δ×0.33, τ×0.50  → 轻量, ~10-12M 参数
-  m (medium): δ×1.00, τ×0.75 → 中等, ~20-26M 参数
-  l (large):  δ×1.00, τ×1.00  → 大型, ~35-50M 参数
-  x (xlarge): δ×1.50, τ×1.00 → 超大, ~55-70M 参数
+| 版本 | δ | τ | 规格 |
+| --- | --- | --- | --- |
+| v5 | 0.33 | 0.25 | n/s/m/l/x (5个规格) |
+| v7 | 0.33 | 0.50 | n/s/m/l/x (5个规格) |
+| v8 | 0.33 | 0.50 | n/s/m/l/x (5个规格) |
+| v11 | 0.33 | 0.50 | n/s/m/l/x (5个规格, 更紧凑) |
+| v26 | 0.33 | 0.50 | n/s/m/l/x (5个规格, 更高效) |
 
-```
+**规格对应关系**：
+
+| 规格 | δ | τ | 定位 |
+| --- | --- | --- | --- |
+| n (nano) | δ×0.33 | τ×0.25 | 最轻量, ~2-3M 参数 |
+| s (small) | δ×0.33 | τ×0.50 | 轻量, ~10-12M 参数 |
+| m (medium) | δ×1.00 | τ×0.75 | 中等, ~20-26M 参数 |
+| l (large) | δ×1.00 | τ×1.00 | 大型, ~35-50M 参数 |
+| x (xlarge) | δ×1.50 | τ×1.00 | 超大, ~55-70M 参数 |
 
 #### 各版本核心超参数速查表
 
-```
-YOLO 核心超参数速查 (推荐默认值):
-参数                v8s      v10s     v11s     v26s     v26x
-输入尺寸            640      640      640      640      640
-批量大小            64       64       64       64       64
-学习率 (初始)       0.01     0.01     0.01     0.01     0.01
-学习率 (最小)       0.0001   0.0001   0.0001   0.0001   0.0001
-优化器              AdamW    AdamW    AdamW    MuSGD    MuSGD
-权重衰减            0.0005   0.0005   0.0005   0.0      0.0
-动量                0.934    0.934    0.934    0.934    0.934
-Warmup epochs       3        3        3        3        3
- epochs             300      300      300      300      300
-早停 patience       100      100      100      100      100
-标签平滑            0.1      0.1      0.1      0.1      0.1
-mosaic              1.0      1.0      1.0      1.0      1.0
-copy_paste          1.0      1.0      1.0      1.0      1.0
-mixup               0.1      0.1      0.1      0.1      0.1
-hsv_h               0.015    0.015    0.015    0.015    0.015
-hsv_s               0.7      0.7      0.7      0.7      0.7
-hsv_v               0.4      0.4      0.4      0.4      0.4
-flipup              0.01     0.01     0.01     0.01     0.01
-fliplef             0.5      0.5      0.5      0.5      0.5
+**YOLO 核心超参数速查 (推荐默认值)**：
 
+| 参数 | v8s | v10s | v11s | v26s | v26x |
+| --- | --- | --- | --- | --- | --- |
+| 输入尺寸 | 640 | 640 | 640 | 640 | 640 |
+| 批量大小 | 64 | 64 | 64 | 64 | 64 |
+| 学习率 (初始) | 0.01 | 0.01 | 0.01 | 0.01 | 0.01 |
+| 学习率 (最小) | 0.0001 | 0.0001 | 0.0001 | 0.0001 | 0.0001 |
+| 优化器 | AdamW | AdamW | AdamW | MuSGD | MuSGD |
+| 权重衰减 | 0.0005 | 0.0005 | 0.0005 | 0.0 | 0.0 |
+| 动量 | 0.934 | 0.934 | 0.934 | 0.934 | 0.934 |
+| Warmup epochs | 3 | 3 | 3 | 3 | 3 |
+| epochs | 300 | 300 | 300 | 300 | 300 |
+| 早停 patience | 100 | 100 | 100 | 100 | 100 |
+| 标签平滑 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 |
+| mosaic | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 |
+| copy_paste | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 |
+| mixup | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 |
+| hsv_h | 0.015 | 0.015 | 0.015 | 0.015 | 0.015 |
+| hsv_s | 0.7 | 0.7 | 0.7 | 0.7 | 0.7 |
+| hsv_v | 0.4 | 0.4 | 0.4 | 0.4 | 0.4 |
+| flipup | 0.01 | 0.01 | 0.01 | 0.01 | 0.01 |
+| fliplef | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 |
 
 ---
 
@@ -1792,17 +1728,10 @@ Backbone 是目标检测模型的"眼睛"，负责从原始图像中提取多层
 
 **CSP（Cross Stage Partial）网络**：
 
-传统残差网络:  Input → [Conv → ResBlock × N] → Output
-                   ↑ 全部梯度都通过这条路径
+- **传统残差网络**：`Input → [Conv → ResBlock × N] → Output`（↑ 全部梯度都通过这条路径）
+- **CSP 网络**：`Input → [Split]`，一路 `→ [Conv → ResBlock × N] → [Concat] → Output`，一路 `→ [直接跳连]`
 
-CSP网络:       Input → [Split]
- → [Conv → ResBlock × N] → [Concat] → Output
- → [直接跳连]
-
-优势: 梯度被分成两部分，一部分经过深度网络，一部分直接传递
-      减少了计算冗余，同时保持了梯度流动的多样性
-
-```
+优势：梯度被分成两部分，一部分经过深度网络，一部分直接传递，减少了计算冗余，同时保持了梯度流动的多样性。
 
 **CSP 的深层原理**：在传统残差网络中，所有输入特征都必须经过相同的深度变换路径，导致大量重复计算。CSP 的核心思想是——将特征图沿通道维度切分为两部分：一部分直接传递到输出（保留原始空间信息），另一部分经过深度网络提取高级语义特征，最后将两者拼接。这样既保留了浅层特征的空间细节，又获得了深层特征的语义信息，同时减少了约 40-50% 的计算量。
 
@@ -1859,35 +1788,28 @@ RepVGG 的核心保证: 训练时多路等价于推理时单路
 
 **ELAN 的梯度路径密度分析**：
 
-```
-ELAN 相比 CSP 的核心改进: 梯度路径密度
+**ELAN 相比 CSP 的核心改进：梯度路径密度**
 
-CSP (2条路径):
-  Input → [Split]
- → 直接跳连 (1条梯度路径)
- → [深度网络] (1条梯度路径)
-  梯度路径总数: 2
-  特征融合密度: 低
+**CSP (2条路径)**：
 
-ELAN (N条路径):
-  Input → [Split into N paths]
- → [Block 1] →
- → [Block 2] →
- → [Block 3] →
- → [Block N] →
-                        ↓
-                    [Concat N paths]
-                        ↓
-                    [Conv 1×1 降维]
-  梯度路径总数: N
-  特征融合密度: 高 (N倍于CSP)
+- `Input → [Split]`
+- → 直接跳连 (1条梯度路径)
+- → [深度网络] (1条梯度路径)
+- 梯度路径总数：2
+- 特征融合密度：低
 
-计算量对比:
-  CSP:     FLOPs ≈ C_in × C_out × H × W × (1 + 9)  (1次1×1 + 1次3×3)
-  ELAN:    FLOPs ≈ C_in × C_out × H × W × N         (N次并行卷积)
-           但 N 通常较小 (2-4)，且可以并行计算
+**ELAN (N条路径)**：
 
-```
+- `Input → [Split into N paths]`
+- → [Block 1] → [Block 2] → [Block 3] → ... → [Block N]
+- ↓ `[Concat N paths]` → ↓ `[Conv 1×1 降维]`
+- 梯度路径总数：N
+- 特征融合密度：高 (N倍于CSP)
+
+**计算量对比**：
+
+- CSP：$\text{FLOPs} \approx C_{in} \times C_{out} \times H \times W \times (1 + 9)$（1次1×1 + 1次3×3）
+- ELAN：$\text{FLOPs} \approx C_{in} \times C_{out} \times H \times W \times N$（N次并行卷积）。但 N 通常较小 (2-4)，且可以并行计算
 
 **RepVGG 风格的核心原理**：
 
@@ -1928,17 +1850,16 @@ RepVGG 重参数化 (Reparameterization) 原理:
 
 **Backbone 演进趋势**：
 
-```
-YOLOv4 CSPDarknet → YOLOv7 ELAN → YOLOv8/10 RepVGG → YOLO26 混合
+**Backbone 演进趋势**
 
-演进逻辑:
-1. YOLOv4 CSP: 将梯度流一分为二，减少冗余计算
-2. YOLOv7 ELAN: 将梯度流分为多条路径，提升特征融合密度
-3. YOLOv8/10 RepVGG: 训练时多路并行，推理时合并为单路
-   (真正的"免费"性能提升)
-4. YOLO26: 综合以上优势，结合轻量化设计
+`YOLOv4 CSPDarknet → YOLOv7 ELAN → YOLOv8/10 RepVGG → YOLO26 混合`
 
-```
+**演进逻辑**：
+
+1. YOLOv4 CSP：将梯度流一分为二，减少冗余计算
+2. YOLOv7 ELAN：将梯度流分为多条路径，提升特征融合密度
+3. YOLOv8/10 RepVGG：训练时多路并行，推理时合并为单路（真正的"免费"性能提升）
+4. YOLO26：综合以上优势，结合轻量化设计
 
 **YOLOv8 的 SPPF 模块**：在 Backbone 末端引入了 SPPF（Spatial Pyramid Pooling - Fast）模块，用于聚合多尺度的上下文信息。SPPF 将传统 SPP 的多个串行最大池化操作优化为串行 5×5 卷积（步长 2）的等效操作，在保持相同感受野的同时大幅减少计算量。具体而言，SPPF 通过 3 个连续的 5×5 卷积（步长 2）模拟了 [5×5, 9×9, 13×13] 的多尺度池化效果，计算量降低约 60%。
 
@@ -2078,33 +1999,22 @@ backbone:
 
 ### 2.2 Neck 演进
 
-```
-YOLOv3/v4 (PANet):
- 上层特征 (P5) → 上采样 → 拼接 → 卷积 → P4'
- 中层特征 (P4)
- P4' → 下采样 → 拼接 → 卷积 → P3' → 输出
-          ↑                        ↑
- 中层特征 (P4)
-          ↑
- 下层特征 (P3) → 输出
+**YOLOv3/v4 (PANet)**：
 
-  特点: 双向特征金字塔（FPN自上而下 + PAN自下而上）
+- 上层特征 (P5) → 上采样 → 与中层特征 (P4) 拼接 → 卷积 → P4'
+- P4' → 下采样 → 与中层特征 (P4) 拼接 → 卷积 → P3' → 输出
+- 下层特征 (P3) → 输出
+- 特点：双向特征金字塔（FPN 自上而下 + PAN 自下而上）
 
-YOLOv8 (CSP-PAN + C2f):
- 上层特征 (P5) → 上采样 → 拼接 → C2f → P4'
- 中层特征 (P4)
- P4' → 下采样 → 拼接 → C2f → P3' → 输出
-          ↑                      ↑
- 中层特征 (P4)
-          ↑
- 下层特征 (P3) → 输出
+**YOLOv8 (CSP-PAN + C2f)**：
 
-  改进: 用 C2f 替代普通卷积层
-       - 更多的跨阶段连接
-       - 更丰富的梯度流
-       - 保持相同的计算量
-
-```
+- 上层特征 (P5) → 上采样 → 与中层特征 (P4) 拼接 → C2f → P4'
+- P4' → 下采样 → 与中层特征 (P4) 拼接 → C2f → P3' → 输出
+- 下层特征 (P3) → 输出
+- 改进：用 C2f 替代普通卷积层
+  - 更多的跨阶段连接
+  - 更丰富的梯度流
+  - 保持相同的计算量
 
 **Neck 为什么如此重要？**
 
@@ -2121,68 +2031,51 @@ Neck 是连接 Backbone 和 Head 的桥梁，负责将 Backbone 输出的多尺�
 
 4. YOLO26: 综合以上优势，结合轻量化设计
 
-```
-
 ### 2.2 Vision Transformer vs CNN for Detection
 
 目标检测领域长期存在 CNN 与 ViT（Vision Transformer）的架构之争。YOLO 系列始终基于 CNN，而 DETR 系列则代表了 ViT 方案。理解两者的差异对于选择合适的检测架构至关重要。
 
 #### 核心架构对比
 
-CNN 检测器 (YOLO 系列) vs ViT 检测器 (DETR 系列):
+**CNN 检测器 (YOLO 系列) vs ViT 检测器 (DETR 系列)**：
 
-维度  CNN (YOLO)  ViT (DETR/Deformable)
-
-基础架构  局部感受野 + 层级特征  全局自注意力
-(VGG/Darknet/CSPDarknet)  (ViT-Base/Large)
-
-感受野机制  逐层卷积扩大感受野  自注意力直接捕获全局
-深度 → 感受野线性增长  第一层即全局感受野
-
-计算复杂度  O(n) 线性 (与输入尺寸)  O(n²) 二次方 (序列长度)
-卷积是局部操作  注意力矩阵 n×n
-
-归纳偏置  强 (平移不变性)  弱 (数据驱动)
-适合小数据集  需要大量数据
-
-推理速度  极快 (YOLO: 1-10ms)  较慢 (DETR: 50-200ms)
-适合实时应用  适合离线分析
-
-小目标检测  优秀 (多尺度特征)  一般 (需要特殊设计)
-(P3 高分辨率层)  (Deformable DETR 改进)
-
-序列长度  固定 (特征图 H×W)  可动态调整 (token 数)
-
-多模态融合  困难 (需要额外设计)  原生支持 (统一 token)
-文本/图像/深度均可 tokenize
+| 维度 | CNN (YOLO) | ViT (DETR/Deformable) |
+| --- | --- | --- |
+| 基础架构 | 局部感受野 + 层级特征 (VGG/Darknet/CSPDarknet) | 全局自注意力 (ViT-Base/Large) |
+| 感受野机制 | 逐层卷积扩大感受野，深度 → 感受野线性增长 | 自注意力直接捕获全局，第一层即全局感受野 |
+| 计算复杂度 | O(n) 线性 (与输入尺寸)，卷积是局部操作 | O(n²) 二次方 (序列长度)，注意力矩阵 n×n |
+| 归纳偏置 | 强 (平移不变性)，适合小数据集 | 弱 (数据驱动)，需要大量数据 |
+| 推理速度 | 极快 (YOLO: 1-10ms)，适合实时应用 | 较慢 (DETR: 50-200ms)，适合离线分析 |
+| 小目标检测 | 优秀 (多尺度特征)，P3 高分辨率层 | 一般 (需要特殊设计)，Deformable DETR 改进 |
+| 序列长度 | 固定 (特征图 H×W) | 可动态调整 (token 数) |
+| 多模态融合 | 困难 (需要额外设计) | 原生支持 (统一 token)，文本/图像/深度均可 tokenize |
 
 #### 数学分析：注意力 vs 卷积
 
-```
+**卷积操作 (CNN)**：
 
-卷积操作 (CNN):
-  Y[i,j,c] = Σ_{m,n,d} X[i+s*m, j+s*n, d] × W[m,n,d,c]
-  其中 s 为步长，感受野随层数线性增长
-  计算量: O(H×W×K×K×C_in×C_out)  (K=核大小)
+$$Y[i,j,c] = \sum_{m,n,d} X[i+s \cdot m, j+s \cdot n, d] \times W[m,n,d,c]$$
 
-自注意力操作 (ViT):
-  Attention(Q,K,V) = softmax(QK^T / √d_k) × V
-  其中 Q=K=V=XW (线性投影)
-  计算量: O(N² × d_model)  (N=token 数, d_model=维度)
-  对于 640×640 图像: N = (640/16)² = 1024 tokens
-  注意力矩阵: 1024 × 1024 = 1M 元素
+- 其中 s 为步长，感受野随层数线性增长
+- 计算量：$O(H \times W \times K \times K \times C_{in} \times C_{out})$（K=核大小）
 
-关键差异:
-  · 卷积: 局部操作，参数共享，平移等变
-  · 注意力: 全局操作，无参数共享，平移不变
-  · 卷积适合提取局部特征 (边缘、纹理)
-  · 注意力适合建模长程依赖 (物体关系、场景理解)
+**自注意力操作 (ViT)**：
 
-```
+$$\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) \times V$$
+
+- 其中 Q=K=V=XW（线性投影）
+- 计算量：$O(N^2 \times d_{model})$（N=token 数, d_model=维度）
+- 对于 640×640 图像：N = (640/16)² = 1024 tokens
+- 注意力矩阵：1024 × 1024 = 1M 元素
+
+**关键差异**：
+
+- 卷积：局部操作，参数共享，平移等变
+- 注意力：全局操作，无参数共享，平移不变
+- 卷积适合提取局部特征 (边缘、纹理)
+- 注意力适合建模长程依赖 (物体关系、场景理解)
 
 #### COCO 基准性能对比
-
-```
 
 COCO val2017 基准性能对比 (2024-2026):
 | 模型 | 参数量 | FLOPs | mAP50-95 | FPS(T4) | 速度类型 |
@@ -2200,7 +2093,6 @@ COCO val2017 基准性能对比 (2024-2026):
 | ViT-Base + Cascade | 304.0M | 1047.0G | 55.3% | 5 | ViT |
 | YOLOv10s (end2end) | 8.7M | 21.3G | 45.8% | 105 | CNN+NMS-Free |
 | YOLOv10m (end2end) | 20.1M | 65.4G | 50.9% | 52 | CNN+NMS-Free |
-```
 
 **关键结论**：
 - CNN 检测器在同等精度下，速度比 ViT 检测器快 5-10 倍
@@ -2211,57 +2103,45 @@ COCO val2017 基准性能对比 (2024-2026):
 
 #### 何时选择 CNN vs ViT
 
-检测器选型决策树:
+**检测器选型决策树**
 
-检测需求
+从「检测需求」出发，分两条主分支：
 
-▼  ▼
-实时性要求  精度优先
-(≥ 30fps)  (离线分析)
+- **实时性要求 (≥ 30fps)** → CNN 方案 (YOLO 系列)
+- **精度优先 (离线分析)** → ViT/Hybrid 方案 (DETR/Swin)
 
-▼  ▼
-CNN 方案  ViT/Hybrid 方案
-(YOLO 系列)  (DETR/Swin)
+部署平台选项：边缘设备 (Jetson)、服务器 (GPU)、数据中心 (A100)、研究平台 (TPU)
 
-▼  ▼  ▼  ▼
-边缘设备  服务器  数据中心  研究平台
-(Jetson)  (GPU)  (A100)  (TPU)
+再判断**资源是否受限？**
 
-▼
-资源是否受限?
-
-是  否
-
-▼  ▼
-YOLOv8n  YOLOv8l/x
-或 YOLO26n  或 YOLO26l/x
+- 是 → YOLOv8n 或 YOLO26n
+- 否 → YOLOv8l/x 或 YOLO26l/x
 
 #### Hybrid 架构：CNN + ViT 融合
 
-```
-
 当前最成功的方案是 Hybrid 架构，结合 CNN 的局部特征提取能力和 ViT 的全局建模能力：
 
-1. Swin Transformer + FPN + Head (DETR-like)
-   · Swin 提取层级特征
-   · FPN 多尺度融合
-   · Transformer decoder 检测头
-   · 优点: 精度高，适合大目标
-   · 缺点: 推理慢，不适合边缘设备
+**1. Swin Transformer + FPN + Head (DETR-like)**
 
-2. ConvNeXt + DETR Head
-   · ConvNeXt 作为 backbone (纯 CNN)
-   · DETR 式 transformer decoder
-   · 优点: 比纯 ViT 快，比纯 DETR 精度高
-   · 缺点: 仍需要 NMS 或特殊处理
+- Swin 提取层级特征
+- FPN 多尺度融合
+- Transformer decoder 检测头
+- 优点：精度高，适合大目标
+- 缺点：推理慢，不适合边缘设备
 
-3. YOLO + Transformer Head (新兴方向)
-   · YOLO CNN backbone + neck
-   · Transformer 检测头替代传统解耦头
-   · 优点: 保留 YOLO 速度优势，提升精度
-   · 代表: YOLO-World, YOLO-OSNet
+**2. ConvNeXt + DETR Head**
 
-```
+- ConvNeXt 作为 backbone (纯 CNN)
+- DETR 式 transformer decoder
+- 优点：比纯 ViT 快，比纯 DETR 精度高
+- 缺点：仍需要 NMS 或特殊处理
+
+**3. YOLO + Transformer Head (新兴方向)**
+
+- YOLO CNN backbone + neck
+- Transformer 检测头替代传统解耦头
+- 优点：保留 YOLO 速度优势，提升精度
+- 代表：YOLO-World, YOLO-OSNet
 
 ```python
 """
@@ -2343,36 +2223,26 @@ COCO val2017 mAP50-95 SOTA 时间线 (2015-2026):
 
 **精度-速度 Pareto 前沿演进**：
 
-```
-mAP50-95 (%)
-↑
-60%  ● YOLO26x (57.5)
-╱
-58%  ● YOLO11x (56.6) ╱
-╱  ╲
-56%  ● YOLOv7-X (56.8)  ╲  ● YOLO26l (55.0)
-╱  ╲
-54%  ● YOLOv9-C (55.6)  ╲  ● YOLO26m (53.1)
-╱  ╲
-52%  ● YOLOv8x (53.9)  ● YOLOv10s (~45.8) ╲
-╲  ╲
-50%  ● YOLOv8m (50.2)  ● YOLO26s (48.6)
-╲
-48%  ● YOLO11s (47.8)
-╲
-46%  ● YOLOv5m (44.9)  ● YOLOv8s (44.9)
-╲
-44%  ● YOLOv4 (43.5)
-╲
-42%  ● YOLOv2 (43.1)
-╲
-40%  ● YOLOv1 (28.9)
+**精度-速度 Pareto 前沿演进**（速度轴：10→150 FPS，由慢到快）：
 
-→ 速度 (FPS)
-10  20  40  60  80  100  150
-(慢)  (快)
-
-```
+| 模型 | mAP50-95 (%) |
+| --- | --- |
+| YOLO26x | 57.5 |
+| YOLOv7-X | 56.8 |
+| YOLO11x | 56.6 |
+| YOLOv9-C | 55.6 |
+| YOLO26l | 55.0 |
+| YOLOv8x | 53.9 |
+| YOLO26m | 53.1 |
+| YOLOv8m | 50.2 |
+| YOLO26s | 48.6 |
+| YOLO11s | 47.8 |
+| YOLOv10s | ~45.8 |
+| YOLOv5m | 44.9 |
+| YOLOv8s | 44.9 |
+| YOLOv4 | 43.5 |
+| YOLOv2 | 43.1 |
+| YOLOv1 | 28.9 |
 
 **不同基准数据集上的 SOTA 对比**：
 
@@ -2406,35 +2276,33 @@ Neck 的核心是 FPN（Feature Pyramid Network，自顶向下）与 PAN（Path 
 
 **FPN 路径（上采样，语义增强）**：
 
-```
-Level 2 (P5 → P4'):
-  上采样:      \hat{P}_5 = \text{Upsample}(P_5) \in \mathbb{R}^{C_5 \times 2H_5 \times 2W_5}
-  通道对齐:    T_5 = \text{Conv}_{1\times1}(\hat{P}_5) \in \mathbb{R}^{C_4 \times H_4 \times W_4}
-  拼接融合:    Cat_1 = \text{Concat}(T_5, P_4) \in \mathbb{R}^{2C_4 \times H_4 \times W_4}
-  C2f处理:     P_4' = \text{C2f}(Cat_1) \in \mathbb{R}^{C_4 \times H_4 \times W_4}
+**Level 2 (P5 → P4')**
 
-Level 1 (P4' → P3'):
-  上采样:      \hat{P}_4' = \text{Upsample}(P_4') \in \mathbb{R}^{C_4 \times 2H_4 \times 2W_4}
-  通道对齐:    T_4 = \text{Conv}_{1\times1}(\hat{P}_4') \in \mathbb{R}^{C_3 \times H_3 \times W_3}
-  拼接融合:    Cat_2 = \text{Concat}(T_4, P_3) \in \mathbb{R}^{2C_3 \times H_3 \times W_3}
-  C2f处理:     P_3' = \text{C2f}(Cat_2) \in \mathbb{R}^{C_3 \times H_3 \times W_3}
+- 上采样：$\hat{P}_5 = \text{Upsample}(P_5) \in \mathbb{R}^{C_5 \times 2H_5 \times 2W_5}$
+- 通道对齐：$T_5 = \text{Conv}_{1\times1}(\hat{P}_5) \in \mathbb{R}^{C_4 \times H_4 \times W_4}$
+- 拼接融合：$Cat_1 = \text{Concat}(T_5, P_4) \in \mathbb{R}^{2C_4 \times H_4 \times W_4}$
+- C2f处理：$P_4' = \text{C2f}(Cat_1) \in \mathbb{R}^{C_4 \times H_4 \times W_4}$
 
-```
+**Level 1 (P4' → P3')**
+
+- 上采样：$\hat{P}_4' = \text{Upsample}(P_4') \in \mathbb{R}^{C_4 \times 2H_4 \times 2W_4}$
+- 通道对齐：$T_4 = \text{Conv}_{1\times1}(\hat{P}_4') \in \mathbb{R}^{C_3 \times H_3 \times W_3}$
+- 拼接融合：$Cat_2 = \text{Concat}(T_4, P_3) \in \mathbb{R}^{2C_3 \times H_3 \times W_3}$
+- C2f处理：$P_3' = \text{C2f}(Cat_2) \in \mathbb{R}^{C_3 \times H_3 \times W_3}$
 
 **PAN 路径（下采样，空间增强）**：
 
-```
-Level 1' (P3' → P4''):
-  下采样:      \tilde{P}_3' = \text{Conv}_{3\times3, s=2}(P_3') \in \mathbb{R}^{C_4 \times H_4 \times W_4}
-  拼接融合:    Cat_3 = \text{Concat}(\tilde{P}_3', P_4') \in \mathbb{R}^{2C_4 \times H_4 \times W_4}
-  C2f处理:     P_4'' = \text{C2f}(Cat_3) \in \mathbb{R}^{C_4 \times H_4 \times W_4}
+**Level 1' (P3' → P4'')**
 
-Level 2' (P4'' → P5''):
-  下采样:      \tilde{P}_4'' = \text{Conv}_{3\times3, s=2}(P_4'') \in \mathbb{R}^{C_5 \times H_5 \times W_5}
-  拼接融合:    Cat_4 = \text{Concat}(\tilde{P}_4'', P_5') \in \mathbb{R}^{2C_5 \times H_5 \times W_5}
-  C2f处理:     P_5'' = \text{C2f}(Cat_4) \in \mathbb{R}^{C_5 \times H_5 \times W_5}
+- 下采样：$\tilde{P}_3' = \text{Conv}_{3\times3, s=2}(P_3') \in \mathbb{R}^{C_4 \times H_4 \times W_4}$
+- 拼接融合：$Cat_3 = \text{Concat}(\tilde{P}_3', P_4') \in \mathbb{R}^{2C_4 \times H_4 \times W_4}$
+- C2f处理：$P_4'' = \text{C2f}(Cat_3) \in \mathbb{R}^{C_4 \times H_4 \times W_4}$
 
-```
+**Level 2' (P4'' → P5'')**
+
+- 下采样：$\tilde{P}_4'' = \text{Conv}_{3\times3, s=2}(P_4'') \in \mathbb{R}^{C_5 \times H_5 \times W_5}$
+- 拼接融合：$Cat_4 = \text{Concat}(\tilde{P}_4'', P_5') \in \mathbb{R}^{2C_5 \times H_5 \times W_5}$
+- C2f处理：$P_5'' = \text{C2f}(Cat_4) \in \mathbb{R}^{C_5 \times H_5 \times W_5}$
 
 **为什么使用 3 个尺度（P3/P4/P5）？**
 
@@ -2445,16 +2313,13 @@ Level 2' (P4'' → P5''):
 
 3 个尺度的设计对应关系：
 
-```
-尺度  特征图分辨率  感受野范围  适合目标大小  网格点数(640输入)
+| 尺度 | 特征图分辨率 | 感受野范围 | 适合目标大小 | 网格点数(640输入) |
+| --- | --- | --- | --- | --- |
+| P3 | 80 × 80 | ~16×16 px | 小目标 (&lt;32px) | 6400 |
+| P4 | 40 × 40 | ~32×32 px | 中等目标 | 1600 |
+| P5 | 20 × 20 | ~64×64 px | 大目标 (&gt;96px) | 400 |
 
-P3  80 × 80  ~16×16 px  小目标 (<32px)  6400
-P4  40 × 40  ~32×32 px  中等目标  1600
-P5  20 × 20  ~64×64 px  大目标 (>96px)  400
-
-总计: 8400 个检测位置
-
-```
+**总计**：8400 个检测位置
 
 每个网格点可以认为是一个"感受野中心"，网络在该位置预测边界框。更高分辨率的特征图（P3）有更多的网格点，可以对小目标进行更精细的定位；更低分辨率的特征图（P5）虽然网格点少，但每个点的感受野更大，适合检测大目标。
 
@@ -2469,26 +2334,21 @@ P5  20 × 20  ~64×64 px  大目标 (>96px)  400
 
 **完整的 Neck 数据流 ASCII 图**：
 
-```
-YOLO Neck 完整数据流
+**Backbone 输出**：
 
+| 层 | 特征 | 说明 |
+| --- | --- | --- |
+| P3 | [C3, 80, 80] | 浅层特征，高分辨率，小目标敏感 |
+| P4 | [C4, 40, 40] | 中层特征，平衡 |
+| P5 | [C5, 20, 20] | 深层特征，低分辨率，语义丰富 |
 
-Backbone 输出:
+**FPN 上采样路径**（语义信息自顶向下传播）：
 
-P3  [C3, 80, 80]  ← 浅层特征，高分辨率，小目标敏感
-P4  [C4, 40, 40]  ← 中层特征，平衡
-P5  [C5, 20, 20]  ← 深层特征，低分辨率，语义丰富
-
-
-╧
-FPN 上采样路径  ← 语义信息自顶向下传播
-╠╣
-
+```text
 P5 [C5,20,20]
 ↑ 上采样 2×
 ▼
-[C4,40,40] ←
-Concat
+[C4,40,40] ← Concat
 ▼
 P4 [C4,40,40]
 
@@ -2496,24 +2356,21 @@ P4 [C4,40,40]
 P4' [C4,40,40]
 ↑ 上采样 2×
 ▼
-[C3,80,80] ←
-Concat
+[C3,80,80] ← Concat
 ▼
 P3 [C3,80,80]
 
 ▼ C2f×2
 P3' [C3,80,80]
+```
 
+**PAN 下采样路径**（空间信息自底向上传播）：
 
-╧
-PAN 下采样路径  ← 空间信息自底向上传播
-╠╣
-
+```text
 P3' [C3,80,80]
 ↓ 下采样 (Conv)
 ▼
-[C4,40,40] ←
-Concat
+[C4,40,40] ← Concat
 ▼
 P4' [C4,40,40]
 
@@ -2521,24 +2378,21 @@ P4' [C4,40,40]
 P4'' [C4,40,40]
 ↓ 下采样
 ▼
-[C5,20,20] ←
-Concat
+[C5,20,20] ← Concat
 ▼
 P5' [C5,20,20]
 
 ▼ C2f×2
 P5'' [C5,20,20]
-
-
-▼
-Neck 最终输出（送入 Head）:
-
-PAN (小目标层)  [C3, 80, 80]  ← 高分辨率，适合小目标
-PAM (中目标层)  [C4, 40, 40]  ← 平衡，适合中等目标
-PAN (大目标层)  [C5, 20, 20]  ← 高语义，适合大目标
-
-
 ```
+
+**Neck 最终输出（送入 Head）**：
+
+| 输出 | 特征 | 说明 |
+| --- | --- | --- |
+| PAN (小目标层) | [C3, 80, 80] | 高分辨率，适合小目标 |
+| PAM (中目标层) | [C4, 40, 40] | 平衡，适合中等目标 |
+| PAN (大目标层) | [C5, 20, 20] | 高语义，适合大目标 |
 
 ### 2.3 Head 演进
 
@@ -2583,60 +2437,57 @@ Anchor-Free 检测的核心思想是：不再预定义一组锚框，而是让�
 
 **网格化预测机制**：
 
-```
+**网格化预测机制**
+
 假设特征图分辨率为 H × W，每个网格点 (i, j) 负责预测一个目标：
 
-对于网格点 (i, j)，其对应的真实世界坐标为:
-  cx = (σ(t_x) + i) / H   # 中心点 x (归一化)
-  cy = (σ(t_y) + j) / W   # 中心点 y (归一化)
-  w =  w_gt × exp(t_w)    # 宽度 (相对于特征图格子大小)
-  h =  h_gt × exp(t_h)    # 高度
+对于网格点 (i, j)，其对应的真实世界坐标为：
 
-其中:
-  - t_x, t_y, t_w, t_h 是网络预测的 4 个偏移量
-  - σ 是 sigmoid 函数，将 cx, cy 约束在 [0,1] 范围内
-  - exp(t_w), exp(t_h) 确保宽高始终为正
-  - i ∈ [0, W-1], j ∈ [0, H-1] 是网格坐标
+$$c_x = \frac{\sigma(t_x) + i}{H} \quad \text{(中心点 x, 归一化)}$$
 
-```
+$$c_y = \frac{\sigma(t_y) + j}{W} \quad \text{(中心点 y, 归一化)}$$
+
+$$w = w_{gt} \times \exp(t_w) \quad \text{(宽度, 相对于特征图格子大小)}$$
+
+$$h = h_{gt} \times \exp(t_h) \quad \text{(高度)}$$
+
+其中：
+
+- $t_x, t_y, t_w, t_h$ 是网络预测的 4 个偏移量
+- $\sigma$ 是 sigmoid 函数，将 cx, cy 约束在 [0,1] 范围内
+- $\exp(t_w), \exp(t_h)$ 确保宽高始终为正
+- $i \in [0, W-1], j \in [0, H-1]$ 是网格坐标
 
 **每个尺度的检测数量计算**：
 
-```
-对于 640×640 输入，Neck 输出 3 个尺度:
+对于 640×640 输入，Neck 输出 3 个尺度：
 
-尺度    特征图大小    网格数(H×W)   每格anchor数  总检测数
+| 尺度 | 特征图大小 | 网格数(H×W) | 每格anchor数 | 总检测数 |
+| --- | --- | --- | --- | --- |
+| P3 | 80 × 80 | 80 × 80 = 6400 | × 1 | 6400 |
+| P4 | 40 × 40 | 40 × 40 = 1600 | × 1 | 1600 |
+| P5 | 20 × 20 | 20 × 20 = 400 | × 1 | 400 |
+| **总计** | | | | **8400 (one-to-many)** |
 
-P3      80 × 80       80 × 80 = 6400  × 1          6400
-P4      40 × 40       40 × 40 = 1600  × 1          1600
-P5      20 × 20       20 × 20 =  400  × 1           400
+**YOLO26 one-to-one 模式**：每个尺度输出 300 个候选框（通过可学习的查询向量生成），总检测数 300（直接输出，无需后处理）
 
-                                              总计: 8400 (one-to-many)
+**特征图分辨率与可检测目标大小的关系**
 
-YOLO26 one-to-one 模式:
-  每个尺度输出 300 个候选框（通过可学习的查询向量生成）
-  总检测数: 300（直接输出，无需后处理）
-
-```
-
-**特征图分辨率与可检测目标大小的关系**：
-
-```
 下采样倍数 = 输入尺寸 / 特征图尺寸
 
-对于 640×640 输入:
-  P3: 下采样 8× → 每像素覆盖 80×80 输入像素
-      → 最适合检测 ≥ 16px 的目标 (80/5 ≈ 16)
-  P4: 下采样 16× → 每像素覆盖 40×40 输入像素
-      → 最适合检测 ≥ 32px 的目标
-  P5: 下采样 32× → 每像素覆盖 20×20 输入像素
-      → 最适合检测 ≥ 64px 的目标
+对于 640×640 输入：
 
-一般规律:
-  可检测的最小目标尺寸 ≈ 输入尺寸 / 特征图分辨率 × 常数
-  即: min_target ≈ imgsz / grid_size
+| 层 | 下采样 | 每像素覆盖 | 最适合检测 |
+| --- | --- | --- | --- |
+| P3 | 8× | 80×80 输入像素 | ≥ 16px 的目标 (80/5 ≈ 16) |
+| P4 | 16× | 40×40 输入像素 | ≥ 32px 的目标 |
+| P5 | 32× | 20×20 输入像素 | ≥ 64px 的目标 |
 
-```
+**一般规律**：
+
+$$\text{min\_target} \approx \frac{\text{imgsz}}{\text{grid\_size}}$$
+
+即可检测的最小目标尺寸 ≈ 输入尺寸 / 特征图分辨率 × 常数。
 
 **YOLO26 one-to-one 与 one-to-many 的对比**：
 
@@ -2786,54 +2637,44 @@ L = λ_box Σ ||g_i - p_π(i)||_1 + λ_giou Σ Giou(g_i, p_π(i))
 
 **DETR 的核心问题与改进**：
 
-```
-DETR 的局限性:
-  1. 收敛慢: 需要 500 epochs 才能收敛 (DETR 原版)
-     → 原因: 小目标检测性能差，特征提取能力不足
-  2. 计算量大: ViT Encoder 的计算复杂度为 O(n²)
-     → 对于高分辨率图像，计算量急剧增加
-  3. 查询冗余: 100 个查询中很多是背景查询
-     → 浪费计算资源
+**DETR 的局限性**：
 
-改进方向:
-  → Deformable DETR: 只关注关键位置，降低复杂度
-  → DINO: 引入去噪训练和更强的数据增强
-  → DDQ: 动态查询分解，提升小目标检测
-  → YOLO-World: 结合 YOLO 的速度优势和开放词汇检测
+1. 收敛慢：需要 500 epochs 才能收敛 (DETR 原版) → 原因：小目标检测性能差，特征提取能力不足
+2. 计算量大：ViT Encoder 的计算复杂度为 O(n²) → 对于高分辨率图像，计算量急剧增加
+3. 查询冗余：100 个查询中很多是背景查询 → 浪费计算资源
 
-```
+**改进方向**：
+
+- Deformable DETR：只关注关键位置，降低复杂度
+- DINO：引入去噪训练和更强的数据增强
+- DDQ：动态查询分解，提升小目标检测
+- YOLO-World：结合 YOLO 的速度优势和开放词汇检测
 
 #### 2.2.3 Swin Transformer 检测
 
-```
-Swin Transformer 架构 (ICCV 2021):
+**Swin Transformer 架构 (ICCV 2021)**
 
+核心创新：引入移位窗口 (Shifted Window) 注意力机制
 
-核心创新: 引入移位窗口 (Shifted Window) 注意力机制
+**与传统 ViT 的关键区别**：
 
-与传统 ViT 的关键区别:
+- ViT：全局注意力, O(n²) 复杂度
+- Swin：局部窗口注意力, O(n) 复杂度 + 跨窗口连接 (shifted windows)
 
-ViT:  全局注意力, O(n²) 复杂度
-Swin:  局部窗口注意力, O(n) 复杂度
-+ 跨窗口连接 (shifted windows)
+**Swin Transformer Block**：
 
+`Input → [LayerNorm] → [Shifted Window attn] → [Add+Norm] → [MLP] → [Add+Norm] → [Window attn] → (下一层，窗口移位)`
 
-Swin Transformer Block:
-Input → [LayerNorm] → [Shifted Window attn] → [Add+Norm]
-→ [MLP] → [Add+Norm]
-→ [Window attn]  → (下一层，窗口移位)
+- 窗口大小：通常 7×7 或 14×14
+- 移位策略：每两层窗口偏移半个窗口大小，实现跨窗口信息交换
 
-窗口大小: 通常 7×7 或 14×14
-移位策略: 每两层窗口偏移半个窗口大小，实现跨窗口信息交换
+**Swin for Detection (Swin-L + FPN)**：
 
-Swin for Detection (Swin-L + FPN):
-Backbone: Swin-L (大模型)
-Neck: FPN + PAN
-Head: 检测头 (anchor-based)
-COCO mAP: 58.7% (vs YOLOv5s 37.4%)
-速度: 较慢 (计算量大)
-
-```
+- Backbone：Swin-L (大模型)
+- Neck：FPN + PAN
+- Head：检测头 (anchor-based)
+- COCO mAP：58.7% (vs YOLOv5s 37.4%)
+- 速度：较慢 (计算量大)
 
 #### 2.2.4 Deformable DETR 改进
 
@@ -3648,24 +3489,23 @@ YOLOv8s 各组件消融实验 (COCO val2017, 基准: YOLOv5s):
 
 #### 消融实验统计显著性分析
 
-```
-消融实验的统计显著性检验 (5 次重复实验):
+**消融实验的统计显著性检验 (5 次重复实验)**：
 
-组件             均值 mAP    标准差    95% 置信区间       显著性
-基准 (v5s)      37.42%      ±0.15%    [37.11%, 37.73%]  —
-+ C2f           38.91%      ±0.12%    [38.67%, 39.15%]  ★★
-+ Decoupled     40.23%      ±0.10%    [40.03%, 40.43%]  ★★★
-+ Anchor-Free   41.52%      ±0.08%    [41.36%, 41.68%]  ★★★
-+ Varifocal     42.31%      ±0.07%    [42.17%, 42.45%]  ★★★
-+ TaskAligned   43.08%      ±0.06%    [42.96%, 43.20%]  ★★★
-+ DFL           43.82%      ±0.05%    [43.72%, 43.92%]  ★★★
-+ SPPF          44.21%      ±0.04%    [44.13%, 44.29%]  ★★★
-完整            44.89%      ±0.03%    [44.83%, 44.95%]  ★★★
-★ p < 0.05, ★★ p < 0.01, ★★★ p < 0.001 (t-test vs 基准)
+| 组件 | 均值 mAP | 标准差 | 95% 置信区间 | 显著性 |
+| --- | --- | --- | --- | --- |
+| 基准 (v5s) | 37.42% | ±0.15% | [37.11%, 37.73%] | — |
+| + C2f | 38.91% | ±0.12% | [38.67%, 39.15%] | ★★ |
+| + Decoupled | 40.23% | ±0.10% | [40.03%, 40.43%] | ★★★ |
+| + Anchor-Free | 41.52% | ±0.08% | [41.36%, 41.68%] | ★★★ |
+| + Varifocal | 42.31% | ±0.07% | [42.17%, 42.45%] | ★★★ |
+| + TaskAligned | 43.08% | ±0.06% | [42.96%, 43.20%] | ★★★ |
+| + DFL | 43.82% | ±0.05% | [43.72%, 43.92%] | ★★★ |
+| + SPPF | 44.21% | ±0.04% | [44.13%, 44.29%] | ★★★ |
+| 完整 | 44.89% | ±0.03% | [44.83%, 44.95%] | ★★★ |
 
-结论: 所有组件的提升均在统计上显著 (p < 0.001)
+★ p &lt; 0.05, ★★ p &lt; 0.01, ★★★ p &lt; 0.001 (t-test vs 基准)
 
-```
+结论：所有组件的提升均在统计上显著 (p &lt; 0.001)
 
 #### 复现消融实验的代码
 
@@ -4855,37 +4695,38 @@ P5'  → C2f → [Cls, Reg] → 类别概率 + bbox
 
 **关键改进总结**：
 
-```
-YOLOv11 相比 YOLOv8 的核心改进:
+**YOLOv11 相比 YOLOv8 的核心改进**
 
+**1. PSA 注意力机制**
 
-1. PSA 注意力机制
-   · 在 C2f 模块后添加 Partial Self-Attention
-   · 分组自注意力: 将通道分为 4 组，每组内部计算注意力
-   · 计算量仅为全注意力的 1/4
-   · 有效捕捉长距离空间依赖关系
+- 在 C2f 模块后添加 Partial Self-Attention
+- 分组自注意力：将通道分为 4 组，每组内部计算注意力
+- 计算量仅为全注意力的 1/4
+- 有效捕捉长距离空间依赖关系
 
-2. 移除 DFL
-   · DFL 增加 4×16 = 64 通道的额外计算
-   · 移除后减少了 ~2% 的计算量
-   · 对定位精度影响微弱 (< 0.1pp)
+**2. 移除 DFL**
 
-3. 简化的检测头
-   · YOLOv8: 分类头 2× Conv, 回归头 2× Conv
-   · YOLOv11: 分类头 1× C2f, 回归头 1× C2f
-   · C2f 提供了更好的梯度流
+- DFL 增加 4×16 = 64 通道的额外计算
+- 移除后减少了 ~2% 的计算量
+- 对定位精度影响微弱 (&lt; 0.1pp)
 
-4. 更高效的模型缩放
-   · YOLOv11n 比 YOLOv8n 少 19% 参数
-   · YOLOv11l 比 YOLOv8l 少 42% 参数
-   · 同时保持了更高的精度
+**3. 简化的检测头**
 
-5. 混合标签分配
-   · 保留 Task-Aligned Assigner
-   · 添加 SimOTA 作为备选策略
-   · 可根据训练阶段动态切换
+- YOLOv8：分类头 2× Conv, 回归头 2× Conv
+- YOLOv11：分类头 1× C2f, 回归头 1× C2f
+- C2f 提供了更好的梯度流
 
-```
+**4. 更高效的模型缩放**
+
+- YOLOv11n 比 YOLOv8n 少 19% 参数
+- YOLOv11l 比 YOLOv8l 少 42% 参数
+- 同时保持了更高的精度
+
+**5. 混合标签分配**
+
+- 保留 Task-Aligned Assigner
+- 添加 SimOTA 作为备选策略
+- 可根据训练阶段动态切换
 
 ### 3.9 各层参数量详细分解
 
@@ -5698,111 +5539,97 @@ model.train(data='data.yaml', epochs=100, imgsz=640)
 
 **推理流程差异**：
 
-```
-YOLOv5 推理流程:
-  输入图像 → Resize → 前向推理 → 解码输出 → NMS(10-15ms) → 输出结果
+**YOLOv5 推理流程**：输入图像 → Resize → 前向推理 → 解码输出 → NMS(10-15ms) → 输出结果
 
-YOLOv8 推理流程:
-  输入图像 → Resize → 前向推理 → 解码输出 → NMS → 输出结果
+**YOLOv8 推理流程**：输入图像 → Resize → 前向推理 → 解码输出 → NMS → 输出结果
 
-注意: 两者的 NMS 过程相同（均为后处理），区别在于 YOLOv8 通过
-      Anchor-Free + TaskAligned Assigner 减少了冗余预测框，
-      使得 NMS 的计算量相对减少。
-
-```
+注意：两者的 NMS 过程相同（均为后处理），区别在于 YOLOv8 通过 Anchor-Free + TaskAligned Assigner 减少了冗余预测框，使得 NMS 的计算量相对减少。
 
 **梯度流分析：耦合头 vs 解耦头**：
 
-```
-耦合头 (Coupled Head, YOLOv5):
- 特征图 F → [Conv × 2] → 拼接 → [分类 + 回归]
- → cls: [B, nc, N]
- → reg: [B, 4, N]
-  问题: 分类和回归共享相同的特征 F
-    · ∂L_cls/∂F 和 ∂L_reg/∂F 方向可能冲突
-    · 分类任务优化时可能破坏回归特征
-    · 回归任务优化时可能破坏分类特征
+**耦合头 (Coupled Head, YOLOv5)**：
 
-解耦头 (Decoupled Head, YOLOv8):
- 特征图 F → [Conv × 2] → F' → [分类分支] → cls
- → [回归分支] → reg
+- 特征图 F → [Conv × 2] → 拼接 → [分类 + 回归]
+  - → cls: [B, nc, N]
+  - → reg: [B, 4, N]
+- 问题：分类和回归共享相同的特征 F
+  - ∂L_cls/∂F 和 ∂L_reg/∂F 方向可能冲突
+  - 分类任务优化时可能破坏回归特征
+  - 回归任务优化时可能破坏分类特征
 
-  优势:
-    · 分类分支学习专门的类别判别特征
-    · 回归分支学习专门的定位特征
-    · 两个分支的梯度互不干扰
-    · 实验表明 mAP 提升 1-3pp
+**解耦头 (Decoupled Head, YOLOv8)**：
 
-```
+- 特征图 F → [Conv × 2] → F' → [分类分支] → cls；→ [回归分支] → reg
+- 优势：
+  - 分类分支学习专门的类别判别特征
+  - 回归分支学习专门的定位特征
+  - 两个分支的梯度互不干扰
+  - 实验表明 mAP 提升 1-3pp
 
 **锚框偏差的数学分析**：
 
-```
-Anchor-Based (YOLOv5) 的锚框偏差问题:
+**Anchor-Based (YOLOv5) 的锚框偏差问题**
 
-  假设数据集目标尺度分布为:
-    小目标: 16×16 ~ 32×32 (占比 38%)
-    中目标: 32×32 ~ 96×96 (占比 45%)
-    大目标: 96×96 ~ 256×256 (占比 17%)
+假设数据集目标尺度分布为：
 
-  K-means 聚类得到 9 个锚框:
-    A1=(10,13), A2=(16,30), A3=(33,22), A4=(30,61),
-    A5=(62,45), A6=(59,119), A7=(116,90), A8=(156,197),
-    A9=(373,326)
+| 目标 | 尺度 | 占比 |
+| --- | --- | --- |
+| 小目标 | 16×16 ~ 32×32 | 38% |
+| 中目标 | 32×32 ~ 96×96 | 45% |
+| 大目标 | 96×96 ~ 256×256 | 17% |
 
-  问题:
-    1. 锚框是静态的，无法适应场景变化
-    2. 某些目标的尺度可能没有匹配的锚框
-    3. 需要为每个目标选择最佳锚框 (额外计算)
-    4. 锚框数量影响训练速度和精度
+K-means 聚类得到 9 个锚框：A1=(10,13), A2=(16,30), A3=(33,22), A4=(30,61), A5=(62,45), A6=(59,119), A7=(116,90), A8=(156,197), A9=(373,326)
 
-Anchor-Free (YOLOv8) 的解决方案:
-  · 不需要预定义锚框
-  · 每个网格点直接预测一个边界框
-  · 通过 TaskAligned Assigner 动态分配正样本
-  · 减少超参数，简化训练流程
+**问题**：
 
-```
+1. 锚框是静态的，无法适应场景变化
+2. 某些目标的尺度可能没有匹配的锚框
+3. 需要为每个目标选择最佳锚框 (额外计算)
+4. 锚框数量影响训练速度和精度
+
+**Anchor-Free (YOLOv8) 的解决方案**：
+
+- 不需要预定义锚框
+- 每个网格点直接预测一个边界框
+- 通过 TaskAligned Assigner 动态分配正样本
+- 减少超参数，简化训练流程
 
 **消融实验分析**：
 
-```
-YOLOv8 各组件的消融实验 (COCO val2017, YOLOv8s):
+**YOLOv8 各组件的消融实验 (COCO val2017, YOLOv8s)**：
 
- 实验设置 mAP50-95 相比基准提升
- 基准 (Coupled Head) 43.2% —
- + Decoupled Head 44.5% +1.3pp
- + Anchor-Free 44.9% +1.7pp
- + Varifocal Loss 45.1% +1.9pp
- + TaskAligned 45.3% +2.1pp
- + DFL 45.6% +2.4pp
- 完整 YOLOv8s 44.9% (各组件协同)
+| 实验设置 | mAP50-95 | 相比基准提升 |
+| --- | --- | --- |
+| 基准 (Coupled Head) | 43.2% | — |
+| + Decoupled Head | 44.5% | +1.3pp |
+| + Anchor-Free | 44.9% | +1.7pp |
+| + Varifocal Loss | 45.1% | +1.9pp |
+| + TaskAligned | 45.3% | +2.1pp |
+| + DFL | 45.6% | +2.4pp |
+| 完整 YOLOv8s | 44.9% | (各组件协同) |
 
-关键发现:
-  · Decoupled Head 贡献最大 (+1.3pp)
-  · DFL 对精度提升有限但有助于小目标定位
-  · 各组件之间存在协同效应，组合使用效果最佳
+**关键发现**：
 
-```
+- Decoupled Head 贡献最大 (+1.3pp)
+- DFL 对精度提升有限但有助于小目标定位
+- 各组件之间存在协同效应，组合使用效果最佳
 
 **选择决策树：何时使用 YOLOv5 vs YOLOv8 vs YOLOv10**：
 
-```
- 模型选择决策树
- Q1: 是否需要 NMS-Free 推理?
- 是 → 使用 YOLOv10 (原生端到端)
- 否 ↓
- Q2: 是否需要最高精度?
- 是 → 使用 YOLOv8 (成熟生态)
- 否 ↓
- Q3: 是否使用旧版代码库?
- 是 → 继续使用 YOLOv5 (兼容性好)
- 否 → 使用 YOLOv8 (新一代标准)
- Q4: 是否资源极度受限?
- 是 → 使用 YOLO11n (2.6M参数)
- 否 → YOLOv8s 是最佳平衡点
+**模型选择决策树**
 
-```
+- **Q1：是否需要 NMS-Free 推理？**
+  - 是 → 使用 YOLOv10 (原生端到端)
+  - 否 ↓
+- **Q2：是否需要最高精度？**
+  - 是 → 使用 YOLOv8 (成熟生态)
+  - 否 ↓
+- **Q3：是否使用旧版代码库？**
+  - 是 → 继续使用 YOLOv5 (兼容性好)
+  - 否 → 使用 YOLOv8 (新一代标准)
+- **Q4：是否资源极度受限？**
+  - 是 → 使用 YOLO11n (2.6M参数)
+  - 否 → YOLOv8s 是最佳平衡点
 
 ### 4.5 YOLOv8 vs YOLOv10 vs YOLO26 三代对比
 
@@ -5828,57 +5655,58 @@ YOLOv8 各组件的消融实验 (COCO val2017, YOLOv8s):
 
 **各代改进深度分析**：
 
-```
-YOLOv8 → YOLOv10 的改进:
- 核心突破: 去除 NMS
- YOLOv8 的问题:
- · NMS 是不可微的后处理操作，阻碍端到端优化
- · NMS 超参数（conf, iou阈值）需要场景调优
- · 冗余预测框增加了不必要的计算
- YOLOv10 的解决方案:
- · 一致性双分配 (CDA): 训练时确保每个目标只被一个预测框负责
- · 端到端优化: 去除 NMS 后，整个检测流程可微
- · 模型效率提升: 更简洁的 Head 设计
- 代价: 精度略有下降（约 0.3-0.5 mAP）
- 收益: 推理速度提升 16-19%，部署更简单
+**YOLOv8 → YOLOv10 的改进**
 
-YOLOv10 → YOLO26 的改进:
- 核心突破: 全面端到端 + 多任务统一
- YOLOv10 的局限:
- · 仍然使用 DFL，回归头复杂度高
- · 单任务架构（仅检测）
- · 优化器仍是传统 SGD
- · one-to-one 头是可选的，默认仍是 one-to-many
- YOLO26 的解决方案:
- · 移除 DFL: 回归头从 20 通道降至 4 通道，简化 80%
- · 原生 one-to-one: 默认端到端推理，无需 NMS
- · MuSGD 优化器: 借鉴 LLM 训练经验，正交化更新
- · 7 任务统一架构: 检测/分割/姿态/OBB/深度/分类/语义分割
- · Progressive Loss: 训练时逐步从 one-to-many 过渡到
- one-to-one，兼顾精度与效率
- · STAL: 改进小目标检测，动态调整正样本分配
- 收益: 参数量减少 20-30%，速度提升 40-57%，精度提升 1.5+pp
+核心突破：去除 NMS
 
-```
+- YOLOv8 的问题：
+  - NMS 是不可微的后处理操作，阻碍端到端优化
+  - NMS 超参数（conf, iou阈值）需要场景调优
+  - 冗余预测框增加了不必要的计算
+- YOLOv10 的解决方案：
+  - 一致性双分配 (CDA)：训练时确保每个目标只被一个预测框负责
+  - 端到端优化：去除 NMS 后，整个检测流程可微
+  - 模型效率提升：更简洁的 Head 设计
+- 代价：精度略有下降（约 0.3-0.5 mAP）
+- 收益：推理速度提升 16-19%，部署更简单
+
+**YOLOv10 → YOLO26 的改进**
+
+核心突破：全面端到端 + 多任务统一
+
+- YOLOv10 的局限：
+  - 仍然使用 DFL，回归头复杂度高
+  - 单任务架构（仅检测）
+  - 优化器仍是传统 SGD
+  - one-to-one 头是可选的，默认仍是 one-to-many
+- YOLO26 的解决方案：
+  - 移除 DFL：回归头从 20 通道降至 4 通道，简化 80%
+  - 原生 one-to-one：默认端到端推理，无需 NMS
+  - MuSGD 优化器：借鉴 LLM 训练经验，正交化更新
+  - 7 任务统一架构：检测/分割/姿态/OBB/深度/分类/语义分割
+  - Progressive Loss：训练时逐步从 one-to-many 过渡到 one-to-one，兼顾精度与效率
+  - STAL：改进小目标检测，动态调整正样本分配
+- 收益：参数量减少 20-30%，速度提升 40-57%，精度提升 1.5+pp
 
 **精度-速度权衡时间线**：
 
-```
-                     精度 (mAP, COCO val)
-                     ↑
- 58% ● YOLO26x (56.9)
- 56% ● YOLOv10 (54.5)
- 54% ● YOLOv8x (53.9)
- 52% ● YOLOv8l (52.9) ● YOLO26l (54.4)
- 50% ● YOLOv8m (50.2) ● YOLO26m (52.5)
- 48% ● YOLOv8s (44.9) ● YOLOv10s (~45) ● YOLO26s (47.8)
- 46% ● YOLO26n (40.1)
- 44%
- → 速度 (延迟, ms)
-           YOLOv8n  YOLOv8s YOLOv8m YOLOv8l YOLOv8x
-                     (向右=更慢)
+**精度-速度权衡时间线（mAP, COCO val；越靠右越慢）**：
 
-```
+| 模型 | mAP |
+| --- | --- |
+| YOLO26x | 56.9 |
+| YOLOv10 | 54.5 |
+| YOLO26l | 54.4 |
+| YOLOv8x | 53.9 |
+| YOLOv8l | 52.9 |
+| YOLO26m | 52.5 |
+| YOLOv8m | 50.2 |
+| YOLO26s | 47.8 |
+| YOLOv8s | 44.9 |
+| YOLOv10s | ~45 |
+| YOLO26n | 40.1 |
+
+（速度参考：YOLOv8n < YOLOv8s < YOLOv8m < YOLOv8l < YOLOv8x，向右 = 更慢）
 
 **三代演进的核心趋势**：
 
@@ -5894,141 +5722,153 @@ YOLOv10 → YOLO26 的改进:
 
 #### 4.6.1 COCO val2017 全尺寸对比
 
-```
-YOLO 全版本全尺寸性能对比 (COCO val2017):
+**YOLO 全版本全尺寸性能对比 (COCO val2017)**
 
-规模  YOLOv5s    YOLOv5m    YOLOv8s    YOLOv8m    YOLOv10s   YOLO11s    YOLO26s
-mAP50 75.2%      78.0%      82.3%      84.6%      82.7%      83.5%      84.1%
-mAP50-95 37.4%  48.8%      44.9%      50.2%      ~45.0%     47.8%      48.6%
-参数(M) 7.2      35.7       11.2       25.9       11.8       9.5        9.5
-FLOPs(G) 16.5   81.1       28.6       78.9       ~30.0      20.7       20.7
-FPS(T4)  85       35         95         45         ~98        105        ~110
-延迟(ms) ~12      ~29        ~11        ~22        ~10        ~10        ~9
-
-规模  YOLOv5l    YOLOv5x    YOLOv8l    YOLOv8x    YOLO11l    YOLO26l    YOLO26x
-mAP50 78.8%      79.7%      85.5%      86.8%      86.2%      87.0%      87.8%
-mAP50-95 48.8%  50.7%      52.9%      53.9%      ~53.5%     55.0%      57.5%
-参数(M) 35.7     86.7       43.7       68.2       24.8       24.8       55.7
-FLOPs(G) 81.1   195.5      165.2      257.8      ~175.0     86.4       193.9
-FPS(T4)  35       22         28         20         ~26        32         ~18
-延迟(ms) ~29      ~45        ~36        ~50        ~38        ~31        ~55
-
-```
+| 规模 | mAP50 | mAP50-95 | 参数(M) | FLOPs(G) | FPS(T4) | 延迟(ms) |
+| --- | --- | --- | --- | --- | --- | --- |
+| YOLOv5s | 75.2% | 37.4% | 7.2 | 16.5 | 85 | ~12 |
+| YOLOv5m | 78.0% | 48.8% | 35.7 | 81.1 | 35 | ~29 |
+| YOLOv8s | 82.3% | 44.9% | 11.2 | 28.6 | 95 | ~11 |
+| YOLOv8m | 84.6% | 50.2% | 25.9 | 78.9 | 45 | ~22 |
+| YOLOv10s | 82.7% | ~45.0% | 11.8 | ~30.0 | ~98 | ~10 |
+| YOLO11s | 83.5% | 47.8% | 9.5 | 20.7 | 105 | ~10 |
+| YOLO26s | 84.1% | 48.6% | 9.5 | 20.7 | ~110 | ~9 |
+| YOLOv5l | 78.8% | 48.8% | 35.7 | 81.1 | 35 | ~29 |
+| YOLOv5x | 79.7% | 50.7% | 86.7 | 195.5 | 22 | ~45 |
+| YOLOv8l | 85.5% | 52.9% | 43.7 | 165.2 | 28 | ~36 |
+| YOLOv8x | 86.8% | 53.9% | 68.2 | 257.8 | 20 | ~50 |
+| YOLO11l | 86.2% | ~53.5% | 24.8 | ~175.0 | ~26 | ~38 |
+| YOLO26l | 87.0% | 55.0% | 24.8 | 86.4 | 32 | ~31 |
+| YOLO26x | 87.8% | 57.5% | 55.7 | 193.9 | ~18 | ~55 |
 
 #### 4.6.2 各版本参数量与 FLOPs 对比图
 
-```
-参数量与 FLOPs 对比 (所有规模):
+**参数量 (M) 对比**：
 
-参数量 (M):
-         YOLOv5   YOLOv8   YOLO10   YOLO11   YOLO26
-n        3.2      3.2      3.5      2.6      2.4    ← 最小
-s        7.2      11.2     11.8     9.5      9.5    ← 推荐
-m        21.0     25.9     26.5     20.4     20.4   ← 平衡
-l        35.7     43.7     44.0     24.8     24.8   ← 高精度
-x        86.7     68.2     68.0     -        55.7   ← 旗舰
+| 规模 | YOLOv5 | YOLOv8 | YOLO10 | YOLO11 | YOLO26 | 定位 |
+| --- | --- | --- | --- | --- | --- | --- |
+| n | 3.2 | 3.2 | 3.5 | 2.6 | 2.4 | 最小 |
+| s | 7.2 | 11.2 | 11.8 | 9.5 | 9.5 | 推荐 |
+| m | 21.0 | 25.9 | 26.5 | 20.4 | 20.4 | 平衡 |
+| l | 35.7 | 43.7 | 44.0 | 24.8 | 24.8 | 高精度 |
+| x | 86.7 | 68.2 | 68.0 | - | 55.7 | 旗舰 |
 
 趋势: YOLO26 在相同精度下参数量减少 15-30%
 
-FLOPs (G, 640×640):
-         YOLOv5   YOLOv8   YOLO10   YOLO11   YOLO26
-n         8.7      8.7      9.0      6.2      5.4    ← 极低
-s        16.5     28.6     30.0     20.7     20.7   ← 推荐
-m        47.0     78.9     80.0     58.0     68.2   ← 平衡
-l        81.1    165.2    170.0    95.0     86.4   ← 高精度
-x       195.5    257.8    260.0    -        193.9  ← 旗舰
+**FLOPs (G, 640×640) 对比**：
+
+| 规模 | YOLOv5 | YOLOv8 | YOLO10 | YOLO11 | YOLO26 | 定位 |
+| --- | --- | --- | --- | --- | --- | --- |
+| n | 8.7 | 8.7 | 9.0 | 6.2 | 5.4 | 极低 |
+| s | 16.5 | 28.6 | 30.0 | 20.7 | 20.7 | 推荐 |
+| m | 47.0 | 78.9 | 80.0 | 58.0 | 68.2 | 平衡 |
+| l | 81.1 | 165.2 | 170.0 | 95.0 | 86.4 | 高精度 |
+| x | 195.5 | 257.8 | 260.0 | - | 193.9 | 旗舰 |
 
 趋势: YOLO26 计算量显著降低，推理效率更高
 
-```
-
 #### 4.6.3 推理速度对比
 
-```
-不同硬件平台上的推理速度 (ms/帧, 单张图像):
+**不同硬件平台上的推理速度 (ms/帧, 单张图像)**：
 
-模型        T4 GPU     A100 GPU    Jetson Orin   CPU (x86)
-YOLOv8n      8.2ms      4.1ms       25ms          45ms
-YOLOv8s     10.5ms      5.2ms       35ms          85ms
-YOLOv8m     22.0ms     11.0ms       65ms         180ms
-YOLOv8l     35.7ms     18.0ms      100ms         320ms
-YOLOv8x     50.0ms     25.0ms      150ms         500ms
-YOLO26n      1.7ms      0.8ms       12ms          25ms  ← 最快
-YOLO26s      2.5ms      1.2ms       18ms          40ms
-YOLO26m      4.7ms      2.4ms       30ms          75ms
-YOLO26l      6.2ms      3.2ms       42ms          105ms
-YOLO26x     11.8ms      6.0ms       75ms          185ms
-
-```
+| 模型 | T4 GPU | A100 GPU | Jetson Orin | CPU (x86) |
+| --- | --- | --- | --- | --- |
+| YOLOv8n | 8.2ms | 4.1ms | 25ms | 45ms |
+| YOLOv8s | 10.5ms | 5.2ms | 35ms | 85ms |
+| YOLOv8m | 22.0ms | 11.0ms | 65ms | 180ms |
+| YOLOv8l | 35.7ms | 18.0ms | 100ms | 320ms |
+| YOLOv8x | 50.0ms | 25.0ms | 150ms | 500ms |
+| YOLO26n | 1.7ms | 0.8ms | 12ms | 25ms ← 最快 |
+| YOLO26s | 2.5ms | 1.2ms | 18ms | 40ms |
+| YOLO26m | 4.7ms | 2.4ms | 30ms | 75ms |
+| YOLO26l | 6.2ms | 3.2ms | 42ms | 105ms |
+| YOLO26x | 11.8ms | 6.0ms | 75ms | 185ms |
 
 #### 4.6.4 精度-速度 Pareto 前沿
 
-```
-精度-速度权衡分析 (mAP50-95 vs 推理延迟, T4 GPU):
+**精度-速度权衡分析 (mAP50-95 vs 推理延迟, T4 GPU)**：
 
-                    推理延迟 (ms) →
-精度 (mAP%)  ↑     1      5      10     20     50    100
- 58% ●26x(56.9,11.8ms)
- 56% ●26l(55.0,6.2ms) ●26x(56.9,11.8ms)
- 54% ●26m(53.1,4.7ms) ●8x(53.9,50ms)
- 52% ●26s(48.6,2.5ms) ●8m(50.2,22ms) ●8l(52.9,36ms)
- 50% ●11s(47.8,~3ms) ●8s(44.9,11ms)
- 48% ●26n(40.1,1.7ms) ●5s(37.4,12ms)
- 46%
- 44%
- →
-         1     5    10    20    50   100ms
-
-```
+| 模型 | mAP50-95 | 推理延迟 (ms) |
+| --- | --- | --- |
+| YOLO26n | 40.1 | 1.7 |
+| YOLO26s | 48.6 | 2.5 |
+| YOLO11s | 47.8 | ~3 |
+| YOLO26m | 53.1 | 4.7 |
+| YOLO26l | 55.0 | 6.2 |
+| YOLOv8s | 44.9 | 11 |
+| YOLO26x | 56.9 | 11.8 |
+| YOLOv5s | 37.4 | 12 |
+| YOLOv8m | 50.2 | 22 |
+| YOLOv8l | 52.9 | 36 |
+| YOLOv8x | 53.9 | 50 |
 
 #### 4.6.5 COCO 细粒度 AP 对比
 
-```
-COCO 细粒度 AP 对比 (mAP_S / mAP_M / mAP_L):
+**COCO 细粒度 AP 对比 (mAP_S / mAP_M / mAP_L)**：
 
-模型          mAP_S(小)   mAP_M(中)   mAP_L(大)   综合 mAP
-YOLOv5s        19.5%       41.2%       57.8%      37.4%
-YOLOv8s        21.8%       46.5%       62.1%      44.9%
-YOLOv8m        25.2%       51.3%       67.8%      50.2%
-YOLOv10s       22.5%       47.8%       63.5%      ~45.0%
-YOLO11s        23.5%       49.2%       65.0%      47.8%
-YOLO26s        25.8%       51.5%       67.2%      48.6%
-YOLOv5x        24.5%       50.5%       68.5%      50.7%
-YOLOv8x        27.5%       55.8%       72.3%      53.9%
-YOLO26x        30.2%       58.5%       75.8%      56.9%
+| 模型 | mAP_S(小) | mAP_M(中) | mAP_L(大) | 综合 mAP |
+| --- | --- | --- | --- | --- |
+| YOLOv5s | 19.5% | 41.2% | 57.8% | 37.4% |
+| YOLOv8s | 21.8% | 46.5% | 62.1% | 44.9% |
+| YOLOv8m | 25.2% | 51.3% | 67.8% | 50.2% |
+| YOLOv10s | 22.5% | 47.8% | 63.5% | ~45.0% |
+| YOLO11s | 23.5% | 49.2% | 65.0% | 47.8% |
+| YOLO26s | 25.8% | 51.5% | 67.2% | 48.6% |
+| YOLOv5x | 24.5% | 50.5% | 68.5% | 50.7% |
+| YOLOv8x | 27.5% | 55.8% | 72.3% | 53.9% |
+| YOLO26x | 30.2% | 58.5% | 75.8% | 56.9% |
 
-关键观察:
-  · YOLO26 在小目标检测上优势明显 (mAP_S 提升 3-8pp)
-  · STAL (Scale-aware Task-aligned) 标签分配显著改善小目标
-  · YOLO26x 在各类别 AP 上均领先，体现了综合性能优势
+**关键观察**：
 
-```
+- YOLO26 在小目标检测上优势明显 (mAP_S 提升 3-8pp)
+- STAL (Scale-aware Task-aligned) 标签分配显著改善小目标
+- YOLO26x 在各类别 AP 上均领先，体现了综合性能优势
 
 #### 4.6.6 各版本 COCO 类别 AP 排名 (Top 10 类别)
 
-```
-COCO 80 类别中 Top 10 表现最佳类别 (YOLO26s):
+**COCO 80 类别中 Top 10 表现最佳类别 (YOLO26s)**：
 
-排名  类别         AP     类别         AP     类别         AP
- 1    cup          65.2%  27.  toothbrush  30.5%  53.  book       20.1%
- 2    bottle       62.8%  28.  clock      29.8%  54.  vase       19.5%
- 3    sandwich     58.5%  29.  keyboard   28.2%  55.  scissors   18.8%
- 4    bowl         57.2%  30.  remote     27.5%  56.  mirror     18.2%
- 5    bird         55.8%  31.  mouse      26.8%  57.  couch      75.2%
- 6    dog          55.1%  32.  tv         26.2%  58.  bed        72.5%
- 7    cat          54.5%  33.  cell phone 25.8%  59.  dining table 45.2%
- 8    horse        52.8%  34.  laptop     25.2%  60.  potted plant 22.5%
- 9    cow          51.2%  35.  chair      24.5%  61.  refrigerator 18.5%
-10    elephant     49.5%  36.  dining table 45.2% 62.  tv        26.2%
+| 排名 | 类别 | AP |
+| --- | --- | --- |
+| 1 | cup | 65.2% |
+| 2 | bottle | 62.8% |
+| 3 | sandwich | 58.5% |
+| 4 | bowl | 57.2% |
+| 5 | bird | 55.8% |
+| 6 | dog | 55.1% |
+| 7 | cat | 54.5% |
+| 8 | horse | 52.8% |
+| 9 | cow | 51.2% |
+| 10 | elephant | 49.5% |
+| 27 | toothbrush | 30.5% |
+| 28 | clock | 29.8% |
+| 29 | keyboard | 28.2% |
+| 30 | remote | 27.5% |
+| 31 | mouse | 26.8% |
+| 32 | tv | 26.2% |
+| 33 | cell phone | 25.8% |
+| 34 | laptop | 25.2% |
+| 35 | chair | 24.5% |
+| 36 | dining table | 45.2% |
+| 53 | book | 20.1% |
+| 54 | vase | 19.5% |
+| 55 | scissors | 18.8% |
+| 56 | mirror | 18.2% |
+| 57 | couch | 75.2% |
+| 58 | bed | 72.5% |
+| 59 | dining table | 45.2% |
+| 60 | potted plant | 22.5% |
+| 61 | refrigerator | 18.5% |
+| 62 | tv | 26.2% |
+
 (仅列部分，完整 80 类见 Ultralytics 官方报告)
 
-类别难度排名 (AP 从高到低):
-  易: person, car, truck, bus, bicycle, motorcycle
-  中: chair, table, couch, bed, potted plant
-  难: cell phone, keyboard, remote, mouse, scissors
-  极难: toothbrush, book, vase, mirror
+**类别难度排名 (AP 从高到低)**：
 
-```
+- 易：person, car, truck, bus, bicycle, motorcycle
+- 中：chair, table, couch, bed, potted plant
+- 难：cell phone, keyboard, remote, mouse, scissors
+- 极难：toothbrush, book, vase, mirror
 
 ---
 
@@ -8162,8 +8002,7 @@ Neck 总 FLOPs: ~0.93G
 
 **Head 阶段（YOLO26 双头）**：
 
-```
-
+```text
 STEP 8: One-to-One Head (e2e 默认)
 
 输入:  P3'[1,128,80,80], P4'[1,256,40,40], P5'[1,512,20,20]
@@ -8180,29 +8019,27 @@ P5 分支 FLOPs: ~0.11G + ~0.11G + ~0.008G ≈ 0.228G
 Concat 三个尺度输出: [1, 900, 6]
 FLOPs: 可忽略
 Head 累计 FLOPs: ~0.41G
-
 ```
 
-```
+**最终输出**
 
-最终输出
+- 输出张量：`[1, 900, 6]`
+- 每个预测：`[cx, cy, w, h, conf, class_id]`
+- cx,cy,w,h：归一化到 [0, 1]
+- conf：置信度 [0, 1]
+- class_id：类别索引
 
-输出张量: [1, 900, 6]
-每个预测: [cx, cy, w, h, conf, class_id]
-cx,cy,w,h: 归一化到 [0, 1]
-conf: 置信度 [0, 1]
-class_id: 类别索引
+**YOLO26s 总 FLOPs**：
 
-YOLO26s 总 FLOPs:
-预处理:  < 0.001G
-Backbone: ~1.80G
-Neck:  ~0.93G
-Head:  ~0.41G
+| 阶段 | FLOPs |
+| --- | --- |
+| 预处理 | &lt; 0.001G |
+| Backbone | ~1.80G |
+| Neck | ~0.93G |
+| Head | ~0.41G |
+| **总计** | **~3.14G** |
 
-总计:  ~3.14G  (实际报告值 20.7G 包含更多操作)
-↑ 这是简化估算，实际值因具体实现略有差异
-
-```
+(实际报告值 20.7G 包含更多操作；↑ 这是简化估算，实际值因具体实现略有差异)
 
 **内存消耗追踪**：
 
@@ -8227,24 +8064,23 @@ GPU 显存占用还需考虑 cuDNN 工作空间等开销。
 
 **各阶段 FLOPs 占比汇总**：
 
-```
-YOLO26s @ 640×640 输入:
+**YOLO26s @ 640×640 输入**：
 
-预处理 (Letterbox+Normalize)  ████████░░░░░░░░░░░░  ~2%
-Backbone (Stage 1-4 + SPPF)  ████████████████████  ~55%
-Neck (FPN + PAN)  ████████░░░░░░░░░░░░  ~28%
-Head (双头输出)  ███░░░░░░░░░░░░░░░░░  ~10%
-后处理 (NMS/解码)  ░░░░░░░░░░░░░░░░░░░░  ~5%
+| 阶段 | FLOPs 占比 |
+| --- | --- |
+| 预处理 (Letterbox+Normalize) | ~2% |
+| Backbone (Stage 1-4 + SPPF) | ~55% |
+| Neck (FPN + PAN) | ~28% |
+| Head (双头输出) | ~10% |
+| 后处理 (NMS/解码) | ~5% |
+| **总计** | **100%** |
 
-总计  ████████████████████  100%
+**关键观察**：
 
-关键观察:
-· Backbone 占据超过一半的计算量，是优化的首要目标
-· Neck 约 28%，特征融合的计算不可忽视
-· Head 和 后处理 相对轻量
-· 减小输入尺寸对 Backbone 影响最大（平方关系）
-
-```
+- Backbone 占据超过一半的计算量，是优化的首要目标
+- Neck 约 28%，特征融合的计算不可忽视
+- Head 和 后处理 相对轻量
+- 减小输入尺寸对 Backbone 影响最大（平方关系）
 
 ### 6.2 YOLO 七任务详解
 
@@ -8252,73 +8088,45 @@ YOLO26 在一个统一框架下支持七大计算机视觉任务。每个任务�
 
 #### 6.2.1 任务总览
 
-YOLO26 七大任务全景图
+**YOLO26 七大任务全景图**
 
-检测  实例分割  语义分割
-Detect  Segment  Semantic
-[bbox+cls]  [mask+bbox]  [pixel cls]
+所有任务共享 **Backbone + Neck（CSPDarknet + CSP-PAN）** 进行特征提取，仅 Head 不同：
 
-输出:  输出:  输出:
-N×(x,y,w,h  N×mask  H×W×C
-+conf+cls)  +bbox+cls  (像素类别)
-
-▼
-
-Backbone + Neck
-(CSPDarknet + CSP-PAN)
-共享特征提取
-
-▼  ▼  ▼
-
-姿态估计  旋转框检测  深度估计
-Pose  OBB  Depth
-[kpts+bbox]  [obb+cls]  [depth map]
-
-输出:  输出:  输出:
-N×17kpts  N×(cx,cy  H×W
-+conf  ,w,h,θ)  (深度值)
-
-▼
-
-图像分类
-Classify
-[cls prob]
-
-输出:
-C×prob
+| 任务 | 英文 | 输出 |
+| --- | --- | --- |
+| 检测 | Detect | N×(x,y,w,h +conf+cls) |
+| 实例分割 | Segment | N×mask +bbox+cls |
+| 语义分割 | Semantic | H×W×C (像素类别) |
+| 姿态估计 | Pose | N×17kpts +conf |
+| 旋转框检测 | OBB | N×(cx,cy,w,h,θ) |
+| 深度估计 | Depth | H×W (深度值) |
+| 图像分类 | Classify | C×prob |
 
 #### 6.2.2 各任务详细解析
 
 **任务 1：目标检测（Detection）**
 
-```
-任务目标: 在图像中定位并识别所有目标物体
+**任务目标**：在图像中定位并识别所有目标物体
 
-输入:  图像 [B, 3, 640, 640]
-输出:  [N, 6] 或 [N, 4+nc]
+- 输入：图像 `[B, 3, 640, 640]`
+- 输出：`[N, 6]` 或 `[N, 4+nc]`
 
-输出格式 (one-to-one, e2e):
+**输出格式 (one-to-one, e2e)**：
 
-cx  cy  w  h  conf  class
-float float float float float  int
+| cx | cy | w | h | conf | class |
+| --- | --- | --- | --- | --- | --- |
+| float | float | float | float | float | int |
+| 320.5 | 240.3 | 80.0 | 120.7 | 0.95 | 2 ← 第1个检测 |
+| 150.2 | 400.1 | 60.5 | 90.3 | 0.87 | 7 ← 第2个检测 |
 
-320.  240.  80.  120.  0.95  2  ← 第1个检测
-5  3  0  7
-150.  400.  60.  90.  0.87  7  ← 第2个检测
-.2  .1  .5  .3
+**标注格式 (YOLO)**：`class_id x_center y_center width height`，例如 `2 0.5 0.375 0.125 0.1875`
 
+**典型应用场景**：
 
-标注格式 (YOLO):
-class_id x_center y_center width height
-2 0.5 0.375 0.125 0.1875
-
-典型应用场景:
-· 安防监控中的人群/车辆检测
-· 自动驾驶中的交通参与者识别
-· 工业流水线的零件检测
-· 零售场景的商品识别
-
-```
+- 安防监控中的人群/车辆检测
+- 自动驾驶中的交通参与者识别
+- 工业流水线的零件检测
+- 零售场景的商品识别
 
 **任务 2：实例分割（Instance Segmentation）**
 
@@ -8424,43 +8232,35 @@ vis (visibility): 0=不可见, 1=可见未标注, 2=可见且已标注
 
 **任务 5：旋转框检测（Oriented Bounding Box, OBB）**
 
-```
-任务目标: 检测具有任意朝向的目标，输出包含角度信息的边界框
+**任务目标**：检测具有任意朝向的目标，输出包含角度信息的边界框
 
-输入:  图像 [B, 3, 1024, 1024]  (OBB 通常使用更高分辨率)
-输出:  [N, 5]  (cx, cy, w, h, angle) + 类别 + 置信度
+- 输入：图像 `[B, 3, 1024, 1024]`（OBB 通常使用更高分辨率）
+- 输出：`[N, 5]` (cx, cy, w, h, angle) + 类别 + 置信度
 
-旋转框参数化:
+**旋转框参数化**：
 
-  [cx, cy, w, h, θ]
-  cx, cy: 中心点坐标 (归一化)
-  w, h:  宽度和高度 (w ≥ h)
-  θ:  旋转角度 ∈ (-π/2, π/2]
-  0 = 水平, 正值=逆时针
+| 参数 | 含义 |
+| --- | --- |
+| cx, cy | 中心点坐标 (归一化) |
+| w, h | 宽度和高度 (w ≥ h) |
+| θ | 旋转角度 ∈ (-π/2, π/2]，0 = 水平，正值 = 逆时针 |
 
+**与轴对齐框的对比**：
 
-与轴对齐框的对比:
+| 类型 | 背景噪声 | NMS 效果 |
+| --- | --- | --- |
+| 轴对齐框 (YOLOv8) | 多，重叠面积大 | 差 |
+| 旋转框 (YOLO26-OBB) | 紧贴目标，重叠面积小 | 好 |
 
-  轴对齐框 (YOLOv8):  旋转框 (YOLO26-OBB):
-  ╭╮
-  ✦ ✦  ← 背景噪声多  ✦ ✦  ← 紧贴目标
-  ✦ ✦  ╰╯
-  旋转角度: -30°
-  重叠面积大，NMS 效果差  重叠面积小，NMS 效果好
+**角度周期性处理**：θ 和 θ+π 表示同一个方向，训练时需要特殊处理避免梯度跳变。常用方案：使用 sin(θ), cos(θ) 编码，或限制角度范围。
 
+**标注格式 (DOTA)**：`x1 y1 x2 y2 x3 y3 x4 y4 class_name`（四个顶点顺时针排列）
 
-角度周期性处理:
-  θ 和 θ+π 表示同一个方向，训练时需要特殊处理避免梯度跳变
-  常用方案: 使用 sin(θ), cos(θ) 编码，或限制角度范围
+**典型应用场景**：
 
-标注格式 (DOTA):
-  x1 y1 x2 y2 x3 y3 x4 y4 class_name
-  (四个顶点顺时针排列)
-
-典型应用场景:
-  · 航空/卫星影像中的建筑物、船舶、飞机检测
-  · 密集排列场景中的文字检测
-  · 工业场景中旋转摆放的零件检测
+- 航空/卫星影像中的建筑物、船舶、飞机检测
+- 密集排列场景中的文字检测
+- 工业场景中旋转摆放的零件检测
   · 遥感影像中的道路和河流提取
 
 ```
@@ -8710,36 +8510,23 @@ with torch.no_grad():
 
 **步骤 4：使用 Netron 的关键技巧**
 
-```
-技巧 1：搜索特定层
-  快捷键 Ctrl+F，输入 "C2f" 或 "SPPF" 快速定位
+**技巧 1：搜索特定层** — 快捷键 Ctrl+F，输入 "C2f" 或 "SPPF" 快速定位
 
-技巧 2：展开/折叠子模块
-  点击模块名称左侧的 ▶ 箭头展开，▶ 箭头折叠
+**技巧 2：展开/折叠子模块** — 点击模块名称左侧的 ▶ 箭头展开，▶ 箭头折叠
 
-技巧 3：查看参数分布
-  点击任意 Conv 层 → 右侧面板 → Parameters → weight
-  点击 "Show histogram" 可查看权重分布直方图
+**技巧 3：查看参数分布** — 点击任意 Conv 层 → 右侧面板 → Parameters → weight；点击 "Show histogram" 可查看权重分布直方图
 
-技巧 4：找出计算量最大的层
-  按 FLOPs 排序：Netron 不直接显示，但可以通过
-  层名称和形状推断。Conv 层的 FLOPs ≈
-  2 × Cin × Cout × Kh × Kw × H × W
+**技巧 4：找出计算量最大的层** — 按 FLOPs 排序：Netron 不直接显示，但可以通过层名称和形状推断。Conv 层的 FLOPs ≈ $2 \times C_{in} \times C_{out} \times K_h \times K_w \times H \times W$
 
-技巧 5：对比不同版本的模型
-  导出 yolo26n.onnx 和 yolo11n.onnx
-  在 Netron 中并排打开，对比结构差异
+**技巧 5：对比不同版本的模型** — 导出 yolo26n.onnx 和 yolo11n.onnx，在 Netron 中并排打开，对比结构差异
 
-技巧 6：导出为图片
-  菜单 File → Export Image → 选择 PNG/SVG
-  适合插入论文或技术文档
-
-```
+**技巧 6：导出为图片** — 菜单 File → Export Image → 选择 PNG/SVG，适合插入论文或技术文档
 
 #### 6.3.5 用 Netron 分析 C2f 模块内部结构
 
 在 Netron 中展开 C2f 模块后，可以看到以下结构：
 
+```text
 C2f_0 (例如 Stage 2 的第一个 C2f)
 
 Input: [1, 256, 40, 40]
@@ -8796,6 +8583,7 @@ Output: [1, 256, 40, 40]
 Concat(x1, x2_output)
 ▼
 Final Output
+```
 
 **如何在 Netron 中验证**：
 1. 打开 `yolo26n.onnx`
@@ -9342,14 +9130,11 @@ subprocess.Popen(['netron', 'yolo_model_tf'])
 TensorFlow SavedModel 目录结构:
 
 yolo_model_tf/
-|  saved_model.pb | # | 模型图定义 |
-| --- | --- | --- |
-
- variables/
-|  |  variables.data-00000-of-00001 | # 变量数据 |
-| --- | --- | --- |
-|  |  variables.index | # 变量索引 |
-|  assets/ | # | 资产文件 |
+  saved_model.pb              # 模型图定义
+  variables/
+    variables.data-00000-of-00001   # 变量数据
+    variables.index                 # 变量索引
+  assets/                     # 资产文件
 Netron 中查看 TensorFlow 模型:
   · 左侧面板显示完整计算图
   · 点击任意节点可查看详细信息
@@ -9625,42 +9410,43 @@ if __name__ == "__main__":
 
 #### 6.2.7 Netron 进阶技巧
 
-```
-Netron 高级使用技巧:
+**Netron 高级使用技巧**
 
+**1. 节点搜索**：
 
-1. 节点搜索:
-· 快捷键: Ctrl+F (Windows/Linux) 或 Cmd+F (Mac)
-· 支持正则表达式搜索
-· 搜索结果高亮显示
+- 快捷键：Ctrl+F (Windows/Linux) 或 Cmd+F (Mac)
+- 支持正则表达式搜索
+- 搜索结果高亮显示
 
-2. 图层对比:
-· 右键点击图层 → "Compare with another layer"
-· 可以对比不同版本的模型差异
-· 用于模型压缩/剪枝后的验证
+**2. 图层对比**：
 
-3. 计算图导出:
-· File → Export → PNG / SVG / PDF
-· 支持导出完整的计算图
-· 适合论文中的架构图绘制
+- 右键点击图层 → "Compare with another layer"
+- 可以对比不同版本的模型差异
+- 用于模型压缩/剪枝后的验证
 
-4. 自定义样式:
-· View → Font Size (调整字体大小)
-· View → Theme (深色/浅色主题)
-· View → Compact (紧凑模式)
+**3. 计算图导出**：
 
-5. 模型调试:
-· 右键节点 → "Debug" 查看中间输出
-· 可以打印任意层的激活值
-· 配合 PyTorch hooks 进行详细调试
+- File → Export → PNG / SVG / PDF
+- 支持导出完整的计算图
+- 适合论文中的架构图绘制
 
-6. 多模型对比:
-· 打开多个 Netron 窗口
-· 并排对比不同版本的模型结构
-· 用于版本迭代的可视化分析
+**4. 自定义样式**：
 
+- View → Font Size (调整字体大小)
+- View → Theme (深色/浅色主题)
+- View → Compact (紧凑模式)
 
-```
+**5. 模型调试**：
+
+- 右键节点 → "Debug" 查看中间输出
+- 可以打印任意层的激活值
+- 配合 PyTorch hooks 进行详细调试
+
+**6. 多模型对比**：
+
+- 打开多个 Netron 窗口
+- 并排对比不同版本的模型结构
+- 用于版本迭代的可视化分析
 
 ## 七、Ultralytics Platform 详解
 
@@ -9982,16 +9768,14 @@ model.export(format="engine", half=True, imgsz=640)
 
 **案例：工厂产品缺陷检测系统**
 
-```
-项目背景:
-  · 任务: 检测电路板上的 5 类缺陷（划痕、短路、缺失元件、焊点异常、错位）
-  · 数据: 2000 张标注图像 (YOLO 格式)
-  · 硬件: NVIDIA T4 GPU 服务器
-  · 要求: 实时推理 (< 20ms/帧)，REST API 接口
+**项目背景**：
 
-Step 1: 数据准备与训练
+- 任务：检测电路板上的 5 类缺陷（划痕、短路、缺失元件、焊点异常、错位）
+- 数据：2000 张标注图像 (YOLO 格式)
+- 硬件：NVIDIA T4 GPU 服务器
+- 要求：实时推理 (&lt; 20ms/帧)，REST API 接口
 
-```
+**Step 1：数据准备与训练**
 
 ```python
 # data.yaml
@@ -10365,30 +10149,28 @@ SLA 保障  99%  99.9%  99.99%
 
 **成本估算示例**：
 
-```
-典型项目成本估算 (YOLOv8s 训练 + 部署):
+**典型项目成本估算 (YOLOv8s 训练 + 部署)**
 
+**场景1：个人开发者（Free 计划）**
 
-场景1: 个人开发者 (Free 计划)
-  · 训练: 共享 GPU，排队等待，预计 2-4 小时
-  · 部署: 1 个 API 端点，月请求 1000 次
-  · 月成本: $0
-  · 年度成本: $0
+- 训练：共享 GPU，排队等待，预计 2-4 小时
+- 部署：1 个 API 端点，月请求 1000 次
+- 月成本：$0
+- 年度成本：$0
 
-场景2: 初创团队 (Pro 计划)
-  · 训练: 独占 GPU (A100)，预计 30 分钟
-  · 部署: 5 个 API 端点，月请求 50,000 次
-  · 月成本: $20 × 5 用户 + $50 超额推理 = $150
-  · 年度成本: ~$1,800
+**场景2：初创团队（Pro 计划）**
 
-场景3: 企业级 (Enterprise 计划)
-  · 训练: 专属 H100 集群，并行训练 8 卡
-  · 部署: 无限端点，高可用集群
-  · 月成本: 定制报价 (约 $2,000-10,000/月)
-  · 年度成本: ~$24,000-120,000
+- 训练：独占 GPU (A100)，预计 30 分钟
+- 部署：5 个 API 端点，月请求 50,000 次
+- 月成本：$20 × 5 用户 + $50 超额推理 = $150
+- 年度成本：~$1,800
 
+**场景3：企业级（Enterprise 计划）**
 
-```
+- 训练：专属 H100 集群，并行训练 8 卡
+- 部署：无限端点，高可用集群
+- 月成本：定制报价 (约 $2,000-10,000/月)
+- 年度成本：~$24,000-120,000
 
 #### 7.3.2 团队协作深度功能
 
@@ -10569,39 +10351,44 @@ Response:
 
 #### 7.3.5 企业级功能
 
-```
-企业级功能详情:
+**企业级功能详情**
 
+**1. SSO/LDAP 集成**：
 
-1. SSO/LDAP 集成:
-· 支持 SAML 2.0 协议
-· 支持 OIDC (OpenID Connect)
-· 支持 LDAP/Active Directory
-· 配置示例:
+- 支持 SAML 2.0 协议
+- 支持 OIDC (OpenID Connect)
+- 支持 LDAP/Active Directory
+- 配置示例：
+
+```json
 {
-"sso_provider": "okta",
-"issuer_url": "https://company.okta.com",
-"client_id": "xxx",
-"client_secret": "xxx"
+  "sso_provider": "okta",
+  "issuer_url": "https://company.okta.com",
+  "client_id": "xxx",
+  "client_secret": "xxx"
 }
+```
 
-2. 审计日志:
-· 记录所有用户操作 (登录、训练、部署、删除)
-· 支持导出为 CSV/JSON 格式
-· 保留周期: 默认 180 天，可延长至 7 年
-· 合规支持: SOC 2, GDPR, HIPAA
+**2. 审计日志**：
 
-3. 合规与安全:
-· 数据加密: AES-256 (静态) + TLS 1.3 (传输)
-· 访问控制: RBAC (基于角色的访问控制)
-· 网络隔离: VPC 支持
-· 数据主权: 支持区域化部署
+- 记录所有用户操作 (登录、训练、部署、删除)
+- 支持导出为 CSV/JSON 格式
+- 保留周期：默认 180 天，可延长至 7 年
+- 合规支持：SOC 2, GDPR, HIPAA
 
-4. SLA 保障:
-· Free: 99% 可用性
-· Pro: 99.9% 可用性
-· Enterprise: 99.99% 可用性
-· 超时补偿: 按比例退还当月费用
+**3. 合规与安全**：
+
+- 数据加密：AES-256 (静态) + TLS 1.3 (传输)
+- 访问控制：RBAC (基于角色的访问控制)
+- 网络隔离：VPC 支持
+- 数据主权：支持区域化部署
+
+**4. SLA 保障**：
+
+- Free：99% 可用性
+- Pro：99.9% 可用性
+- Enterprise：99.99% 可用性
+- 超时补偿：按比例退还当月费用
 
 
 ```
@@ -11568,25 +11355,17 @@ Netron 不仅支持查看模型结构，还可以与多种推理框架集成，�
 
 #### 6.6.1 Netron + TensorFlow 集成
 
-```
-
-Netron 查看 TensorFlow SavedModel 结构:
-
+**Netron 查看 TensorFlow SavedModel 结构**：
 
 1. 导出 TensorFlow SavedModel
-   model.export(format="savedmodel")
-
+   `model.export(format="savedmodel")`
 2. 使用 Netron 打开
-   netron runs/train/exp/weights/saved_model/
-
+   `netron runs/train/exp/weights/saved_model/`
 3. TensorFlow 特有信息:
-   · 每个操作节点的输入/输出张量
-   · TensorRT 优化后的算子融合
-   · tf.function 追踪的图结构
-   · 常量折叠后的优化结果
-
-
-```
+   - 每个操作节点的输入/输出张量
+   - TensorRT 优化后的算子融合
+   - `tf.function` 追踪的图结构
+   - 常量折叠后的优化结果
 
 #### 6.6.2 Netron + ONNX Runtime 调试
 
@@ -11696,27 +11475,18 @@ def debug_onnx_model(onnx_path):
 
 #### 6.6.3 多框架模型导出验证清单
 
-```
-多框架模型导出验证清单:
+**多框架模型导出验证清单**：
+
 | 框架 | 导出命令 | Netron 验证要点 | 常见问题 |
 | --- | --- | --- | --- |
-| ONNX | model.export("onnx") | 输入/输出张量形状 | · 动态轴处理 |
-· 算子不支持
+| ONNX | `model.export("onnx")` | 输入/输出张量形状 | 动态轴处理、算子不支持 |
+| TensorRT | `model.export("engine")` | 引擎绑定数、精度模式 | FP16 精度损失、算子未实现 |
+| TFLite | `model.export("tflite")` | 量化参数、TFLite 算子映射 | 算子不支持、动态 shape |
+| CoreML | `model.export("coreml")` | 神经网络层类型、精度 | 部分算子不支持、iOS 版本兼容 |
+| OpenVINO | `model.export("openvino")` | IR 文件、权重精度 | CPU 后端限制、算子转换 |
 
-TensorRT  model.export("engine")  引擎绑定数、精度模式  · FP16 精度损失
-· 算子未实现
+**Netron 通用排查步骤**：
 
-TFLite  model.export("tflite")  量化参数、TFLite 算子映射  · 算子不支持
-· 动态 shape
-
-CoreML  model.export("coreml")  神经网络层类型、精度  · 部分算子不支持
-· iOS 版本兼容
-
-OpenVINO  model.export("openvino")  IR 文件、权重精度  · CPU 后端限制
-· 算子转换
-
-
-Netron 通用排查步骤:
 1. 打开模型文件
 2. 检查输入张量形状是否与预期一致
 3. 检查输出张量形状
@@ -11724,40 +11494,25 @@ Netron 通用排查步骤:
 5. 对比原始 PyTorch 模型结构
 6. 检查是否有未支持的算子（红色标记）
 
-
-```
-
-### 6.2 Netron 与多框架实战
-
-### 6.6 Netron 与多框架集成实战
-
 Netron 不仅支持查看模型结构，还可以与多种推理框架集成，帮助开发者验证模型在不同后端上的行为。
 
 #### 6.6.1 Netron + TensorFlow 集成
 
-```
-Netron 查看 TensorFlow SavedModel 结构:
-
+**Netron 查看 TensorFlow SavedModel 结构**：
 
 1. 导出 TensorFlow SavedModel
-   model.export(format="savedmodel")
-
+   `model.export(format="savedmodel")`
 2. 使用 Netron 打开
-   netron runs/train/exp/weights/saved_model/
-
+   `netron runs/train/exp/weights/saved_model/`
 3. TensorFlow 特有信息:
-   · 每个操作节点的输入/输出张量
-   · TensorRT 优化后的算子融合
-   · tf.function 追踪的图结构
-   · 常量折叠后的优化结果
-
+   - 每个操作节点的输入/输出张量
+   - TensorRT 优化后的算子融合
+   - `tf.function` 追踪的图结构
+   - 常量折叠后的优化结果
 4. TensorFlow Lite 验证:
-   model.export(format="tflite")
-   # 在 Netron 中打开 .tflite 文件
-   # 可以查看 TFLite 算子映射和量化参数
+   `model.export(format="tflite")` — 在 Netron 中打开 `.tflite` 文件，可查看 TFLite 算子映射和量化参数
 
-
-```
+#### 6.6.2 Netron + ONNX Runtime 调试
 
 ```python
 """
@@ -12015,14 +11770,11 @@ subprocess.Popen(['netron', 'yolo_model_tf'])
 TensorFlow SavedModel 目录结构:
 
 yolo_model_tf/
-|  saved_model.pb | # | 模型图定义 |
-| --- | --- | --- |
-
- variables/
-|  |  variables.data-00000-of-00001 | # 变量数据 |
-| --- | --- | --- |
-|  |  variables.index | # 变量索引 |
-|  assets/ | # | 资产文件 |
+  saved_model.pb              # 模型图定义
+  variables/
+    variables.data-00000-of-00001   # 变量数据
+    variables.index                 # 变量索引
+  assets/                     # 资产文件
 Netron 中查看 TensorFlow 模型:
   · 左侧面板显示完整计算图
   · 点击任意节点可查看详细信息
@@ -12529,32 +12281,25 @@ model.train(
 
 ### 8.7 从头训练 vs 迁移学习
 
-```
-训练策略选择决策树:
+**训练策略选择决策树**：
 
+是否有标注数据？
+- 否 → 使用预训练权重 + 迁移学习
+- 是 ↓
 
-是否有标注数据?
-否 → 使用预训练权重 + 迁移学习
-
-是 ↓
-
-数据量如何?
-< 500 张 → 迁移学习 (必须)
-· 冻结 Backbone 前 N 层
-· 只训练 Head 和最后几层
-· 使用较低学习率 (1e-4 ~ 1e-3)
-· 更多 epochs (300-500)
-
-500-5000 张 → 迁移学习 (推荐)
-· 解冻部分 Backbone
-· 使用中等学习率 (1e-3 ~ 5e-3)
-· 标准 epochs (100-200)
-
-> 5000 张 → 从头训练 或 迁移学习
-· 从头训练: 使用更高的学习率, 更强的数据增强
-· 迁移学习: 通常更快收敛, 精度相近
-
-```
+数据量如何？
+- **< 500 张 → 迁移学习 (必须)**
+  - 冻结 Backbone 前 N 层
+  - 只训练 Head 和最后几层
+  - 使用较低学习率 (1e-4 ~ 1e-3)
+  - 更多 epochs (300-500)
+- **500-5000 张 → 迁移学习 (推荐)**
+  - 解冻部分 Backbone
+  - 使用中等学习率 (1e-3 ~ 5e-3)
+  - 标准 epochs (100-200)
+- **> 5000 张 → 从头训练 或 迁移学习**
+  - 从头训练: 使用更高的学习率, 更强的数据增强
+  - 迁移学习: 通常更快收敛, 精度相近
 
 **迁移学习最佳实践**：
 
@@ -12622,43 +12367,42 @@ model.train(
 
 **学习率调度策略**：
 
-```
-YOLO 的学习率调度 (Cosine LR Decay with Warmup):
+**YOLO 的学习率调度 (Cosine LR Decay with Warmup)**：
 
-  阶段 1: Warmup (前 3 轮)
-    lr = lr0 × (epoch / warmup_epochs)
-    作用: 避免初始梯度突变，稳定训练
+**阶段 1: Warmup (前 3 轮)**
 
-  阶段 2: Cosine Decay (剩余轮数)
-    lr = lrf × lr0 + 0.5 × (1 - lrf) × lr0 × (1 + cos(π × t / T))
-    其中:
-      lrf = 最终学习率比例 (默认 0.01)
-      t = 当前轮数
-      T = 总轮数
+- $lr = lr_0 \times (epoch / warmup\_epochs)$
+- 作用: 避免初始梯度突变，稳定训练
 
-  效果:
-    · Warmup 阶段: 学习率从 0 线性增加到 lr0
-    · Cosine 阶段: 学习率从 lr0 平滑衰减到 lrf × lr0
-    · 避免陷入局部最优，提升最终精度
+**阶段 2: Cosine Decay (剩余轮数)**
 
-```
+$$lr = lrf \times lr_0 + 0.5 \times (1 - lrf) \times lr_0 \times \left(1 + \cos\left(\pi \times \frac{t}{T}\right)\right)$$
+
+其中:
+- `lrf` = 最终学习率比例 (默认 0.01)
+- `t` = 当前轮数
+- `T` = 总轮数
+
+**效果**：
+- Warmup 阶段: 学习率从 0 线性增加到 `lr0`
+- Cosine 阶段: 学习率从 `lr0` 平滑衰减到 `lrf × lr0`
+- 避免陷入局部最优，提升最终精度
 
 ### 9.6 推理延迟的分解与优化
 
 **延迟分解：各组件耗时占比**
 
-```
-YOLO26s @ 640×640, T4 GPU, TensorRT FP16:
+**YOLO26s @ 640×640, T4 GPU, TensorRT FP16**：
 
-预处理 (预处理)  ████████░░░░░░░░░░░░  ~0.3ms  (3%)
-Backbone (特征提取) ████████████████████  ~1.2ms (57%)
-Neck  (特征融合)  ██████░░░░░░░░░░░░░░  ~0.5ms (24%)
-Head  (预测输出)  ███░░░░░░░░░░░░░░░░░  ~0.2ms (10%)
-后处理 (解码+NMS)  ██░░░░░░░░░░░░░░░░░░  ~0.1ms ( 6%)
+| 组件 | 耗时 | 占比 |
+| --- | --- | --- |
+| 预处理 | ~0.3ms | 3% |
+| Backbone (特征提取) | ~1.2ms | 57% |
+| Neck (特征融合) | ~0.5ms | 24% |
+| Head (预测输出) | ~0.2ms | 10% |
+| 后处理 (解码+NMS) | ~0.1ms | 6% |
 
-总计: ~2.1ms (约 476 FPS)
-
-```
+**总计**：~2.1ms (约 476 FPS)
 
 **使用 torch.profiler 测量各组件耗时**：
 
@@ -12754,45 +12498,37 @@ Web 摄像头               ≤ 100ms    ONNX Runtime + CPU/GPU              YOL
 
 **延迟优化的优先级建议**：
 
-```
-优化优先级 (按 ROI 排序):
+**优化优先级 (按 ROI 排序)**：
 
-  优先级 1: 使用 TensorRT 导出 + FP16 量化
-    → 预期加速: 2-3x, 精度损失: <0.5%
-    → 实施难度: 低 (model.export(format="engine", half=True))
-    → 推荐: 所有部署场景
-
-  优先级 2: 使用 one-to-one 模式 (end2end=True)
-    → 预期加速: 1.5-2x (去除 NMS)
-    → 精度影响: 极小 (~0.1 mAP)
-    → 实施难度: 低 (修改推理参数)
-    → 推荐: 所有需要低延迟的场景
-
-  优先级 3: 减小输入尺寸
-    → 预期加速: 1.5-4x (取决于尺寸缩小比例)
-    → 精度影响: 中等 (小目标检测下降)
-    → 实施难度: 低 (修改 imgsz 参数)
-    → 推荐: 大目标为主的场景
-
-  优先级 4: 使用更小规模的模型
-    → 预期加速: 2-4x
-    → 精度影响: 较大 (mAP 下降 3-10pp)
-    → 实施难度: 低 (切换模型文件)
-    → 推荐: 资源严重受限的场景
-
-  优先级 5: INT8 量化
-    → 预期加速: 2-4x (需支持 INT8 的硬件)
-    → 精度影响: 小 (0.5-1.0 mAP)
-    → 实施难度: 中 (需要校准数据集)
-    → 推荐: 边缘设备 (Jetson, RK3588)
-
-  优先级 6: 模型剪枝
-    → 预期加速: 1.5-2x
-    → 精度影响: 中 (1-3 mAP)
-    → 实施难度: 高 (需要重新训练/微调)
-    → 推荐: 对模型大小有严格要求的场景
-
-```
+- **优先级 1: 使用 TensorRT 导出 + FP16 量化**
+  - 预期加速: 2-3x, 精度损失: <0.5%
+  - 实施难度: 低 (`model.export(format="engine", half=True)`)
+  - 推荐: 所有部署场景
+- **优先级 2: 使用 one-to-one 模式 (end2end=True)**
+  - 预期加速: 1.5-2x (去除 NMS)
+  - 精度影响: 极小 (~0.1 mAP)
+  - 实施难度: 低 (修改推理参数)
+  - 推荐: 所有需要低延迟的场景
+- **优先级 3: 减小输入尺寸**
+  - 预期加速: 1.5-4x (取决于尺寸缩小比例)
+  - 精度影响: 中等 (小目标检测下降)
+  - 实施难度: 低 (修改 `imgsz` 参数)
+  - 推荐: 大目标为主的场景
+- **优先级 4: 使用更小规模的模型**
+  - 预期加速: 2-4x
+  - 精度影响: 较大 (mAP 下降 3-10pp)
+  - 实施难度: 低 (切换模型文件)
+  - 推荐: 资源严重受限的场景
+- **优先级 5: INT8 量化**
+  - 预期加速: 2-4x (需支持 INT8 的硬件)
+  - 精度影响: 小 (0.5-1.0 mAP)
+  - 实施难度: 中 (需要校准数据集)
+  - 推荐: 边缘设备 (Jetson, RK3588)
+- **优先级 6: 模型剪枝**
+  - 预期加速: 1.5-2x
+  - 精度影响: 中 (1-3 mAP)
+  - 实施难度: 高 (需要重新训练/微调)
+  - 推荐: 对模型大小有严格要求的场景
 
 ### 9.7 量化与剪枝深度优化
 
@@ -12800,47 +12536,45 @@ Web 摄像头               ≤ 100ms    ONNX Runtime + CPU/GPU              YOL
 
 #### 9.7.1 量化理论
 
-```
-Post-Training Quantization (PTQ) vs Quantization-Aware Training (QAT):
+**Post-Training Quantization (PTQ) vs Quantization-Aware Training (QAT)**：
 
+**PTQ (训练后量化)**：
+- 流程: FP32 模型 → 校准 → INT8 模型
+- 校准数据集: 使用少量样本 (100-1000 张)
+- 校准方法:
+  1. Max 校准: 使用最大激活值作为缩放因子
+  2. MSE 校准: 最小化 FP32 与 INT8 输出的 MSE
+  3. Entropy 校准: 使用直方图统计激活分布
+- 精度损失: 通常 < 1% mAP
+- 加速比: 2-4x (取决于硬件)
+- 适用场景: 快速部署，精度要求不苛刻
 
-PTQ (训练后量化):
-  · 流程: FP32 模型 → 校准 → INT8 模型
-  · 校准数据集: 使用少量样本 (100-1000 张)
-  · 校准方法:
-    1. Max 校准: 使用最大激活值作为缩放因子
-    2. MSE 校准: 最小化 FP32 与 INT8 输出的 MSE
-    3. Entropy 校准: 使用直方图统计激活分布
-  · 精度损失: 通常 < 1% mAP
-  · 加速比: 2-4x (取决于硬件)
-  · 适用场景: 快速部署，精度要求不苛刻
+**QAT (量化感知训练)**：
+- 流程: FP32 模型 → 量化模拟训练 → INT8 模型
+- 量化模拟: 在训练中模拟量化噪声
+- 伪量化操作:
+  - `x_quant = round(x / scale) * scale`，其中 `scale` 为可学习参数
+- 精度损失: 通常 < 0.5% mAP
+- 加速比: 2-4x
+- 适用场景: 对精度要求严格
 
-QAT (量化感知训练):
-  · 流程: FP32 模型 → 量化模拟训练 → INT8 模型
-  · 量化模拟: 在训练中模拟量化噪声
-  · 伪量化操作:
-    x_quant = round(x / scale) * scale
-    其中 scale 为可学习参数
-  · 精度损失: 通常 < 0.5% mAP
-  · 加速比: 2-4x
-  · 适用场景: 对精度要求严格
+**数学推导**：
 
-数学推导:
-  量化公式:
-    x_int8 = round(x_fp32 / s)
-    x_reconstructed = x_int8 × s
-    其中 s = max(|x_fp32|) / 127  (对称量化)
+- 量化公式:
 
-  反向传播 (直通估计器 STE):
-    ∂L/∂s ≈ ∂L/∂x_reconstructed × x_fp32
-    (梯度绕过 round 操作)
+  $$x_{int8} = \text{round}(x_{fp32} / s), \quad x_{reconstructed} = x_{int8} \times s$$
 
-  动态量化 vs 静态量化:
-    · 动态量化: 每层计算不同的 scale (更精确，更慢)
-    · 静态量化: 使用校准数据集预计算 scale (更快，略低精度)
+  其中 $s = \max(|x_{fp32}|) / 127$ (对称量化)
 
+- 反向传播 (直通估计器 STE):
 
-```
+  $$\frac{\partial L}{\partial s} \approx \frac{\partial L}{\partial x_{reconstructed}} \times x_{fp32}$$
+
+  (梯度绕过 `round` 操作)
+
+- 动态量化 vs 静态量化:
+  - 动态量化: 每层计算不同的 scale (更精确，更慢)
+  - 静态量化: 使用校准数据集预计算 scale (更快，略低精度)
 
 #### 9.7.2 INT8 量化实践
 
@@ -12917,107 +12651,107 @@ with open('yolo26s_int8.trt', 'wb') as f:
 
 #### 9.7.3 结构化剪枝
 
-```
-结构化剪枝原理与实现:
+**结构化剪枝原理与实现**：
 
+**剪枝类型对比**：
 
-剪枝类型对比:
+| 维度 | 非结构化剪枝 | 结构化剪枝 |
+| --- | --- | --- |
+| 剪枝对象 | 单个权重 | 通道/层/滤波器 |
+| 稀疏度 | 高 (90%+) | 低 (30-50%) |
+| 硬件加速 | 需要特殊硬件 | 通用硬件支持 |
+| 精度损失 | 大 (需要重训练) | 小 |
+| 部署复杂度 | 高 | 低 |
 
-  维度  非结构化剪枝  结构化剪枝
+**结构化剪枝算法**：
 
-  剪枝对象  单个权重  通道/层/滤波器
-  稀疏度  高 (90%+)  低 (30-50%)
-  硬件加速  需要特殊硬件  通用硬件支持
-  精度损失  大 (需要重训练)  小
-  部署复杂度  高  低
+1. **重要性度量**：
+   - L1 范数: $|W|_1 = \sum|w_{ij}|$
+   - L2 范数: $|W|_2 = \sum w_{ij}^2$
+   - 梯度权重: $|\partial L / \partial W| \times |W|$
+   - 输出激活: $\text{mean}(|\text{activations}|)$
+2. **剪枝策略**：
+   - 一次性剪枝: 直接移除不重要的通道
+   - 迭代剪枝: 逐步增加剪枝比例
+   - 周期性剪枝: 训练-剪枝-微调循环
+3. **剪枝后微调**：
+   - 解冻被剪枝层
+   - 使用较低学习率微调
+   - 通常 10-30 epochs 即可恢复精度
 
+**剪枝代码示例**：
 
-结构化剪枝算法:
-  1. 重要性度量:
-     · L1 范数: |W|_1 = Σ|w_ij|
-     · L2 范数: |W|_2 = Σw_ij²
-     · 梯度权重: |∂L/∂W| × |W|
-     · 输出激活: mean(|activations|)
+```python
+import torch
+import torch.nn.utils.prune as prune
 
-  2. 剪枝策略:
-     · 一次性剪枝: 直接移除不重要的通道
-     · 迭代剪枝: 逐步增加剪枝比例
-     · 周期性剪枝: 训练-剪枝-微调循环
+def structured_channel_pruning(model, prune_ratio=0.3):
+    """结构化通道剪枝"""
+    pruned_layers = []
 
-  3. 剪枝后微调:
-     · 解冻被剪枝层
-     · 使用较低学习率微调
-     · 通常 10-30 epochs 即可恢复精度
+    for name, module in model.named_modules():
+        if isinstance(module, torch.nn.Conv2d):
+            # 计算通道重要性 (L1 范数)
+            weights = module.weight.data.abs().sum(dim=(2, 3))  # [C_out]
+            threshold = torch.quantile(weights, prune_ratio)
 
-剪枝代码示例:
-  import torch
-  import torch.nn.utils.prune as prune
+            # 创建掩码
+            mask = (weights > threshold).float()
+            mask = mask.view(-1, 1, 1, 1)  # [C_out, 1, 1, 1]
 
-  def structured_channel_pruning(model, prune_ratio=0.3):
-      """结构化通道剪枝"""
-      pruned_layers = []
+            # 应用剪枝
+            prune.custom_from_mask(
+                module, 'weight',
+                mask=mask
+            )
+            pruned_layers.append((name, module))
 
-      for name, module in model.named_modules():
-          if isinstance(module, torch.nn.Conv2d):
-              # 计算通道重要性 (L1 范数)
-              weights = module.weight.data.abs().sum(dim=(2, 3))  # [C_out]
-              threshold = torch.quantile(weights, prune_ratio)
+    return pruned_layers
 
-              # 创建掩码
-              mask = (weights > threshold).float()
-              mask = mask.view(-1, 1, 1, 1)  # [C_out, 1, 1, 1]
-
-              # 应用剪枝
-              prune.custom_from_mask(
-                  module, 'weight',
-                  mask=mask
-              )
-              pruned_layers.append((name, module))
-
-      return pruned_layers
-
-  # 使用
-  model = YOLO('yolo26s.pt').model
-  pruned = structured_channel_pruning(model, prune_ratio=0.3)
-  print(f'剪枝了 {len(pruned)} 个卷积层')
-
-
+# 使用
+model = YOLO('yolo26s.pt').model
+pruned = structured_channel_pruning(model, prune_ratio=0.3)
+print(f'剪枝了 {len(pruned)} 个卷积层')
 ```
 
 #### 9.7.4 知识蒸馏
 
-知识蒸馏原理:
+**知识蒸馏原理**：
 
-蒸馏损失函数:
-L_total = α × L_task(T_student) + (1-α) × L_distill(T)
+**蒸馏损失函数**：
+
+$$L_{total} = \alpha \times L_{task}(T_{student}) + (1-\alpha) \times L_{distill}(T)$$
 
 其中:
-L_task: 任务损失 (标准交叉熵)
-L_distill: 蒸馏损失
-L_distill = -Σ_k [q_k(T) × log(p_k/T)]
-q_k(T) = exp(z_k/T) / Σ_j exp(z_j/T)  (教师 softmax)
-p_k/T = exp(z_k^s/T) / Σ_j exp(z_j^s/T)  (学生 softmax)
-T: 温度参数 (默认 3-5)
-α: 任务损失权重 (默认 0.7)
+- $L_{task}$: 任务损失 (标准交叉熵)
+- $L_{distill}$: 蒸馏损失
 
-YOLO 蒸馏策略:
-1. 输出蒸馏:
-· 教师: YOLOv8x (68.2M 参数)
-· 学生: YOLO26s (9.5M 参数)
-· 目标: 学生在 COCO 上达到教师 95% 的精度
+$$L_{distill} = -\sum_k [q_k(T) \times \log(p_k / T)]$$
 
-2. 特征蒸馏:
-· 在中间层添加蒸馏损失
-· MSE(教师特征, 学生特征)
-· 帮助学生学习中间表示
+$$q_k(T) = \frac{\exp(z_k / T)}{\sum_j \exp(z_j / T)} \text{ (教师 softmax)}$$
 
-3. 关系蒸馏:
-· 学习样本间的关系矩阵
-· 教师: Gram 矩阵 G_teacher
-· 学生: Gram 矩阵 G_student
-· 损失: MSE(G_teacher, G_student)
+$$p_k / T = \frac{\exp(z_k^s / T)}{\sum_j \exp(z_j^s / T)} \text{ (学生 softmax)}$$
 
-蒸馏效果:
+- $T$: 温度参数 (默认 3-5)
+- $\alpha$: 任务损失权重 (默认 0.7)
+
+**YOLO 蒸馏策略**：
+
+1. **输出蒸馏**：
+   - 教师: YOLOv8x (68.2M 参数)
+   - 学生: YOLO26s (9.5M 参数)
+   - 目标: 学生在 COCO 上达到教师 95% 的精度
+2. **特征蒸馏**：
+   - 在中间层添加蒸馏损失
+   - $\text{MSE}(\text{教师特征}, \text{学生特征})$
+   - 帮助学生学习中间表示
+3. **关系蒸馏**：
+   - 学习样本间的关系矩阵
+   - 教师: Gram 矩阵 $G_{teacher}$
+   - 学生: Gram 矩阵 $G_{student}$
+   - 损失: $\text{MSE}(G_{teacher}, G_{student})$
+
+**蒸馏效果**：
 | 模型 | 参数量 | mAP50-95 | 推理延迟 |
 | --- | --- | --- | --- |
 | YOLOv8x | 68.2M | 53.9% | 50ms |
@@ -13048,55 +12782,51 @@ YOLO 蒸馏策略:
 
 #### 9.7.6 AutoML 架构搜索
 
-```
-AutoML 架构搜索在 YOLO 中的应用:
+**AutoML 架构搜索在 YOLO 中的应用**：
 
+**神经网络架构搜索 (NAS) 方法**：
 
-神经网络架构搜索 (NAS) 方法:
-  1. 强化学习 (RL):
-     · 用 RNN 作为控制器
-     · 生成架构作为 action
-     · 训练后精度作为 reward
-     · 示例: ENAS, DARTS
+1. **强化学习 (RL)**：
+   - 用 RNN 作为控制器
+   - 生成架构作为 action
+   - 训练后精度作为 reward
+   - 示例: ENAS, DARTS
+2. **进化算法 (EA)**：
+   - 初始化种群 (随机架构)
+   - 评估适应度 (训练精度)
+   - 选择、交叉、变异
+   - 示例: NPENAS, AmoebaNet
+3. **梯度基于 (Gradient-based)**：
+   - 连续化搜索空间
+   - 端到端优化架构参数
+   - 示例: DARTS, RealNAS
 
-  2. 进化算法 (EA):
-     · 初始化种群 (随机架构)
-     · 评估适应度 (训练精度)
-     · 选择、交叉、变异
-     · 示例: NPENAS, AmoebaNet
+**YOLO 架构搜索策略**：
 
-  3. 梯度基于 (Gradient-based):
-     · 连续化搜索空间
-     · 端到端优化架构参数
-     · 示例: DARTS, RealNAS
+- **搜索空间**：
+  - Bottleneck 数量: [1, 2, 3, 4, 5, 6]
+  - 通道数: [64, 96, 128, 160, 192, 256, 320, 384, 512]
+  - 激活函数: [SiLU, ReLU, GELU]
+  - 注意力机制: [None, SE, CBAM, SimAM]
+- **搜索流程**：
+  1. 定义搜索空间
+  2. 随机采样初始架构
+  3. 训练和评估
+  4. 选择最优架构
+  5. 全量训练微调
 
-YOLO 架构搜索策略:
-  搜索空间:
-    · Bottleneck 数量: [1, 2, 3, 4, 5, 6]
-    · 通道数: [64, 96, 128, 160, 192, 256, 320, 384, 512]
-    · 激活函数: [SiLU, ReLU, GELU]
-    · 注意力机制: [None, SE, CBAM, SimAM]
+**搜索结果 (示例)**：
 
-  搜索流程:
-    1. 定义搜索空间
-    2. 随机采样初始架构
-    3. 训练和评估
-    4. 选择最优架构
-    5. 全量训练微调
+最优架构 (自动搜索):
 
-  搜索结果 (示例):
-    最优架构 (自动搜索):
-      Stage 1: Conv(3→64) → C2f(64→128, n=2)
-      Stage 2: Conv(128→256) → C2f(128→256, n=3)
-      Stage 3: Conv(256→512) → C2f(256→512, n=3)
-      Stage 4: Conv(512→512) → C2f(512→512, n=2)
-      参数量: 8.5M, FLOPs: 18.2G
-      mAP: 49.1% (vs YOLO26s 的 48.6%)
+- Stage 1: `Conv(3→64) → C2f(64→128, n=2)`
+- Stage 2: `Conv(128→256) → C2f(128→256, n=3)`
+- Stage 3: `Conv(256→512) → C2f(256→512, n=3)`
+- Stage 4: `Conv(512→512) → C2f(512→512, n=2)`
+- 参数量: 8.5M, FLOPs: 18.2G
+- mAP: 49.1% (vs YOLO26s 的 48.6%)
 
-    参数量节省 10%，精度提升 0.5pp
-
-
-```
+> 参数量节省 10%，精度提升 0.5pp
 
 ## 十、总结
 
@@ -13159,74 +12889,63 @@ YOLO 目标检测体系
 
 #### 学习路线（新手 → 专家）
 
-```
-第一阶段：入门 (1-2 周)
+**第一阶段：入门 (1-2 周)**
 
-目标: 能够使用 YOLOv8 进行基本的检测和分割训练
+- **目标**：能够使用 YOLOv8 进行基本的检测和分割训练
+- **学习路径**：
+  1. Python 基础 + PyTorch 入门
+  2. 安装 ultralytics 库
+  3. 使用预训练模型进行推理
+  4. 准备简单的数据集并训练
+  5. 理解基本的训练指标 (mAP, Precision, Recall)
+- **推荐资源**：
+  - [Ultralytics 官方文档](https://docs.ultralytics.com/)
+  - YOLOv8 快速入门教程
+  - COCO 数据集简介
 
-学习路径:
-1. Python 基础 + PyTorch 入门
-2. 安装 ultralytics 库
-3. 使用预训练模型进行推理
-4. 准备简单的数据集并训练
-5. 理解基本的训练指标 (mAP, Precision, Recall)
+**第二阶段：进阶 (2-4 周)**
 
-推荐资源:
-· [Ultralytics 官方文档](https://docs.ultralytics.com/)
-· YOLOv8 快速入门教程
-· COCO 数据集简介
+- **目标**：能够针对特定场景调优 YOLO 模型
+- **学习路径**：
+  1. 深入理解 YOLOv8 架构 (Backbone/Neck/Head)
+  2. 学习超参数调优策略
+  3. 掌握数据增强技巧
+  4. 理解训练过程中的 Loss 曲线
+  5. 学习模型导出和部署基础
+- **推荐资源**：
+  - YOLOv8 论文和技术报告
+  - PyTorch 官方教程
+  - TensorRT 文档
 
-第二阶段：进阶 (2-4 周)
+**第三阶段：高级 (1-2 月)**
 
-目标: 能够针对特定场景调优 YOLO 模型
+- **目标**：能够设计和优化自定义 YOLO 架构
+- **学习路径**：
+  1. 深入研究 YOLOv8/v10/v26 的创新点
+  2. 学习多任务学习 (分割、姿态、OBB)
+  3. 掌握分布式训练和混合精度训练
+  4. 学习模型压缩技术 (剪枝、量化、蒸馏)
+  5. 理解 CDA、STAL、Progressive Loss 等前沿技术
+- **推荐资源**：
+  - YOLOv10 论文 (arXiv:2405.14458)
+  - YOLO26 论文 (arXiv:2606.03748)
+  - DETR/Deformable-DETR 论文
+  - CVPR/ICCV/ECCV 相关论文
 
-学习路径:
-1. 深入理解 YOLOv8 架构 (Backbone/Neck/Head)
-2. 学习超参数调优策略
-3. 掌握数据增强技巧
-4. 理解训练过程中的 Loss 曲线
-5. 学习模型导出和部署基础
+**第四阶段：专家 (3-6 月)**
 
-推荐资源:
-· YOLOv8 论文和技术报告
-· PyTorch 官方教程
-· TensorRT 文档
-
-第三阶段：高级 (1-2 月)
-
-目标: 能够设计和优化自定义 YOLO 架构
-
-学习路径:
-1. 深入研究 YOLOv8/v10/v26 的创新点
-2. 学习多任务学习 (分割、姿态、OBB)
-3. 掌握分布式训练和混合精度训练
-4. 学习模型压缩技术 (剪枝、量化、蒸馏)
-5. 理解 CDA、STAL、Progressive Loss 等前沿技术
-
-推荐资源:
-· YOLOv10 论文 (arXiv:2405.14458)
-· YOLO26 论文 (arXiv:2606.03748)
-· DETR/DEformable-DETR 论文
-· CVPR/ICCV/ECCV 相关论文
-
-第四阶段：专家 (3-6 月)
-
-目标: 能够在 YOLO 基础上进行原创性研究
-
-学习路径:
-1. 跟踪最新研究进展 (YOLOE, YOLO-World 等)
-2. 理解 Vision Transformer 在检测中的应用
-3. 学习开放词汇检测 (Open-Vocabulary Detection)
-4. 研究多模态检测 (文本+图像)
-5. 探索端到端检测的最新方法
-
-推荐资源:
-· arXiv 最新论文
-· Ultralytics GitHub 仓库
-· CVPR/ICCV/ECCV/NeurIPS 会议论文
-· 行业最佳实践 (自动驾驶、安防、工业质检)
-
-```
+- **目标**：能够在 YOLO 基础上进行原创性研究
+- **学习路径**：
+  1. 跟踪最新研究进展 (YOLOE, YOLO-World 等)
+  2. 理解 Vision Transformer 在检测中的应用
+  3. 学习开放词汇检测 (Open-Vocabulary Detection)
+  4. 研究多模态检测 (文本+图像)
+  5. 探索端到端检测的最新方法
+- **推荐资源**：
+  - arXiv 最新论文
+  - Ultralytics GitHub 仓库
+  - CVPR/ICCV/ECCV/NeurIPS 会议论文
+  - 行业最佳实践 (自动驾驶、安防、工业质检)
 
 #### 技能树
 
@@ -13256,29 +12975,14 @@ OpenCV
 
 #### 职业发展方向
 
-```
-YOLO 开发者职业路径:
+**YOLO 开发者职业路径**：
 
-方向  核心技能  典型岗位
-
-算法工程师  · YOLO 架构设计  · 目标检测算法工程师
-· 模型训练调优  · 视觉算法工程师
-· 论文复现与创新
-
-部署工程师  · TensorRT/ONNX  · 模型部署工程师
-· 边缘计算 (Jetson/RK)  · 推理优化工程师
-· 量化与剪枝
-
-数据工程师  · 数据标注平台  · 数据 pipeline 工程师
-· 数据质量控制  · 数据工程师
-· 主动学习
-
-产品经理  · 场景理解  · AI 产品经理
-· 技术选型  · 解决方案架构师
-· 商业落地
-
-
-```
+| 方向 | 核心技能 | 典型岗位 |
+| --- | --- | --- |
+| 算法工程师 | YOLO 架构设计、模型训练调优、论文复现与创新 | 目标检测算法工程师、视觉算法工程师 |
+| 部署工程师 | TensorRT/ONNX、边缘计算 (Jetson/RK)、量化与剪枝 | 模型部署工程师、推理优化工程师 |
+| 数据工程师 | 数据标注平台、数据质量控制、主动学习 | 数据 pipeline 工程师、数据工程师 |
+| 产品经理 | 场景理解、技术选型、商业落地 | AI 产品经理、解决方案架构师 |
 
 #### 附录 B：YOLO 技术决策树
 
@@ -13312,74 +13016,64 @@ TensorRT FP16  ONNX + 任意硬件
 
 #### 附录 C：YOLO 学习路线图
 
-```
 YOLO 学习路线图（从入门到专家）:
 
+**阶段 1: 基础入门（1-2 周）**
 
-阶段 1: 基础入门（1-2 周）
-
-前置知识:
-  · Python 编程基础
-  · 线性代数（矩阵运算）
-  · 概率论基础
-
-学习内容:
-  1. 安装 Ultralytics: pip install ultralytics
+- **前置知识**：
+  - Python 编程基础
+  - 线性代数（矩阵运算）
+  - 概率论基础
+- **学习内容**：
+  1. 安装 Ultralytics: `pip install ultralytics`
   2. 跑通第一个检测模型:
+     ```python
      from ultralytics import YOLO
      model = YOLO('yolo26n.pt')
      results = model.predict('image.jpg')
+     ```
   3. 理解 YOLO 格式标注
   4. 准备第一个数据集
 
+**阶段 2: 深入理解（2-4 周）**
 
-阶段 2: 深入理解（2-4 周）
-
-学习内容:
+- **学习内容**：
   1. YOLO 架构原理（Backbone/Neck/Head）
   2. 损失函数详解（CIoU, DFL, Varifocal）
   3. 标签分配策略（TaskAligned, CDA, STAL）
   4. 数据增强技术（Mosaic, MixUp, Copy-Paste）
   5. 训练超参数调优（lr, momentum, weight_decay）
+- **推荐资源**：
+  - 本文档第二、三、四章
+  - [YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/)
+  - [DETR Paper](https://arxiv.org/abs/2005.12872)
 
-推荐资源:
-  · 本文档第二、三、四章
-  · [YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/)
-  · [DETR Paper](https://arxiv.org/abs/2005.12872)
+**阶段 3: 高级应用（4-8 周）**
 
-
-阶段 3: 高级应用（4-8 周）
-
-学习内容:
+- **学习内容**：
   1. 自定义数据集训练
   2. 超参数调优（Bayesian Optimization）
   3. 多任务模型（分割、姿态、OBB）
   4. 模型导出与部署
   5. 性能优化（量化、剪枝、蒸馏）
+- **推荐资源**：
+  - 本文档第五至九章
+  - [YOLO26 Training Recipe](https://docs.ultralytics.com/guides/yolo26-training-recipe)
+  - [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/)
 
-推荐资源:
-  · 本文档第五至九章
-  · [YOLO26 Training Recipe](https://docs.ultralytics.com/guides/yolo26-training-recipe)
-  · [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/)
+**阶段 4: 专家级（8-12 周）**
 
-
-阶段 4: 专家级（8-12 周）
-
-学习内容:
+- **学习内容**：
   1. 自定义模型架构
   2. 分布式训练优化
   3. 模型压缩与加速
   4. 边缘部署（Jetson, RK3588, 移动端）
   5. MLOps 流水线构建
   6. 论文阅读与复现
-
-推荐资源:
-  · [YOLOv10 Paper](https://arxiv.org/abs/2405.14458)
-  · [YOLO26 Documentation](https://docs.ultralytics.com/models/yolo26/)
-  · [DETR/DEFORMABLE DETR 论文]
-
-
-```
+- **推荐资源**：
+  - [YOLOv10 Paper](https://arxiv.org/abs/2405.14458)
+  - [YOLO26 Documentation](https://docs.ultralytics.com/models/yolo26/)
+  - [DETR/DEFORMABLE DETR 论文]
 
 ### 附录：YOLO 知识图谱与学习路线图
 
@@ -13425,206 +13119,170 @@ YOLO 完整技能树
 
 #### 附录 B：学习路线图
 
-```
 YOLO 学习路线图:
 
+**阶段 1: 基础入门 (1-2 周)**
 
-阶段 1: 基础入门 (1-2 周)
-
-前置知识:
-  · Python 编程基础
-  · 线性代数 (矩阵运算)
-  · 概率论基础
-
-学习内容:
-  1. 安装 Ultralytics: pip install ultralytics
+- **前置知识**：
+  - Python 编程基础
+  - 线性代数 (矩阵运算)
+  - 概率论基础
+- **学习内容**：
+  1. 安装 Ultralytics: `pip install ultralytics`
   2. 跑通第一个检测模型:
+     ```python
      from ultralytics import YOLO
      model = YOLO('yolo26n.pt')
      results = model.predict('image.jpg')
+     ```
   3. 理解 YOLO 格式标注
   4. 准备第一个数据集
+- **推荐资源**：
+  - [Ultralytics 官方文档](https://docs.ultralytics.com/)
+  - [PyTorch 入门教程](https://pytorch.org/tutorials/)
+  - YOLO 系列论文 [1][2][3]
 
-推荐资源:
-  · [Ultralytics 官方文档](https://docs.ultralytics.com/)
-  · [PyTorch 入门教程](https://pytorch.org/tutorials/)
-  · YOLO 系列论文 [1][2][3]
+**阶段 2: 深入理解 (2-4 周)**
 
-阶段 2: 深入理解 (2-4 周)
-
-学习内容:
+- **学习内容**：
   1. YOLOv8 架构深入:
-     · C2f 模块原理
-     · TaskAligned Assigner
-     · DFL 机制
+     - C2f 模块原理
+     - TaskAligned Assigner
+     - DFL 机制
   2. 训练流程理解:
-     · 数据增强 (Mosaic, MixUp, Copy-Paste)
-     · 损失函数 (BCE, CIoU, DFL)
-     · 优化器 (SGD, AdamW, MuSGD)
+     - 数据增强 (Mosaic, MixUp, Copy-Paste)
+     - 损失函数 (BCE, CIoU, DFL)
+     - 优化器 (SGD, AdamW, MuSGD)
   3. 指标理解:
-     · mAP, precision, recall, F1
-     · PR 曲线, confusion matrix
+     - mAP, precision, recall, F1
+     - PR 曲线, confusion matrix
+- **推荐资源**：
+  - 本文档第二、三、四章
+  - [YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/)
+  - [DETR Paper](https://arxiv.org/abs/2005.12872)
 
-推荐资源:
-  · 本文档第二、三、四章
-  · [YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/)
-  · [DETR Paper](https://arxiv.org/abs/2005.12872)
+**阶段 3: 高级应用 (4-8 周)**
 
-阶段 3: 高级应用 (4-8 周)
-
-学习内容:
+- **学习内容**：
   1. 自定义数据集训练
   2. 超参数调优 (Bayesian Optimization)
   3. 多任务模型 (分割、姿态、OBB)
   4. 模型导出与部署
   5. 性能优化 (量化、剪枝、蒸馏)
+- **推荐资源**：
+  - 本文档第五至九章
+  - [YOLO26 Training Recipe](https://docs.ultralytics.com/guides/yolo26-training-recipe)
+  - [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/)
 
-推荐资源:
-  · 本文档第五至九章
-  · [YOLO26 Training Recipe](https://docs.ultralytics.com/guides/yolo26-training-recipe)
-  · [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/)
+**阶段 4: 精通研究 (8-12 周)**
 
-阶段 4: 精通研究 (8-12 周)
-
-学习内容:
+- **学习内容**：
   1. 阅读最新 YOLO 论文
   2. 复现核心算法
   3. 改进模型架构
   4. 参与开源项目
-
-推荐资源:
-  · arXiv 最新论文
-  · [CVPR/ICCV/ECCV 目标检测论文]
-  · [GitHub: ultralytics/ultralytics]
-
-
-```
+- **推荐资源**：
+  - arXiv 最新论文
+  - [CVPR/ICCV/ECCV 目标检测论文]
+  - [GitHub: ultralytics/ultralytics]
 
 #### 附录 C：推荐阅读文献
 
-```
-YOLO 系列核心论文:
+**YOLO 系列核心论文**
 
+**基础理论**：
 
-基础理论:
-[1] Redmon et al. (2015). You Only Look Once. CVPR.
-→ 端到端检测的开创性工作
-[2] Girshick et al. (2015). Faster R-CNN. NIPS.
-→ Two-stage 检测的标杆
-[3] Lin et al. (2017). Focal Loss. ICCV.
-→ 解决类别不平衡问题
+1. Redmon et al. (2015). You Only Look Once. CVPR. — 端到端检测的开创性工作
+2. Girshick et al. (2015). Faster R-CNN. NIPS. — Two-stage 检测的标杆
+3. Lin et al. (2017). Focal Loss. ICCV. — 解决类别不平衡问题
 
-YOLO 系列:
-[4] Redmon & Farhadi (2016). YOLO9000. CVPR.
-→ 引入锚框和聚类
-[5] Redmon & Farhadi (2018). YOLOv3. arXiv.
-→ 多尺度预测
-[6] Bochkovskiy et al. (2020). YOLOv4. arXiv.
-→ 技术组合优化
-[7] Jocher, Chaurasia, Qiu (2023). Ultralytics YOLOv8（开源项目，无正式论文）. https://github.com/ultralytics/ultralytics
-→ 现代 YOLO 的起点
-[8] Yue et al. (2024). YOLOv10. arXiv:2405.14458.
-→ 去除 NMS
-[9] Jocher et al. (2026). YOLO26. arXiv:2606.03748.
-→ 原生端到端 + 多任务统一
+**YOLO 系列**：
 
-Transformer 检测:
-[10] Carion et al. (2020). DETR. ECCV.
-→ Transformer 检测的开山之作
-[11] Zhu et al. (2021). Deformable DETR. ICLR.
-→ 高效 Transformer 检测
-[12] Liu et al. (2022). DINO. arXiv.
-→ 去噪训练 + 强增强
+4. Redmon & Farhadi (2016). YOLO9000. CVPR. — 引入锚框和聚类
+5. Redmon & Farhadi (2018). YOLOv3. arXiv. — 多尺度预测
+6. Bochkovskiy et al. (2020). YOLOv4. arXiv. — 技术组合优化
+7. Jocher, Chaurasia, Qiu (2023). Ultralytics YOLOv8（开源项目，无正式论文）. https://github.com/ultralytics/ultralytics — 现代 YOLO 的起点
+8. Yue et al. (2024). YOLOv10. arXiv:2405.14458. — 去除 NMS
+9. Jocher et al. (2026). YOLO26. arXiv:2606.03748. — 原生端到端 + 多任务统一
 
-优化器与创新:
-[13] Smith (2017). Cyclical Learning Rates. arXiv.
-→ 学习率调度
-[14] Loshchilov & Hutter (2017). AdamW. arXiv.
-→ 解耦权重衰减
+**Transformer 检测**：
 
+10. Carion et al. (2020). DETR. ECCV. — Transformer 检测的开山之作
+11. Zhu et al. (2021). Deformable DETR. ICLR. — 高效 Transformer 检测
+12. Liu et al. (2022). DINO. arXiv. — 去噪训练 + 强增强
 
-```
+**优化器与创新**：
+
+13. Smith (2017). Cyclical Learning Rates. arXiv. — 学习率调度
+14. Loshchilov & Hutter (2017). AdamW. arXiv. — 解耦权重衰减
 
 #### 附录 D：职业发展方向
 
-```
 YOLO 相关职业路径:
 
+**路径 1: AI 算法工程师**
 
-路径 1: AI 算法工程师
+- **职责**：
+  - 模型训练与调优
+  - 数据 pipeline 建设
+  - 性能优化与部署
+- **技能要求**：
+  - Python + PyTorch/TensorFlow
+  - 熟悉 YOLO 系列模型
+  - 熟悉 TensorRT/OpenVINO 等部署工具
+  - 了解 MLOps 工具链 (MLflow, W&B)
+- **薪资范围 (2026)**：
+  - 初级: 20-35万/年
+  - 中级: 35-60万/年
+  - 高级: 60-120万/年
 
-职责:
-· 模型训练与调优
-· 数据 pipeline 建设
-· 性能优化与部署
+**路径 2: CV 研究员**
 
-技能要求:
-· Python + PyTorch/TensorFlow
-· 熟悉 YOLO 系列模型
-· 熟悉 TensorRT/OpenVINO 等部署工具
-· 了解 MLOps 工具链 (MLflow, W&B)
+- **职责**：
+  - 阅读和复现最新论文
+  - 提出改进方案
+  - 撰写技术报告
+- **技能要求**：
+  - 扎实的数学基础
+  - 熟练的 PyTorch 编程
+  - 论文阅读与写作能力
+  - 创新能力
+- **薪资范围 (2026)**：
+  - 初级研究员: 25-45万/年
+  - 高级研究员: 50-100万/年
+  - 首席研究员: 100万+/年
 
-薪资范围 (2026):
-· 初级: 20-35万/年
-· 中级: 35-60万/年
-· 高级: 60-120万/年
+**路径 3: AI 产品经理**
 
-路径 2: CV 研究员
+- **职责**：
+  - 需求分析与产品规划
+  - 技术方案评估
+  - 项目进度管理
+- **技能要求**：
+  - 理解 AI 技术边界
+  - 产品思维
+  - 沟通能力
+  - 项目管理
+- **薪资范围 (2026)**：
+  - 初级 PM: 20-40万/年
+  - 高级 PM: 40-80万/年
+  - 产品总监: 80万+/年
 
-职责:
-· 阅读和复现最新论文
-· 提出改进方案
-· 撰写技术报告
+**路径 4: 边缘 AI 工程师**
 
-技能要求:
-· 扎实的数学基础
-· 熟练的 PyTorch 编程
-· 论文阅读与写作能力
-· 创新能力
-
-薪资范围 (2026):
-· 初级研究员: 25-45万/年
-· 高级研究员: 50-100万/年
-· 首席研究员: 100万+/年
-
-路径 3: AI 产品经理
-
-职责:
-· 需求分析与产品规划
-· 技术方案评估
-· 项目进度管理
-
-技能要求:
-· 理解 AI 技术边界
-· 产品思维
-· 沟通能力
-· 项目管理
-
-薪资范围 (2026):
-· 初级 PM: 20-40万/年
-· 高级 PM: 40-80万/年
-· 产品总监: 80万+/年
-
-路径 4: 边缘 AI 工程师
-
-职责:
-· 模型压缩与优化
-· 嵌入式部署
-· 性能调优
-
-技能要求:
-· TensorRT / ONNX Runtime / OpenVINO
-· C++ 编程
-· 嵌入式系统 (Jetson, RK3588)
-· 硬件知识 (GPU, NPU)
-
-薪资范围 (2026):
-· 初级: 18-30万/年
-· 中级: 30-55万/年
-· 高级: 55-100万/年
-
-
-```
+- **职责**：
+  - 模型压缩与优化
+  - 嵌入式部署
+  - 性能调优
+- **技能要求**：
+  - TensorRT / ONNX Runtime / OpenVINO
+  - C++ 编程
+  - 嵌入式系统 (Jetson, RK3588)
+  - 硬件知识 (GPU, NPU)
+- **薪资范围 (2026)**：
+  - 初级: 18-30万/年
+  - 中级: 30-55万/年
+  - 高级: 55-100万/年
 
 *参考资料：*
 - *[Ultralytics YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/)*

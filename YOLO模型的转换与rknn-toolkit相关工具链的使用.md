@@ -370,14 +370,13 @@ print("INT8 模型导出成功: best_int8.rknn")
 
 **量化效果对比**：
 
-```
 模型格式  文件大小  推理速度  精度损失
 
-FP32 (.rknn)  ~50MB  基准  0%
-FP16 (.rknn)  ~25MB  ~1.5x  ~0.1%
-INT8 (.rknn)  ~12MB  ~2-3x  ~0.5-1%
+| FP32 (.rknn) | ~50MB | 基准 | 0% |
+| --- | --- | --- | --- |
+| FP16 (.rknn) | ~25MB | ~1.5x | ~0.1% |
+| INT8 (.rknn) | ~12MB | ~2-3x | ~0.5-1% |
 
-```
 
 ## 五、开发板端推理部署
 
@@ -469,43 +468,45 @@ print(f"推理速度: {fps:.1f} FPS")
 
 ```
 
-```
-问题2: Unsupported operation: xxx
-解决:
+**问题2**：Unsupported operation: xxx
+
+**解决**：
+
 1. 更新 RKNN-Toolkit2 到最新版本
 2. 在 PC 端使用 ONNX opset 11 导出
 3. 检查是否使用了 RKNN 不支持的算子
 
-```
-
 ### 6.2 推理结果不正确
 
-```
-问题: 推理结果与 ONNX 不一致
-原因: 归一化参数不匹配
+**问题**：推理结果与 ONNX 不一致
+**原因**：归一化参数不匹配
 
-解决:
+**解决**：
+
 1. 确认 training 和 inference 使用相同的归一化
 2. 检查 channel_mean_value 配置
 3. 确认图像预处理流程一致
 
-验证方法:
+**验证方法**：
+
+```bash
 # 在 PC 端和开发板上分别推理同一张图片
 # 对比输出结果
-
 ```
 
 ### 6.3 性能不达标
 
-```
-问题: 推理速度不理想
-解决:
+**问题**：推理速度不理想
+
+**解决**：
+
 1. 尝试 INT8 量化（速度提升 2-3x）
 2. 减小输入尺寸（如 320×320）
 3. 使用 half 精度（FP16）
 4. 检查 NPU 是否运行在高性能模式
-   echo "performance" > /sys/class/devfreq/*npu*/governor
 
+```bash
+echo "performance" > /sys/class/devfreq/*npu*/governor
 ```
 
 ### 6.4 NPU 内存不足

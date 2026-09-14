@@ -1838,7 +1838,6 @@ rknn_init_runtime(ctx_, &option);
 #define RKNN_PERF_MODE_NORMAL  0  // 默认性能模式
 #define RKNN_PERF_MODE_HIGH    1  // 高性能模式（NPU 频率锁定最高档）
 #define RKNN_PERF_MODE_LOW     2  // 低功耗模式（NPU 频率降低）
-
 ```
 
 ```c
@@ -2047,8 +2046,8 @@ typedef struct rknn_tensor_mem_attr {
 #define RKNN_MEM_FLAG_CACHED          (1 << 2)  // CPU 缓存可见（提升 CPU 访问速度）
 #define RKNN_MEM_FLAG_NON_CACHED      (1 << 3)  // CPU 缓存不可见（避免 cache coherency 问题）
 #define RKNN_MEM_FLAG_DMA_COHERENT    (1 << 4)  // DMA 一致性（硬件保障 CPU/NPU 数据同步）
-
 ```
+
 
 **使用示例：**
 
@@ -2822,18 +2821,17 @@ std::vector<Detection> postprocess_yolov5(float* outputs, int num_anchors,
 
 #### YOLOv8（无锚框，Anchor-Free）
 
-```
-输出格式: [1, 4+num_classes, H*W*A]  或经过 transpose 后 [1, H*W*A, 4+num_classes]
-  - 前 4 个值: cx, cy, cw, ch（中心 + 宽高，无需 anchor）
-  - 后 num_classes 个值: 各类别概率（无需 objectness）
+**输出格式**：`[1, 4+num_classes, H*W*A]` 或经过 transpose 后 `[1, H*W*A, 4+num_classes]`
 
-解码逻辑:
-  1. 模型输出已经是归一化坐标（相对于输入尺寸）
-  2. 直接乘输入尺寸得到 640x640 空间坐标
-  3. 减去 padding，除以 scale 映射回原图
-  4. 类别分数 = max(class_probs)
+- 前 4 个值：cx, cy, cw, ch（中心 + 宽高，无需 anchor）
+- 后 num_classes 个值：各类别概率（无需 objectness）
 
-```
+**解码逻辑**：
+
+1. 模型输出已经是归一化坐标（相对于输入尺寸）
+2. 直接乘输入尺寸得到 640x640 空间坐标
+3. 减去 padding，除以 scale 映射回原图
+4. 类别分数 = max(class_probs)
 
 ```cpp
 // YOLOv8 后处理（无锚框，Anchor-Free）
@@ -3085,15 +3083,13 @@ CPU_accessible（CPU 可访问内存）
 
 #### 内存类型选择指南
 
-```
- 特性 DMA_BUF PHYSICAL CPU_accessible
- 分配速度 慢 (ms级) 中等 快 (us级)
- CPU 访问延迟 中 快 最快
- NPU DMA 访问 最优 优 需拷贝
- 内存开销 中 高 (锁定) 低
- 适用场景 零拷贝推理 高频推理 原型/调试
-
-```
+| 特性 | DMA_BUF | PHYSICAL | CPU_accessible |
+| --- | --- | --- | --- |
+| 分配速度 | 慢 (ms级) | 中等 | 快 (us级) |
+| CPU 访问延迟 | 中 | 快 | 最快 |
+| NPU DMA 访问 | 最优 | 优 | 需拷贝 |
+| 内存开销 | 中 | 高 (锁定) | 低 |
+| 适用场景 | 零拷贝推理 | 高频推理 | 原型/调试 |
 
 ---
 
@@ -3740,16 +3736,14 @@ make -j$(sysctl -n hw.ncpu)
 
 ### 12.3 静态链接 vs 动态链接权衡
 
-```
- 特性 动态链接 静态链接
- 二进制体积 小 (1-5MB) 大 (10-30MB)
- 部署复杂度 需确保目标机有 .so 单文件即运行
- 更新灵活性 可单独升级 .so 需重新编译
- 启动速度 稍慢 (动态链接解析) 稍快
- 内存占用 共享 .so 节省内存 每个进程独立拷贝
- 适用场景 开发/测试/多应用共享 交付/嵌入式/单应用
-
-```
+| 特性 | 动态链接 | 静态链接 |
+| --- | --- | --- |
+| 二进制体积 | 小 (1-5MB) | 大 (10-30MB) |
+| 部署复杂度 | 需确保目标机有 .so | 单文件即运行 |
+| 更新灵活性 | 可单独升级 .so | 需重新编译 |
+| 启动速度 | 稍慢 (动态链接解析) | 稍快 |
+| 内存占用 | 共享 .so 节省内存 | 每个进程独立拷贝 |
+| 适用场景 | 开发/测试/多应用共享 | 交付/嵌入式/单应用 |
 
 **动态链接（推荐开发阶段）：**
 
@@ -4283,44 +4277,43 @@ public:
 
 ### 14.1 完整项目结构
 
-```
+```text
 yolo-npu-deploy/
- CMakeLists.txt # 主构建配置
- toolchain-aarch64.cmake # 交叉编译工具链
- config.yaml # 配置文件
- src/
- main.cpp # 入口
- yolo_detector.h # 检测器头文件
- yolo_detector.cpp # 检测器实现
- inference_engine.h # 引擎抽象接口
- rknn_engine.h # RKNN 后端
- rknn_engine.cpp
- onnx_engine.h # ONNX 后端
- onnx_engine.cpp
- health_check.h # HTTP 健康检查
- prometheus_metrics.h # Prometheus 指标
- config_manager.h # 配置管理
- hot_reload.h # 热加载
- include/
- rknn_api.h # RKNN API 头文件
- lib/
- librknn_runtime.so # RKNN 运行时库
- models/
- best.rknn # 转换后的模型
- data/
- coco.names # 类别名称
- scripts/
- build.sh # 构建脚本
- deploy.sh # 部署脚本
- benchmark.sh # 性能测试脚本
- integration_test.sh # 集成测试脚本
- docker/
- Dockerfile.cross_compile # Docker 交叉编译
- tests/
- test_detector.cpp # 单元测试
- test_postprocess.cpp # 后处理测试
- README.md
-
+├── CMakeLists.txt              # 主构建配置
+├── toolchain-aarch64.cmake     # 交叉编译工具链
+├── config.yaml                 # 配置文件
+├── src/
+│   ├── main.cpp                # 入口
+│   ├── yolo_detector.h         # 检测器头文件
+│   ├── yolo_detector.cpp       # 检测器实现
+│   ├── inference_engine.h      # 引擎抽象接口
+│   ├── rknn_engine.h           # RKNN 后端
+│   ├── rknn_engine.cpp
+│   ├── onnx_engine.h           # ONNX 后端
+│   ├── onnx_engine.cpp
+│   ├── health_check.h          # HTTP 健康检查
+│   ├── prometheus_metrics.h    # Prometheus 指标
+│   ├── config_manager.h        # 配置管理
+│   └── hot_reload.h            # 热加载
+├── include/
+│   └── rknn_api.h              # RKNN API 头文件
+├── lib/
+│   └── librknn_runtime.so      # RKNN 运行时库
+├── models/
+│   └── best.rknn               # 转换后的模型
+├── data/
+│   └── coco.names              # 类别名称
+├── scripts/
+│   ├── build.sh                # 构建脚本
+│   ├── deploy.sh               # 部署脚本
+│   ├── benchmark.sh            # 性能测试脚本
+│   └── integration_test.sh     # 集成测试脚本
+├── docker/
+│   └── Dockerfile.cross_compile# Docker 交叉编译
+└── tests/
+    ├── test_detector.cpp       # 单元测试
+    ├── test_postprocess.cpp    # 后处理测试
+    └── README.md
 ```
 
 ### 14.2 分步编译和部署指南

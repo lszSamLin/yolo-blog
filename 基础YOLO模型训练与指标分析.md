@@ -1119,13 +1119,12 @@ names:                               # 类别名称字典（0-indexed）
 
 **示例**：标注一张 640×480 图片中的第 0 类目标，边界框左上角(200, 100)，右下角(400, 300)：
 
-```
+```text
 # 计算归一化坐标
 x_center = (200 + 400) / 2 / 640 = 0.46875
 y_center = (100 + 300) / 2 / 480 = 0.41667
 width    = (400 - 200) / 640 = 0.31250
 height   = (300 - 100) / 480 = 0.41667
-
 ```
 
 输出：`0 0.46875 0.41667 0.31250 0.41667`
@@ -1875,27 +1874,26 @@ copy_paste: 0.0    # 默认关闭
 
 #### 课程学习原理
 
-```
-课程学习在目标检测中的应用:
+**课程学习在目标检测中的应用**
 
+**传统训练**：所有样本随机混合，难易程度相同
 
-传统训练: 所有样本随机混合，难易程度相同
-epoch 1: [简单样本, 困难样本, 中等样本, ...] 随机顺序
-epoch 2: [困难样本, 简单样本, 中等样本, ...] 随机顺序
-...
+- epoch 1: [简单样本, 困难样本, 中等样本, ...] 随机顺序
+- epoch 2: [困难样本, 简单样本, 中等样本, ...] 随机顺序
+- ...
 
-课程学习: 从简单到困难，逐步增加样本难度
-epoch 1-20:  仅简单样本 (大目标、清晰图像)
-epoch 21-40: 简单 + 中等样本
-epoch 41-60: 简单 + 中等 + 困难样本
-epoch 61+:  全部样本
+**课程学习**：从简单到困难，逐步增加样本难度
 
-难度定义:
-· 简单: 目标尺寸 > 48×48, 清晰无遮挡
-· 中等: 目标尺寸 16×16 ~ 48×48, 轻微遮挡
-· 困难: 目标尺寸 < 16×16, 严重遮挡/模糊
+- epoch 1-20: 仅简单样本（大目标、清晰图像）
+- epoch 21-40: 简单 + 中等样本
+- epoch 41-60: 简单 + 中等 + 困难样本
+- epoch 61+: 全部样本
 
-```
+**难度定义**：
+
+- 简单：目标尺寸 > 48×48，清晰无遮挡
+- 中等：目标尺寸 16×16 ~ 48×48，轻微遮挡
+- 困难：目标尺寸 < 16×16，严重遮挡/模糊
 
 #### 课程学习实现
 
@@ -2783,36 +2781,39 @@ def create_autoaug_pipeline():
 
 课程学习按照从简单到复杂的顺序训练模型，类似于人类学习的模式。
 
-```
-课程学习在目标检测中的应用:
+**课程学习在目标检测中的应用**
 
+**阶段 1 (Epoch 1-20)：简单样本**
 
-阶段 1 (Epoch 1-20): 简单样本
-· 大目标、清晰背景、低重叠
-· 高 mosaic probability (1.0)
-· 高学习率
+- 大目标、清晰背景、低重叠
+- 高 mosaic probability (1.0)
+- 高学习率
 
-阶段 2 (Epoch 21-50): 中等难度
-· 中等目标、轻度遮挡
-· 中等 mosaic probability (0.8)
-· 标准学习率
+**阶段 2 (Epoch 21-50)：中等难度**
 
-阶段 3 (Epoch 51-80): 困难样本
-· 小目标、高重叠、复杂背景
-· 低 mosaic probability (0.5)
-· 降低学习率
+- 中等目标、轻度遮挡
+- 中等 mosaic probability (0.8)
+- 标准学习率
 
-阶段 4 (Epoch 81-100): 最终调优
-· 所有样本
-· mosaic 关闭 (0.0)
-· 低学习率 + 数据增强减弱
+**阶段 3 (Epoch 51-80)：困难样本**
 
-数学形式化:
-样本难度 d(x, y) = f(目标数量, 目标尺度, 背景复杂度, 遮挡程度)
-P(sample ∼ easy) ∝ exp(-β × d(x, y))
-其中 β 是课程温度参数，控制难度分布的"尖锐程度"
+- 小目标、高重叠、复杂背景
+- 低 mosaic probability (0.5)
+- 降低学习率
 
-```
+**阶段 4 (Epoch 81-100)：最终调优**
+
+- 所有样本
+- mosaic 关闭 (0.0)
+- 低学习率 + 数据增强减弱
+
+**数学形式化**：
+
+$$d(x, y) = f(\text{目标数量}, \text{目标尺度}, \text{背景复杂度}, \text{遮挡程度})$$
+
+$$P(\text{sample} \sim \text{easy}) \propto \exp(-\beta \times d(x, y))$$
+
+其中 $\beta$ 是课程温度参数，控制难度分布的"尖锐程度"
 
 ```python
 """
@@ -3602,20 +3603,20 @@ Step  5:  重复  Step  2~4，直到达到目标性能或标注预算耗尽
 
 在 HSV 色彩空间中，色调（H）、饱和度（S）、明度（V）三个通道相互正交，分别对应颜色的不同物理属性：
 
-```
-H（色调）：0°~360°，表示颜色的种类（红/绿/蓝等）
-          扰动 H：模拟白平衡漂移、色温变化
-          公式：H' = H + ΔH, 其中 ΔH ~ U(-hsv_h, hsv_h)
+**H（色调）**：0°~360°，表示颜色的种类（红/绿/蓝等）
 
-S（饱和度）：0~1，表示颜色的纯度
-           扰动 S：模拟光照强度变化、相机曝光差异
-           公式：S' = S × (1 + Δs), 其中 Δs ~ U(-hsv_s, hsv_s)
+- 扰动 H：模拟白平衡漂移、色温变化
+- 公式：$H' = H + \Delta H$，其中 $\Delta H \sim U(-\text{hsv\_h}, \text{hsv\_h})$
 
-V（明度）：0~1，表示亮度
-          扰动 V：模拟阴影、过曝、夜间场景
-          公式：V' = V × (1 + Δv), 其中 Δv ~ U(-hsv_v, hsv_v)
+**S（饱和度）**：0~1，表示颜色的纯度
 
-```
+- 扰动 S：模拟光照强度变化、相机曝光差异
+- 公式：$S' = S \times (1 + \Delta s)$，其中 $\Delta s \sim U(-\text{hsv\_s}, \text{hsv\_s})$
+
+**V（明度）**：0~1，表示亮度
+
+- 扰动 V：模拟阴影、过曝、夜间场景
+- 公式：$V' = V \times (1 + \Delta v)$，其中 $\Delta v \sim U(-\text{hsv\_v}, \text{hsv\_v})$
 
 > **为什么不在 RGB 空间直接扰动？** RGB 三个通道高度耦合，改变 R 会影响颜色种类和亮度。HSV 空间将颜色信息与亮度信息分离，更符合人类对光照变化的感知模型。
 
@@ -3634,39 +3635,39 @@ V（明度）：0~1，表示亮度
 
 Mosaic 增强的本质是**四样本混合**，其效果可分解为：
 
-```
-合成图片 P = α × I₁ + β × I₂ + γ × I₃ + δ × I₄
-其中 α+β+γ+δ = 1（实际中每个象限取整张图片，系数为1或0）
+**合成图片**：
 
-等效视角：一张 Mosaic 图的 GT 是 4 张源图标注的合并集合，
-损失是在这张合成图上计算的单一代价，而非四个独立损失相加：
-  L_mosaic = L(P, GT₁ ∪ GT₂ ∪ GT₃ ∪ GT₄)
-由于一次前向同时回归约 4 倍数量的目标，小 batch 下也能获得
-更充分的监督信号（这正是 Mosaic 有助于稳定训练的原因之一）。
+$$P = \alpha \times I_1 + \beta \times I_2 + \gamma \times I_3 + \delta \times I_4$$
 
-```
+其中 $\alpha+\beta+\gamma+\delta = 1$（实际中每个象限取整张图片，系数为 1 或 0）。
+
+**等效视角**：一张 Mosaic 图的 GT 是 4 张源图标注的合并集合，损失是在这张合成图上计算的单一代价，而非四个独立损失相加：
+
+$$L_{\text{mosaic}} = L(P, GT_1 \cup GT_2 \cup GT_3 \cup GT_4)$$
+
+由于一次前向同时回归约 4 倍数量的目标，小 batch 下也能获得更充分的监督信号（这正是 Mosaic 有助于稳定训练的原因之一）。
 
 > **为什么 Mosaic 对小目标特别有效？** Mosaic 拼接时，原本在单张图片中很小的目标，在拼接到大图上后相对面积增大，使得检测头能接收到更强的梯度信号。同时，拼接引入的裁剪和位移相当于同时应用了平移和缩放增强。
 
 #### MixUp 增强的正则化效果
 
-```
-MixUp 公式：
-  输入混合：x̃ = λxᵢ + (1-λ)xⱼ
-  标签混合：ỹ = λyᵢ + (1-λ)yⱼ
-  其中 λ ~ Beta(α, α)，通常 α=0.2
+**MixUp 公式**：
 
-正则化效果分析：
-  - 迫使模型学习线性决策边界（而非记忆复杂边界）
-  - 减少了模型的置信度（calibration），降低过拟合
-  - 在边界区域提供软标签，增强对模糊边界的鲁棒性
+- 输入混合：$\tilde{x} = \lambda x_i + (1-\lambda) x_j$
+- 标签混合：$\tilde{y} = \lambda y_i + (1-\lambda) y_j$
+- 其中 $\lambda \sim \text{Beta}(\alpha, \alpha)$，通常 $\alpha=0.2$
 
-理论保证（Zhang et al., 2017）：
-  MixUp 可以看作对模型施加了 Lipschitz 连续性正则化
-  上界：||f(x) - f(x')|| ≤ L × ||x - x'||
-  其中 L 为模型的 Lipschitz 常数，MixUp 训练使 L 更小
+**正则化效果分析**：
 
-```
+- 迫使模型学习线性决策边界（而非记忆复杂边界）
+- 减少了模型的置信度（calibration），降低过拟合
+- 在边界区域提供软标签，增强对模糊边界的鲁棒性
+
+**理论保证（Zhang et al., 2017）**：
+
+- MixUp 可以看作对模型施加了 Lipschitz 连续性正则化
+- 上界：$\|f(x) - f(x')\| \leq L \times \|x - x'\|$
+- 其中 L 为模型的 Lipschitz 常数，MixUp 训练使 L 更小
 
 ---
 
@@ -4373,11 +4374,10 @@ model.train(device=[0, 1, 2, 3], batch=-1)
 
 **DDP（Distributed Data Parallel）工作原理**：
 
-```
-主进程（GPU 0）: 广播模型 → 分配数据 → 收集梯度 → 更新参数
-子进程（GPU 1-N）: 接收模型 → 处理数据 → 发送梯度 → 等待更新
-
-```
+| 进程 | 工作流程 |
+| --- | --- |
+| 主进程（GPU 0） | 广播模型 → 分配数据 → 收集梯度 → 更新参数 |
+| 子进程（GPU 1-N） | 接收模型 → 处理数据 → 发送梯度 → 等待更新 |
 
 ### 3.5 YOLOv8 训练配方详解
 
@@ -4601,26 +4601,17 @@ yolo detect train \
 
 **Warmup 阶段（epoch 0 ~ warmup_epochs）**：
 
-```
-lr(epoch) = lr0 × (epoch / warmup_epochs)
-
-```
+$$lr(\text{epoch}) = lr_0 \times \frac{\text{epoch}}{\text{warmup\_epochs}}$$
 
 作用：学习率从 0 线性上升到 lr0，避免训练初期梯度爆炸。
 
 **Cosine Decay 阶段（epoch warmup_epochs ~ epochs）**：
 
-```
-lr(epoch) = lrf×lr0 + (lr0 - lrf×lr0) × 0.5 × (1 + cos(π × (epoch - warmup) / (epochs - warmup)))
-
-```
+$$lr(\text{epoch}) = lrf \times lr_0 + (lr_0 - lrf \times lr_0) \times 0.5 \times \left(1 + \cos\left(\frac{\pi \times (\text{epoch} - \text{warmup})}{\text{epochs} - \text{warmup}}\right)\right)$$
 
 简化为：
 
-```
-lr(epoch) = lrf×lr0 + lr0×(1 - lrf) × 0.5 × (1 + cos(π × progress))
-
-```
+$$lr(\text{epoch}) = lrf \times lr_0 + lr_0 \times (1 - lrf) \times 0.5 \times (1 + \cos(\pi \times \text{progress}))$$
 
 其中 `progress ∈ [0, 1]` 为训练进度。
 
@@ -4660,31 +4651,33 @@ v_t = momentum × v_{t-1} + gradient_t
 
 #### Weight Decay（L2 正则化）
 
-```
-梯度更新中加入 L2 正则项：
-gradient_total = gradient_data + weight_decay × θ
+**梯度更新中加入 L2 正则项**：
 
-weight_decay=0.0005 的效果：
-  - 每个参数的更新都会减去 0.05% 的当前值
-  - 促使参数趋向零，降低模型复杂度
-  - 与 Dropout 不同，Weight Decay 是全局的、连续的约束
+$$\text{gradient\_total} = \text{gradient\_data} + \text{weight\_decay} \times \theta$$
 
-```
+`weight_decay=0.0005` 的效果：
+
+- 每个参数的更新都会减去 0.05% 的当前值
+- 促使参数趋向零，降低模型复杂度
+- 与 Dropout 不同，Weight Decay 是全局的、连续的约束
 
 #### Label Smoothing 公式
 
-```
-标准交叉熵：L = -log(p_target)
-Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
+**标准交叉熵**：
 
-其中 ε 为 label_smoothing 系数（默认 0.0）
+$$L = -\log(p_{\text{target}})$$
 
-效果：
-  - ε=0.0：标准 hard label（one-hot）
-  - ε=0.1：soft label，目标类别概率 0.9，其他类别各 0.01/(C-1)
-  - 降低模型置信度，缓解过拟合，改善校准（calibration）
+**Label Smoothing**：
 
-```
+$$L = -(1-\varepsilon) \times \log(p_{\text{target}}) - \frac{\varepsilon \times \log(1-p_{\text{target}})}{C-1}$$
+
+其中 $\varepsilon$ 为 label_smoothing 系数（默认 0.0）
+
+**效果**：
+
+- $\varepsilon=0.0$：标准 hard label（one-hot）
+- $\varepsilon=0.1$：soft label，目标类别概率 0.9，其他类别各 0.01/(C-1)
+- 降低模型置信度，缓解过拟合，改善校准（calibration）
 
 ---
 
@@ -4752,21 +4745,18 @@ Label Smoothing：L = -(1-ε)×log(p_target) - ε×log(1-p_target) / (C-1)
 
 #### 梯度爆炸的原理
 
-```
-梯度爆炸的原因：
+**梯度爆炸的原因**
 
 在深层网络中，反向传播通过链式法则逐层传递梯度：
 
-∂L/∂θ_layer1 = ∂L/∂θ_layerN × ∏(∂θ_layer(i+1)/∂θ_layer(i))
+$$\frac{\partial L}{\partial \theta_{\text{layer1}}} = \frac{\partial L}{\partial \theta_{\text{layerN}}} \times \prod_i \frac{\partial \theta_{\text{layer}(i+1)}}{\partial \theta_{\text{layer}(i)}}$$
 
-如果每层的雅可比矩阵特征值 > 1，梯度会指数级放大：
-  30 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^30 ≈ 17.4 倍
-  50 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^50 ≈ 117 倍
+如果每层的雅可比矩阵特征值 &gt; 1，梯度会指数级放大：
 
-后果：参数更新步长过大 → 训练发散 → Loss 变为 NaN
+- 30 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^30 ≈ 17.4 倍
+- 50 层网络，每层梯度放大 1.1 倍 → 总放大 1.1^50 ≈ 117 倍
 
-
-```
+**后果**：参数更新步长过大 → 训练发散 → Loss 变为 NaN
 
 #### 梯度裁剪方法
 
@@ -4829,36 +4819,20 @@ for epoch in range(100):
 
 #### 混合精度训练深度分析
 
-```
-FP16 与 FP32 精度对比:
+**FP16 与 FP32 精度对比**
 
+| 格式 | 存储 | 范围 | 精度 | 优势 |
+| --- | --- | --- | --- | --- |
+| FP16 (半精度浮点) | 16 位 (1 符号位 + 5 指数位 + 10 尾数位) | ±65504 | ~3 位十进制 | 显存减半，计算速度提升 2x |
+| FP32 (单精度浮点) | 32 位 (1 符号位 + 8 指数位 + 23 尾数位) | ±3.4×10³⁸ | ~7 位十进制 | 精度高，训练稳定 |
+| FP8 (八位浮点, 新兴) | 8 位 (1 符号位 + 5 指数位 + 2 尾数位) | ±57344 | ~1 位十进制 | 极致压缩，需要 QAT 配合 |
 
-FP16 (半精度浮点):
-· 存储: 16 位 (1 符号位 + 5 指数位 + 10 尾数位)
-· 范围: ±65504
-· 精度: ~3 位十进制
-· 优势: 显存减半，计算速度提升 2x
+**混合精度训练的核心**：
 
-FP32 (单精度浮点):
-· 存储: 32 位 (1 符号位 + 8 指数位 + 23 尾数位)
-· 范围: ±3.4×10³⁸
-· 精度: ~7 位十进制
-· 优势: 精度高，训练稳定
-
-FP8 (八位浮点, 新兴):
-· 存储: 8 位 (1 符号位 + 5 指数位 + 2 尾数位)
-· 范围: ±57344
-· 精度: ~1 位十进制
-· 优势: 极致压缩，需要 QAT 配合
-
-混合精度训练的核心:
-· 前向传播: FP16 计算 (加速)
-· 反向传播: FP32 梯度 (稳定性)
-· 权重更新: FP32 (精度保障)
-· Loss Scaling: 防止 FP16 下溢
-
-
-```
+- 前向传播：FP16 计算 (加速)
+- 反向传播：FP32 梯度 (稳定性)
+- 权重更新：FP32 (精度保障)
+- Loss Scaling：防止 FP16 下溢
 
 #### 梯度累积策略
 
@@ -5285,35 +5259,22 @@ for epoch in range(100):
 
 混合精度训练（Mixed Precision Training）是加速 GPU 训练同时减少显存占用的核心技术。PyTorch 通过 AMP（Automatic Mixed Precision）提供了完善的混合精度训练支持。
 
-```
-混合精度训练的原理:
+**混合精度训练的原理**
 
-FP32 (单精度):
-  · 存储: 32 bits (1 sign + 8 exponent + 23 mantissa)
-  · 范围: ±3.4 × 10^38
-  · 精度: 约 7 位十进制数字
-  · GPU 计算: 慢，显存占用大
+| 格式 | 存储 | 范围 | 精度 | GPU 计算 |
+| --- | --- | --- | --- | --- |
+| FP32 (单精度) | 32 bits (1 sign + 8 exponent + 23 mantissa) | ±3.4 × 10^38 | 约 7 位十进制数字 | 慢，显存占用大 |
+| FP16 (半精度) | 16 bits (1 sign + 5 exponent + 10 mantissa) | ±65504 | 约 3-4 位十进制数字 | 快 2x，显存占用减半 |
+| BF16 (Bfloat16) | 16 bits (1 sign + 8 exponent + 7 mantissa) | ±3.4 × 10^38 (同 FP32) | 约 2-3 位十进制数字 | 快 2x，显存占用减半 |
 
-FP16 (半精度):
-  · 存储: 16 bits (1 sign + 5 exponent + 10 mantissa)
-  · 范围: ±65504
-  · 精度: 约 3-4 位十进制数字
-  · GPU 计算: 快 2x，显存占用减半
+BF16 优势：动态范围与 FP32 相同，训练更稳定。
 
-BF16 (Bfloat16):
-  · 存储: 16 bits (1 sign + 8 exponent + 7 mantissa)
-  · 范围: ±3.4 × 10^38 (同 FP32)
-  · 精度: 约 2-3 位十进制数字
-  · GPU 计算: 快 2x，显存占用减半
-  · 优势: 动态范围与 FP32 相同，训练更稳定
+**混合精度策略**：
 
-混合精度策略:
-  · 前向传播: FP16
-  · 反向传播: FP16
-  · 权重更新: FP32 (保持精度)
-  · Loss Scaling: 防止 FP16 下溢
-
-```
+- 前向传播：FP16
+- 反向传播：FP16
+- 权重更新：FP32（保持精度）
+- Loss Scaling：防止 FP16 下溢
 
 **FP16 vs BF16 详细对比**：
 
@@ -5660,36 +5621,35 @@ YOLOv8 的分类损失实际采用 **BCE（二元交叉熵）**；Varifocal Loss
 
 #### 传统 Focal Loss 的问题
 
-```
-传统 Focal Loss：
-  FL(p) = -α × (1-p)^γ × log(p)
+**传统 Focal Loss**：
 
-  问题：
-  - 只关注"难分类"样本（p 接近 0.5 的样本）
-  - 忽略了预测框质量（IoU）与分类置信度的关系
-  - 高质量预测框（IoU 高）和粗糙预测框（IoU 低）可能被同等对待
+$$\text{FL}(p) = -\alpha \times (1-p)^{\gamma} \times \log(p)$$
 
-```
+问题：
+
+- 只关注"难分类"样本（p 接近 0.5 的样本）
+- 忽略了预测框质量（IoU）与分类置信度的关系
+- 高质量预测框（IoU 高）和粗糙预测框（IoU 低）可能被同等对待
 
 #### Varifocal Loss 的设计思想
 
-```
-Varifocal Loss：
-  VF(p, v) = -v × (1-p)^γ × log(p) - (1-v) × p^γ × log(1-p)
+**Varifocal Loss**：
 
-  其中：
-  - p: 模型的分类预测概率
-  - v: IoU 感知的重要性权重（0 ≤ v ≤ 1）
-    - v ≈ 1：高质量预测（IoU 高），重点优化
-    - v ≈ 0：低质量预测（IoU 低），降低权重
-  - γ: 聚焦参数（默认 2.0），控制难样本的权重
+$$\text{VF}(p, v) = -v \times (1-p)^{\gamma} \times \log(p) - (1-v) \times p^{\gamma} \times \log(1-p)$$
 
-  关键创新：
-  - 将 IoU 信息融入分类损失
-  - 高质量框获得更高的分类学习权重
-  - 低质量框被自动抑制，避免干扰学习
+其中：
 
-```
+- $p$：模型的分类预测概率
+- $v$：IoU 感知的重要性权重（$0 \leq v \leq 1$）
+  - $v \approx 1$：高质量预测（IoU 高），重点优化
+  - $v \approx 0$：低质量预测（IoU 低），降低权重
+- $\gamma$：聚焦参数（默认 2.0），控制难样本的权重
+
+关键创新：
+
+- 将 IoU 信息融入分类损失
+- 高质量框获得更高的分类学习权重
+- 低质量框被自动抑制，避免干扰学习
 
 **Varifocal Loss vs Focal Loss 对比**：
 
@@ -5710,25 +5670,23 @@ DFL 是 YOLOv8 引入的一个创新损失函数，用于边界框分布建模�
 
 #### DFL 的核心思想
 
-```
-传统方法（直接回归）：
-  输出层：4 个值 [tx, ty, tw, th] → 直接对应边界框坐标
-  问题：
+**传统方法（直接回归）**：
+
+- 输出层：4 个值 `[tx, ty, tw, th]` → 直接对应边界框坐标
+- 问题：
   - 回归任务对异常值敏感
   - 无法表达预测的不确定性
   - 梯度在接近目标时变弱
 
-DFL 方法（分布建模）：
-  输出层：4 × (bin_count) 个值 → 每个坐标的分布概率
-  bin_count 通常为 16
+**DFL 方法（分布建模）**：
 
-  推理时：对分布求期望（或加权平均）→ 得到最终坐标
-  优势：
+- 输出层：`4 × (bin_count)` 个值 → 每个坐标的分布概率
+- bin_count 通常为 16
+- 推理时：对分布求期望（或加权平均）→ 得到最终坐标
+- 优势：
   - 对异常值鲁棒（分布平滑）
   - 能够表达不确定性
   - 梯度更稳定
-
-```
 
 #### DFL 的数学表达
 
@@ -5853,20 +5811,19 @@ Mosaic 增强是 YOLO 系列的核心创新之一，但并非整个训练过程�
 
 #### Mosaic 的训练阶段作用
 
-```
-训练初期（epoch 0 → epochs-close_mosaic）:
-Mosaic 开启：4 张图片拼接，丰富背景和尺度变化
-相当于增大了有效 batch size（1 张合成图 ≈ 4 张独立图）
-加速早期收敛，尤其对小数据集效果显著
-本实验：前 143 轮（153-10=143）均启用 Mosaic
+**训练初期（epoch 0 → epochs-close_mosaic）**：
 
-训练末期（epoch epochs-close_mosaic → epochs）:
-Mosaic 关闭：使用真实单张图片
-边界框更精确（不再有拼接造成的裁剪变形）
-学习率已衰减到较低水平，参数微调
-本实验：最后 10 轮关闭 Mosaic
+- Mosaic 开启：4 张图片拼接，丰富背景和尺度变化
+- 相当于增大了有效 batch size（1 张合成图 ≈ 4 张独立图）
+- 加速早期收敛，尤其对小数据集效果显著
+- 本实验：前 143 轮（153-10=143）均启用 Mosaic
 
-```
+**训练末期（epoch epochs-close_mosaic → epochs）**：
+
+- Mosaic 关闭：使用真实单张图片
+- 边界框更精确（不再有拼接造成的裁剪变形）
+- 学习率已衰减到较低水平，参数微调
+- 本实验：最后 10 轮关闭 Mosaic
 
 #### 关闭 Mosaic 的时机选择
 
@@ -5931,26 +5888,20 @@ patience 设置：100
 
 综合以上四个维度，训练稳定性的诊断流程如下：
 
-```
-                    训练启动
-              ▼                 ▼
-        Loss 是否下降？     mAP 是否上升？
+**训练稳定性诊断流程**
 
-否  是
-    ▼                   ▼       ▼
- 学习率过高      数据/标注问题   检查 batch size
+从「训练启动」出发，检查两项：
 
-降低 lr0  检查数据质量
-▼  ▼
- 增大 warmup    重新标注    太小      太大
-(梯度噪声大) (可能过拟合)
-              ▼
-        训练收敛正常
-              ▼
-        检查过拟合风险
-         (train/val gap)
+1. **Loss 是否下降？**
+   - 否 → 学习率过高 → 降低 lr0，增大 warmup（梯度噪声大）
+   - 是 → 继续检查下一项
+2. **mAP 是否上升？**
+   - 否 → 数据/标注问题 → 检查数据质量，重新标注
+   - 是 → 检查 batch size：
+     - 太小 → （可能过拟合）
+     - 太大 → （可能过拟合）
 
-```
+**训练收敛正常 → 检查过拟合风险 (train/val gap)**
 
 **本实验结论**：从 `results.csv` 数据看，train/val box_loss gap 在最佳 epoch（113）仅为 -0.047，最终 epoch（153）为 +0.021，差距极小，训练稳定性优秀，无过拟合迹象。
 
@@ -6517,16 +6468,14 @@ def generate_comparison_report(models, data_yaml, n_repeats=5):
 
 **P-R-F1 三角关系速查**：
 
-```
-         P 高 R 低（宁可错杀）       P 低 R 高（宁可漏不掉）
-              ← 安全场景             → 筛查场景
-              （如炸弹检测）          （如疫情初筛）
+**P-R-F1 三角关系速查**
 
-                    F1 峰值（最佳平衡点）
-                          ↑
-                    conf ≈ 0.45~0.5
+| 倾向 | 场景方向 | 例子 |
+| --- | --- | --- |
+| P 高 R 低（宁可错杀） | ← 安全场景 | 如炸弹检测 |
+| P 低 R 高（宁可漏不掉） | → 筛查场景 | 如疫情初筛 |
 
-```
+**F1 峰值（最佳平衡点）**：conf ≈ 0.45~0.5
 
 #### 4.2.7 指标异常信号与调优方向
 
@@ -6560,16 +6509,15 @@ mAP50 高，mAP50-95 极低  mAP50 与 mAP50-95 均低
 
 训练日志中会记录三个参数组的学习率：
 
-```
-  LR/pg0:  bias 参数组的学习率（通常最高）
-  LR/pg1:  权重参数组的学习率（中间值）
-  LR/pg2:  BN 参数组的学习率（通常最低）
-
-```
+| 参数组 | 含义 |
+| --- | --- |
+| `LR/pg0` | bias 参数组的学习率（通常最高） |
+| `LR/pg1` | 权重参数组的学习率（中间值） |
+| `LR/pg2` | BN 参数组的学习率（通常最低） |
 
 **学习率调度曲线（Ultralytics 默认）**：
 
-```
+```text
 lr
 ↑
 lr0  ╭ 线性上升（Warmup）
@@ -6589,7 +6537,6 @@ lr0×lrf  ╲
 
 → epochs
 0  warmup_epochs(3)  epochs(100)
-
 ```
 
 **两个阶段的工作原理**：
@@ -7728,32 +7675,33 @@ model.train(
 
 #### SGD vs AdamW 选择决策
 
-```
-优化器选择决策树：
-                    开始微调
-              ▼                 ▼
-         数据集规模          推理延迟敏感？
-     ▼                 ▼       ▼
-  < 1000张        > 10000张   是        否
-     ▼                 ▼       ▼         ▼
-  SGD (推荐)     SGD       需评估    SGD (推荐)
-  快速收敛         稳定收敛             或 AdamW
-                   或 AdamW            (如果SGD
-                   (GPU显存不足时)     效果不佳时)
+**优化器选择决策树**
 
-SGD 适用场景：
-  ✓ 标准 GPU 训练（显存充足）
-  ✓ 需要快速收敛
-  ✓ 小目标检测任务（增大 imgsz）
-  ✓ 标准目标检测任务
+从「开始微调」出发，分两条主分支：
 
-AdamW 适用场景：
-  ✓ GPU 显存充足（SGD 显存占用低）
-  ✓ Windows 平台（SGD 完全兼容）
-  ✓ 多 GPU 训练（SGD DDP 完整支持）
-  ✓ 需要更精细的学习率控制
+**分支1：数据集规模**
 
-```
+- &lt; 1000 张 → SGD（推荐），快速收敛
+- &gt; 10000 张 → SGD，稳定收敛；或 AdamW（GPU 显存不足时）
+
+**分支2：推理延迟敏感？**
+
+- 是 → 需评估
+- 否 → SGD（推荐），或 AdamW（如果 SGD 效果不佳时）
+
+**SGD 适用场景**：
+
+- ✓ 标准 GPU 训练（显存充足）
+- ✓ 需要快速收敛
+- ✓ 小目标检测任务（增大 imgsz）
+- ✓ 标准目标检测任务
+
+**AdamW 适用场景**：
+
+- ✓ GPU 显存充足（SGD 显存占用低）
+- ✓ Windows 平台（SGD 完全兼容）
+- ✓ 多 GPU 训练（SGD DDP 完整支持）
+- ✓ 需要更精细的学习率控制
 
 #### 冻结策略（Transfer Learning）
 
@@ -7805,24 +7753,23 @@ model.train(
 
 ### 8.1 训练输出目录结构
 
-```
+```text
 runs/detect/exp1/
-weights/
-best.pt  # mAP50-95 最高的权重 ⭐
-last.pt  # 最后一轮的权重
-results.png  # 所有训练曲线汇总图 ⭐
-results.csv  # 所有指标的CSV文件
-confusion_matrix.png  # 混淆矩阵
-confusion_matrix_normalized.png
-F1_curve.png  # F1随置信度变化
-PR_curve.png  # Precision-Recall曲线
-P_curve.png  # 精确率随置信度变化
-R_curve.png  # 召回率随置信度变化
-val_batch0_pred.jpg  # 验证集预测可视化
-val_batch0_labels.jpg  # 验证集真实标注可视化
-train_batch0.jpg  # 训练批次可视化（含增强效果）
-args.yaml  # 本次训练的完整参数记录
-
+├── weights/
+│   ├── best.pt                     # mAP50-95 最高的权重 ⭐
+│   └── last.pt                     # 最后一轮的权重
+├── results.png                     # 所有训练曲线汇总图 ⭐
+├── results.csv                     # 所有指标的CSV文件
+├── confusion_matrix.png            # 混淆矩阵
+├── confusion_matrix_normalized.png
+├── F1_curve.png                    # F1随置信度变化
+├── PR_curve.png                    # Precision-Recall曲线
+├── P_curve.png                     # 精确率随置信度变化
+├── R_curve.png                     # 召回率随置信度变化
+├── val_batch0_pred.jpg             # 验证集预测可视化
+├── val_batch0_labels.jpg           # 验证集真实标注可视化
+├── train_batch0.jpg                # 训练批次可视化（含增强效果）
+└── args.yaml                       # 本次训练的完整参数记录
 ```
 
 ### 8.2 results.png 图表解读
@@ -9014,18 +8961,19 @@ mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
 
 #### 分布式训练性能分析
 
-```
-分布式训练性能分析:
+**分布式训练性能分析**
 
-1. 通信开销分析
-   · NCCL 通信时间 = 参数大小 / 带宽 × 2 (all_reduce)
-   · 对于 YOLOv8s (11.2M 参数):
-     · 单卡: ~0ms
-     · 4卡 (NVLink): ~5ms/step
-     · 4卡 (PCIe): ~20ms/step
-     · 8卡 (PCIe): ~35ms/step
+**1. 通信开销分析**
 
-2. 扩展效率分析
+- NCCL 通信时间 = 参数大小 / 带宽 × 2 (all_reduce)
+- 对于 YOLOv8s (11.2M 参数):
+  - 单卡: ~0ms
+  - 4卡 (NVLink): ~5ms/step
+  - 4卡 (PCIe): ~20ms/step
+  - 8卡 (PCIe): ~35ms/step
+
+**2. 扩展效率分析**
+
 | GPU 数量 | 总 batch | 每卡 batch | 加速比 | 效率 |
 | --- | --- | --- | --- | --- |
 | 1 | 16 | 16 | 1.0x | 100% |
@@ -9034,10 +8982,7 @@ mp.spawn(train_ddp, args=(world_size, "data.yaml", 100), nprocs=world_size)
 | 8 | 128 | 16 | 6.2x | 77% |
 | 16 | 256 | 16 | 10.5x | 66% |
 
-   注意: 加速比 < GPU 数量，因为存在通信和同步开销
-   推荐使用 4-8 GPU，效率最高
-
-```
+注意: 加速比 &lt; GPU 数量，因为存在通信和同步开销。推荐使用 4-8 GPU，效率最高
 
 ---
 
@@ -9698,32 +9643,32 @@ model.train(
 
 随着实验迭代，模型版本管理变得日益重要。以下是一种实用的版本管理策略：
 
-```
-模型版本管理目录结构：
+**模型版本管理目录结构**：
+
+```text
 models/
-v001_yolov8n_baseline/  # 基线模型（默认参数）
-best.pt  # 最佳权重
-args.yaml  # 训练参数记录
-metrics.json  # 最终指标
+├── v001_yolov8n_baseline/     # 基线模型（默认参数）
+│   ├── best.pt                # 最佳权重
+│   ├── args.yaml              # 训练参数记录
+│   └── metrics.json           # 最终指标
+├── v002_yolov8n_lr0.005/      # 降低学习率
+│   ├── best.pt
+│   ├── args.yaml
+│   └── metrics.json
+├── v003_yolov8s_mosaic0.5/    # 换大模型 + 调整 Mosaic
+│   ├── best.pt
+│   ├── args.yaml
+│   └── metrics.json
+└── v004_yolov8n_batch32/      # 增大 Batch Size
+    ├── best.pt
+    ├── args.yaml
+    └── metrics.json
+```
 
-v002_yolov8n_lr0.005/  # 降低学习率
-best.pt
-args.yaml
-metrics.json
+**部署时**：
 
-v003_yolov8s_mosaic0.5/  # 换大模型 + 调整 Mosaic
-best.pt
-args.yaml
-metrics.json
-
-v004_yolov8n_batch32/  # 增大 Batch Size
-best.pt
-args.yaml
-metrics.json
-
-部署时：
-  - 选择 metrics.json 中 mAP50-95 最高的版本
-  - 或使用自动追踪工具（MLflow/W&B）进行版本对比
+- 选择 metrics.json 中 mAP50-95 最高的版本
+- 或使用自动追踪工具（MLflow/W&B）进行版本对比
 
 ```
 
@@ -9957,7 +9902,7 @@ YOLOv8 实验追踪检查清单：
 
 #### 实验命名规范
 
-```
+```text
 推荐命名格式：
   {模型}_{日期}_{实验目的}_{关键参数}
 
@@ -9966,7 +9911,6 @@ YOLOv8 实验追踪检查清单：
   yolo8s_20250116_mixup0.1          # 测试 mixup 效果
   yolo8m_20250117_1280px            # 增大分辨率
   yolov8n_20250118_end2end          # YOLOv8 端到端模式
-
 ```
 
 #### 实验元数据管理

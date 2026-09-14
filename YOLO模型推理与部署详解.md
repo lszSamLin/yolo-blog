@@ -10,124 +10,78 @@
 
 ### 1.1 推理全流程图
 
-YOLO 推理完整流程
+**YOLO 推理完整流程**：
 
-原始图像 ► 检测结果
-(H×W×3)  (N×[cx,cy,w,h,conf,cls])
+原始图像 (H×W×3) → 检测结果 (N×[cx,cy,w,h,conf,cls])
 
-▼
+**STEP 1：预处理 (Preprocessing)**
 
-STEP 1: 预处理 (Preprocessing)
+- 原始图像 (H×W×3, uint8)
+- Letterbox Resize：
+  - 保持宽高比缩放到目标尺寸（如 640×640）
+  - 空白区域填充灰色 (114, 114, 114)
+  - 计算缩放比 scale 和偏移量 (pad_w, pad_h)
+- 归一化：像素值 / 255.0
+- 通道转换：HWC → CHW (H×W×3 → 3×H×W)
+- Batch 维：[1, 3, 640, 640] (float32)
 
-原始图像 (H×W×3, uint8)
+**STEP 2：前向传播 (Inference)**
 
-▼
-Letterbox Resize:
-- 保持宽高比缩放到目标尺寸 (如 640×640)
-- 空白区域填充灰色 (114, 114, 114)
-- 计算缩放比 scale 和偏移量 (pad_w, pad_h)
+- 输入：[1, 3, 640, 640]
+- Backbone (CSPDarknet, 特征提取) → Neck (CSP-PAN, 特征融合) → Head (Detect, 预测输出)
+- YOLOv8/v11 输出：[1, 4+nc, 8400] (one-to-many)
+- YOLO26 输出：[1, 300, 6] (one-to-one, e2e)
 
-▼
-归一化: 像素值 / 255.0
+**STEP 3：输出解码 (Decoding)**
 
-▼
-通道转换: HWC → CHW (H×W×3 → 3×H×W)
+One-to-Many 解码 (YOLOv8/v11)：
 
-▼
-Batch 维: [1, 3, 640, 640] (float32)
-
-▼
-
-STEP 2: 前向传播 (Inference)
-
-输入: [1, 3, 640, 640]
-
-▼
-
-Backbone  →  Neck  →  Head
-CSPDarknet  CSP-PAN  Detect
-(特征提取)  (特征融合)  (预测输出)
-
-▼
-YOLOv8/v11 输出: [1, 4+nc, 8400] (one-to-many)
-YOLO26 输出:  [1, 300, 6] (one-to-one, e2e)
-
-▼
-
-STEP 3: 输出解码 (Decoding)
-
-One-to-Many 解码 (YOLOv8/v11):
 1. Reshape: [1, 4+nc, 8400] → [1, 8400, 4+nc]
-2. 裁剪掉置信度<阈值的预测 (conf_thres)
-3. 坐标解码:
-cx = (x + grid_x) / scale
-cy = (y + grid_y) / scale
-w = exp(wx) * anchor_w / scale
-h = exp(wh) * anchor_h / scale
+2. 裁剪掉置信度 < 阈值的预测 (conf_thres)
+3. 坐标解码：$cx = (x + grid_x) / scale$，$cy = (y + grid_y) / scale$，$w = \exp(wx) \times anchor_w / scale$，$h = \exp(wh) \times anchor_h / scale$
 4. 非极大值抑制 (NMS, iou_thres)
 
-One-to-One 解码 (YOLO26 e2e):
+One-to-One 解码 (YOLO26 e2e)：
+
 1. Reshape: [1, 300, 6]
 2. 直接取 top-K 置信度最高的预测
 3. 无需 NMS！
 
-▼
-STEP 4: 后处理 (Post-processing)
-1. 坐标还原: 将归一化坐标转回原始图像坐标
-x1 = (cx - w/2) / scale - pad_w/width
-y1 = (cy - h/2) / scale - pad_h/height
-x2 = (cx + w/2) / scale - pad_w/width
-y2 = (cy + h/2) / scale - pad_h/height
-2. 格式化输出:
-[x1, y1, x2, y2, conf, class_id]
-3. 可视化 (可选): 绘制边界框、标签、掩码/关键点
+**STEP 4：后处理 (Post-processing)**
+
+1. 坐标还原：将归一化坐标转回原始图像坐标
+   - $x1 = (cx - w/2) / scale - pad\_w/width$
+   - $y1 = (cy - h/2) / scale - pad\_h/height$
+   - $x2 = (cx + w/2) / scale - pad\_w/width$
+   - $y2 = (cy + h/2) / scale - pad\_h/height$
+2. 格式化输出：[x1, y1, x2, y2, conf, class_id]
+3. 可视化 (可选)：绘制边界框、标签、掩码/关键点
 
 ### 1.2 Letterbox 预处理详解
 
 Letterbox 是 YOLO 系列的核心预处理技术，其目标是在保持图像宽高比的同时将其缩放到目标尺寸。
 
-Letterbox 原理图:
+**Letterbox 原理图**：
 
-原始图像 (800×600)  缩放后 (640×480)
-
-scale=0.8
-目标  ►  目标
-
-800×600 (4:3)  640×480 (4:3)
-
-Letterbox 填充 (缩放至 640×640):
-
-░░░░░░░░░  ░ = 灰色填充 (114,114,114)
-░░░░░  目标  ░░░░
-░░░░░  ░░░░
-░░░░░░░░░
-░░░░░░░░░░░░░░░░░░░░░
-
-640×640
+- 原始图像 (800×600, 4:3) → 缩放后 (640×480, 4:3)，scale=0.8
+- Letterbox 填充（缩放至 640×640）：四周填充灰色 (114,114,114)，目标居中，输出尺寸 640×640
 
 **Letterbox 数学推导**：
 
 ```
-给定:
-  img_size = (W, H)          # 原始图像尺寸
-  target_size = 640          # 目标尺寸
+给定：
 
-步骤:
-  1. 计算缩放比:
-     scale = min(target_size/W, target_size/H)
-     # 取较小值以保证图像完整缩放到目标尺寸内
+- $img\_size = (W, H)$，原始图像尺寸
+- $target\_size = 640$，目标尺寸
 
-  2. 计算缩放后尺寸:
-     new_w = round(W * scale)
-     new_h = round(H * scale)
+步骤：
 
-  3. 计算填充:
-     pad_w = (target_size - new_w) / 2
-     pad_h = (target_size - new_h) / 2
-
-  4. 执行缩放+填充:
-     - 使用 INTER_LINEAR 或 INTER_AREA 插值缩放
-     - 四周填充灰色 (114, 114, 114)
+1. 计算缩放比：$scale = \min(target\_size/W, \ target\_size/H)$（取较小值以保证图像完整缩放到目标尺寸内）
+2. 计算缩放后尺寸：$new\_w = round(W \times scale)$，$new\_h = round(H \times scale)$
+3. 计算填充：$pad\_w = (target\_size - new\_w) / 2$，$pad\_h = (target\_size - new\_h) / 2$
+4. 执行缩放+填充：
+   - 使用 INTER_LINEAR 或 INTER_AREA 插值缩放
+   - 四周填充灰色 (114, 114, 114)
 
 ```
 
@@ -210,23 +164,21 @@ def preprocess_image(image, imgsz=640):
 
 #### 1.3.1 算子融合（Operator Fusion）
 
-```
-未融合的卷积层（训练后）：
-  Input → Conv → BatchNorm → SiLU → Output
-  
-融合后（推理时）：
-  Input → FusedConv → Output
-         (Conv + BN + Activation 合并为单个算子)
+**未融合的卷积层**（训练后）：
 
-优势:
-  - 减少内存读写（BN 和 Activation 不再需要中间结果）
-  - 减少 kernel launch 开销
-  - 提升 CUDA  occupancy
+- Input → Conv → BatchNorm → SiLU → Output
 
-实现:
-  model.fuse()  # YOLO 内置方法
+**融合后**（推理时）：
 
-```
+- Input → FusedConv → Output（Conv + BN + Activation 合并为单个算子）
+
+**优势**：
+
+- 减少内存读写（BN 和 Activation 不再需要中间结果）
+- 减少 kernel launch 开销
+- 提升 CUDA occupancy
+
+**实现**：`model.fuse()`（YOLO 内置方法）
 
 #### 1.3.2 内存优化
 
@@ -257,82 +209,65 @@ with torch.inference_mode():
 
 YOLOv8/v11/v26（one-to-many）的解码过程：
 
-```
-网络输出: [1, 4+nc, 8400]
-  前 4 维: cx, cy, w, h 的原始预测值
-  后 nc 维: 各类别的 logit 值
+**网络输出**：[1, 4+nc, 8400]
 
-解码步骤:
-  1. 将 8400 个预测分配到 3 个尺度:
-     P3 (小目标):  80×80 = 6400 个预测 → 对应 640/8=80 网格
-     P4 (中目标):  40×40 = 1600 个预测 → 对应 640/16=40 网格
-     P5 (大目标):  20×20 =  400 个预测 → 对应 640/32=20 网格
-     总计: 6400+1600+400 = 8400
+- 前 4 维：cx, cy, w, h 的原始预测值
+- 后 nc 维：各类别的 logit 值
 
-  2. 对每个预测框 (cx, cy, w, h):
-     # cx, cy 是相对于网格点的偏移
-     x1 = (cx + column) / scale  # 还原到原图坐标
-     y1 = (cy + row) / scale
-     x2 = x1 + w / scale
-     y2 = y1 + h / scale
-     
-     其中 scale = 640 / 原始图像最短边
-               column = x % grid_size
-               row = x // grid_size
+**解码步骤**：
 
-  3. 对类别 logit 应用 sigmoid:
-     conf = sigmoid(cls_logits)
-
-  4. 过滤: 保留 conf > conf_thres 的预测框
-
-```
+1. 将 8400 个预测分配到 3 个尺度：
+   - P3 (小目标)：80×80 = 6400 个预测 → 对应 640/8=80 网格
+   - P4 (中目标)：40×40 = 1600 个预测 → 对应 640/16=40 网格
+   - P5 (大目标)：20×20 = 400 个预测 → 对应 640/32=20 网格
+   - 总计：6400+1600+400 = 8400
+2. 对每个预测框 (cx, cy, w, h)（cx, cy 是相对于网格点的偏移）：
+   - $x1 = (cx + column) / scale$（还原到原图坐标）
+   - $y1 = (cy + row) / scale$
+   - $x2 = x1 + w / scale$
+   - $y2 = y1 + h / scale$
+   - 其中 $scale = 640 / 原始图像最短边$，$column = x \ \% \ grid\_size$，$row = x // grid\_size$
+3. 对类别 logit 应用 sigmoid：$conf = sigmoid(cls\_logits)$
+4. 过滤：保留 $conf > conf\_thres$ 的预测框
 
 #### 1.4.2 YOLO26 One-to-One 解码
 
-```
-YOLO26 One-to-One 头输出: [1, 300, 6]
-  6 个值 = [cx, cy, w, h, conf, class_id]
+**YOLO26 One-to-One 头输出**：[1, 300, 6]，6 个值 = [cx, cy, w, h, conf, class_id]
 
-解码步骤 (比 one-to-many 更简单):
-  1. 无需网格分配（直接输出绝对坐标）
-  2. 无需 NMS（天生无冗余）
-  3. 仅需过滤低置信度预测:
-     保留 conf > conf_thres 的预测
-  4. 按置信度排序，取前 top_k 个
+**解码步骤**（比 one-to-many 更简单）：
 
-优势:
-  - 推理流程更简洁
-  - 消除 NMS 耗时（约 5-15ms）
-  - 更适合边缘设备部署
+1. 无需网格分配（直接输出绝对坐标）
+2. 无需 NMS（天生无冗余）
+3. 仅需过滤低置信度预测：保留 $conf > conf\_thres$ 的预测
+4. 按置信度排序，取前 top_k 个
 
-```
+**优势**：
+
+- 推理流程更简洁
+- 消除 NMS 耗时（约 5-15ms）
+- 更适合边缘设备部署
 
 ### 1.5 后处理详解
 
 #### 1.5.1 NMS（非极大值抑制）
 
-```
-NMS 算法原理:
+**NMS 算法原理**：
 
+- 输入：预测框列表 $D = [(x1,y1,x2,y2, \ conf, \ class), \ldots]$，IoU 阈值：$iou\_thres$
 
-输入: 预测框列表 D = [(x1,y1,x2,y2, conf, class), ...]
-      IoU 阈值: iou_thres
+步骤：
 
-步骤:
-  1. 按类别分组
-  2. 对每个类别:
-     a. 按置信度降序排序
-     b. 选择置信度最高的框作为"保留框"
-     c. 计算"保留框"与其余框的 IoU
-     d. 去除 IoU > iou_thres 的框（冗余检测）
-     e. 重复步骤 b-d 直到所有框处理完毕
+1. 按类别分组
+2. 对每个类别：
+   1. 按置信度降序排序
+   2. 选择置信度最高的框作为"保留框"
+   3. 计算"保留框"与其余框的 IoU
+   4. 去除 $IoU > iou\_thres$ 的框（冗余检测）
+   5. 重复步骤 2-4 直到所有框处理完毕
 
-公式:
-  IoU(A, B) = |A ∩ B| / |A ∪ B|
-  
-  其中 |A ∩ B| 是交集面积，|A ∪ B| 是并集面积
+公式：$IoU(A, B) = \frac{|A \cap B|}{|A \cup B|}$
 
-```
+其中 $|A \cap B|$ 是交集面积，$|A \cup B|$ 是并集面积
 
 **NMS 实现**：
 
@@ -383,53 +318,48 @@ def nms(boxes, scores, iou_threshold):
 
 #### 1.5.2 DIoU-NMS（Distance IoU NMS）
 
-```
-DIoU-NMS 相比标准 NMS 的改进:
-  - 不仅考虑重叠面积（IoU）
-  - 还考虑中心点距离
-  - 对重叠但位置不同的框更有效
+**DIoU-NMS 相比标准 NMS 的改进**：
 
-DIoU 公式:
-  DIoU(A,B) = IoU(A,B) - ρ²(a,b) / c²
-  
-  其中:
-    ρ(a,b): 预测框中心与 GT 中心的欧氏距离
-    c: 最小外接矩形的对角线长度
+- 不仅考虑重叠面积（IoU）
+- 还考虑中心点距离
+- 对重叠但位置不同的框更有效
 
-```
+DIoU 公式：$DIoU(A,B) = IoU(A,B) - \frac{\rho^2(a,b)}{c^2}$
+
+其中：
+
+- $\rho(a,b)$：预测框中心与 GT 中心的欧氏距离
+- $c$：最小外接矩形的对角线长度
 
 #### 1.5.3 Soft-NMS
 
-```
-Soft-NMS 相比标准 NMS 的改进:
-  - 不直接剔除低 IoU 框
-  - 而是根据 IoU 衰减置信度
-  - 能保留部分被标准 NMS 错误剔除的框
+**Soft-NMS 相比标准 NMS 的改进**：
 
-置信度衰减策略:
-  线性衰减:  score = score * (1 - IoU)
-  高斯衰减:  score = score * exp(-IoU² / σ)
-  
-  推荐 σ = 0.5（高斯衰减效果更好）
+- 不直接剔除低 IoU 框
+- 而是根据 IoU 衰减置信度
+- 能保留部分被标准 NMS 错误剔除的框
 
-```
+**置信度衰减策略**：
+
+- 线性衰减：$score = score \times (1 - IoU)$
+- 高斯衰减：$score = score \times \exp(-IoU^2 / \sigma)$
+- 推荐 $\sigma = 0.5$（高斯衰减效果更好）
 
 #### 1.5.4 WBF（Weighted Boxes Fusion）
 
-```
-WBF 多模型融合算法:
-  - 融合多个模型的预测结果
-  - 对重叠框进行加权平均
-  - 比简单的 NMS 融合效果更优
+**WBF 多模型融合算法**：
 
-公式:
-  x_center = Σ(score_i * x_i) / Σ(score_i)
-  y_center = Σ(score_i * y_i) / Σ(score_i)
-  width    = Σ(score_i * w_i) / Σ(score_i)
-  height   = Σ(score_i * h_i) / Σ(score_i)
-  score    = mean(score_i)
+- 融合多个模型的预测结果
+- 对重叠框进行加权平均
+- 比简单的 NMS 融合效果更优
 
-```
+公式：
+
+- $x\_center = \frac{\sum(score_i \times x_i)}{\sum(score_i)}$
+- $y\_center = \frac{\sum(score_i \times y_i)}{\sum(score_i)}$
+- $width = \frac{\sum(score_i \times w_i)}{\sum(score_i)}$
+- $height = \frac{\sum(score_i \times h_i)}{\sum(score_i)}$
+- $score = mean(score_i)$
 
 ### 1.6 预处理高级优化
 
@@ -437,15 +367,17 @@ WBF 多模型融合算法:
 
 传统预处理（Letterbox Resize、归一化、通道转换）通常在 CPU 上逐帧执行，成为推理流水线的瓶颈。将预处理卸载到 GPU 上可以显著降低整体延迟。
 
-CPU 预处理 vs GPU 预处理延迟对比（1920×1080 图像, RTX 4090）
-操作  CPU (ms)  GPU (ms)  加速比
-Resize (INTER_LINEAR)  2.1  0.15  14x
-Letterbox Padding  0.8  0.05  16x
-BGR→RGB 转换  0.3  0.02  15x
-归一化 (/255.0)  0.1  0.01  10x
-HWC→CHW 转置  0.5  0.03  17x
-DMA 传输到 GPU  —  0.25  —
-合计  3.8  0.51  ~7.5x
+**CPU 预处理 vs GPU 预处理延迟对比**（1920×1080 图像, RTX 4090）：
+
+| 操作 | CPU (ms) | GPU (ms) | 加速比 |
+|------|---------|---------|--------|
+| Resize (INTER_LINEAR) | 2.1 | 0.15 | 14x |
+| Letterbox Padding | 0.8 | 0.05 | 16x |
+| BGR→RGB 转换 | 0.3 | 0.02 | 15x |
+| 归一化 (/255.0) | 0.1 | 0.01 | 10x |
+| HWC→CHW 转置 | 0.5 | 0.03 | 17x |
+| DMA 传输到 GPU | — | 0.25 | — |
+| 合计 | 3.8 | 0.51 | ~7.5x |
 
 **CUDA 预处理 Kernel 实现**：
 
@@ -573,11 +505,13 @@ def gpu_letterbox(image, target_size=640):
 
 在 CPU 端，利用 SIMD 指令集（x86 的 AVX2/AVX-512，ARM 的 NEON）可以显著加速预处理操作。
 
-SIMD 向量化加速效果（1920×1080 预处理, Intel Xeon Gold 6248R）
-操作  标量实现  AVX2  NEON(ARM)  加速比
-像素归一化  0.45ms  0.12ms  0.15ms  3.8x
-BGR→RGB 通道交换  0.30ms  0.08ms  0.10ms  3.7x
-Resize 插值  2.10ms  0.55ms  0.65ms  3.8x
+**SIMD 向量化加速效果**（1920×1080 预处理, Intel Xeon Gold 6248R）：
+
+| 操作 | 标量实现 | AVX2 | NEON(ARM) | 加速比 |
+|------|---------|------|----------|--------|
+| 像素归一化 | 0.45ms | 0.12ms | 0.15ms | 3.8x |
+| BGR→RGB 通道交换 | 0.30ms | 0.08ms | 0.10ms | 3.7x |
+| Resize 插值 | 2.10ms | 0.55ms | 0.65ms | 3.8x |
 
 **使用 OpenCV 的 SIMD 优化**：
 
@@ -654,41 +588,16 @@ def fast_letterbox_cpu(src, target=640):
 
 在生产级系统中，减少内存拷贝是降低延迟的关键。通过零拷贝技术，可以将预处理、推理和后处理的所有操作限制在 GPU 显存中。
 
-零拷贝流水线架构：
+**零拷贝流水线架构**：
 
-摄像头 / 网络接收
+- 摄像头 / 网络接收
+- CUDA Video Decoding ← 硬件解码 (NVDEC)，直接输出到 CUDA 缓冲区（零拷贝, CUDA Pinned Memory）
+- GPU Preprocess ← CUDA Kernel 执行预处理（Letterbox + Normalize + HWC→CHW），直接输出到 GPU 显存（零拷贝, 同一片显存）
+- TensorRT Engine Inference ← GPU 推理，直接输出到 GPU 显存（零拷贝）
+- GPU Postprocess ← CUDA Kernel 执行 NMS 解码（NMS + Decode），仅结果拷贝到 CPU
+- 检测结果
 
-▼
-
-CUDA Video  ← 硬件解码 (NVDEC)
-Decoding  直接输出到 CUDA 缓冲区
-
-(零拷贝, CUDA Pinned Memory)
-▼
-
-GPU Preprocess  ← CUDA Kernel 执行预处理
-(Letterbox +  直接输出到 GPU 显存
-Normalize +
-HWC→CHW)
-
-(零拷贝, 同一片显存)
-▼
-
-TensorRT Engine  ← GPU 推理
-Inference  直接输出到 GPU 显存
-
-(零拷贝)
-▼
-
-GPU Postprocess  ← CUDA Kernel 执行 NMS 解码
-(NMS + Decode)
-
-(仅结果拷贝到 CPU)
-▼
-检测结果
-
-总内存拷贝次数: 1次 (结果 → CPU)
-传统流水线内存拷贝: 6+次 (上传输入 → 下载推理 → 后处理)
+总内存拷贝次数：1 次（结果 → CPU）；传统流水线内存拷贝：6+ 次（上传输入 → 下载推理 → 后处理）
 
 ```python
 import pycuda.driver as cuda
@@ -753,17 +662,12 @@ class ZeroCopyPipeline:
 
 对于视频流场景，可以设计重叠的预处理-推理流水线，使预处理和推理并行执行。
 
-流水线并行架构：
+**流水线并行架构**（随时间 →）：
 
-时间 →
-Frame 1
-Preproc  Inference
-Frame 2
-Preproc  Inference
-Frame 3
-Preproc  Inference
-Frame 4
-Preproc
+- Frame 1：Preproc → Inference
+- Frame 2：Preproc → Inference
+- Frame 3：Preproc → Inference
+- Frame 4：Preproc
 
 效果：预处理和推理重叠执行，总体吞吐提升 ~2x
 
@@ -834,26 +738,22 @@ class PipelinedInference:
 
 标准 NMS 在 CPU 上实现，但当预测框数量超过数千时，NMS 会成为瓶颈。通过 CUDA 并行化 NMS，可以将延迟从 ~2ms 降至 ~0.1ms。
 
-```
-NMS 并行化策略：
+**NMS 并行化策略**：
 
+- 传统 CPU NMS：
+  - 排序: O(N log N)
+  - 两两 IoU: O(N²)（但实际上提前终止）
+  - 8400 个预测框: ~1.5ms
+- CUDA 并行 NMS：
+  - 排序: 并行 radix sort ~0.05ms
+  - IoU 计算: 每个 warp 处理 32 个框, ~0.02ms
+  - 8400 个预测框: ~0.08ms (加速比 ~19x)
 
-传统 CPU NMS:
-排序: O(N log N)
-两两 IoU: O(N²)  (但实际上提前终止)
-8400 个预测框: ~1.5ms
+**实现要点**：
 
-CUDA 并行 NMS:
-排序: 并行 radix sort ~0.05ms
-IoU 计算: 每个 warp 处理 32 个框, ~0.02ms
-8400 个预测框: ~0.08ms (加速比 ~19x)
-
-实现要点:
 1. 使用 shared memory 缓存 IoU 矩阵分块
 2. 每个 block 处理一个类别
 3. 使用 atomic 操作实现非极大值抑制
-
-```
 
 ```cuda
 // 自定义 NMS CUDA Kernel
@@ -1014,19 +914,18 @@ class FastNMSCUDA:
 
 将多个串行操作合并为单个 CUDA kernel，可以显著减少 kernel launch 开销和内存读写。
 
-```
-未融合的 kernel 序列：
-  Kernel1: Resize    → 写显存 (H×W×3)
-  Kernel2: Normalize → 读显存 + 写显存 (H×W×3)
-  Kernel3: HWC→CHW  → 读显存 + 写显存 (3×H×W)
-  总内存读写: 4次全量数据传输
+**未融合的 kernel 序列**：
 
-融合后的单一 kernel：
-  Kernel: Preprocess → 直接输出 CHW 格式
-  总内存读写: 1次（仅最终输出）
-  节省显存带宽: ~75%
+- Kernel1: Resize → 写显存 (H×W×3)
+- Kernel2: Normalize → 读显存 + 写显存 (H×W×3)
+- Kernel3: HWC→CHW → 读显存 + 写显存 (3×H×W)
+- 总内存读写：4 次全量数据传输
 
-```
+**融合后的单一 kernel**：
+
+- Kernel: Preprocess → 直接输出 CHW 格式
+- 总内存读写：1 次（仅最终输出）
+- 节省显存带宽：~75%
 
 ```cuda
 // Fused 预处理 Kernel: Resize + Normalize + HWC→CHW
@@ -1086,22 +985,17 @@ __global__ void fused_preprocess_kernel(
 
 卷积操作是推理的主要计算瓶颈。通过将输入特征图的分块加载到 shared memory，可以大幅减少全局内存访问。
 
-```
-卷积操作的内存访问模式：
+**卷积操作的内存访问模式**：
 
+- 标准卷积（无 shared memory）：
+  - 输入特征图: [C, H, W] → 每个输出像素需要从全局内存读取 K×K 个值
+  - 对于 3×640×640 的输入，每个输出位置需要读取 9 个全局内存值
+- 使用 shared memory 的卷积：
+  1. 将输入特征图的分块（tile）加载到 shared memory
+  2. 多个线程协同计算一个输出区域
+  3. shared memory 访问延迟（~1 cycle）远低于全局内存（~300 cycles）
 
-标准卷积（无 shared memory）:
-输入特征图: [C, H, W]  →  每个输出像素需要从全局内存读取 K×K 个值
-对于 3×640×640 的输入，每个输出位置需要读取 9 个全局内存值
-
-使用 shared memory 的卷积:
-1. 将输入特征图的分块（tile）加载到 shared memory
-2. 多个线程协同计算一个输出区域
-3. shared memory 访问延迟（~1 cycle）远低于全局内存（~300 cycles）
-
-加速比: 3-5x（取决于 tile 大小和内存带宽）
-
-```
+加速比：3-5x（取决于 tile 大小和内存带宽）
 
 ```cuda
 // 使用 shared memory 的卷积 kernel
@@ -1179,24 +1073,18 @@ __global__ void conv_shared_memory_kernel(
 
 NVIDIA GPU 的 warp（32 个线程）级别原语可以实现高效的跨线程通信，用于实现高性能的归约（reduction）操作。
 
-```
-Warp 级原语在 YOLO 推理中的应用：
+**Warp 级原语在 YOLO 推理中的应用**：
 
-
-1. Warp Shuffle（__shfl_down_sync）
-· 用于高效的 softmax 计算
-· 用于 reduce_sum（加速归一化层）
-· 用于并行排序（加速 NMS）
-
-2. Warp Vote（__any_sync, __all_sync）
-· 用于条件分支判断
-· 用于快速判断是否所有预测框都被抑制
-
-3. Warp Broadcast（__shfl_sync）
-· 用于共享阈值参数
-· 用于跨线程传递锚点信息
-
-```
+1. **Warp Shuffle**（`__shfl_down_sync`）
+   - 用于高效的 softmax 计算
+   - 用于 reduce_sum（加速归一化层）
+   - 用于并行排序（加速 NMS）
+2. **Warp Vote**（`__any_sync`, `__all_sync`）
+   - 用于条件分支判断
+   - 用于快速判断是否所有预测框都被抑制
+3. **Warp Broadcast**（`__shfl_sync`）
+   - 用于共享阈值参数
+   - 用于跨线程传递锚点信息
 
 ```cuda
 // 使用 Warp Shuffle 的高效 softmax
@@ -1240,17 +1128,12 @@ __global__ void softmax_warp_kernel(float* input, float* output, int N) {
 
 通过 CUDA stream 实现计算与数据传输的重叠，最大化 GPU 利用率。
 
-```
-异步计算流水线：
+**异步计算流水线**：
 
-
-Stream 0 (数据传输):  DMA1▶  DMA2▶  DMA3▶  ...
-Stream 1 (计算):  Kernel1▶ Kernel2▶ ...
-
-关键: DMA 和 Kernel 在时间上重叠
-效果: 整体延迟接近 max(传输时间, 计算时间) 而非 sum
-
-```
+- Stream 0（数据传输）：DMA1 → DMA2 → DMA3 → ...
+- Stream 1（计算）：Kernel1 → Kernel2 → ...
+- 关键：DMA 和 Kernel 在时间上重叠
+- 效果：整体延迟接近 max(传输时间, 计算时间) 而非 sum
 
 ```python
 import torch
@@ -1286,22 +1169,20 @@ TensorRT 支持通过自定义插件（Plugin）扩展其算子库，这对于�
 
 TensorRT 8.x 推荐使用 `IPluginV2DynamicExt` 接口：
 
-TensorRT Plugin 接口层次：
+**TensorRT Plugin 接口层次**：
 
-IPluginV2  (基础接口)
+- IPluginV2（基础接口）
+- IPluginV2DynamicExt（动态形状支持, TRT 8.x 推荐）
+- IPluginV2IOExt（扩展 IO 支持）
+- IPluginV2Legacy（遗留接口, 不推荐）
 
-IPluginV2DynamicExt  (动态形状支持, TRT 8.x 推荐)
+**关键方法**：
 
-IPluginV2IOExt (扩展 IO 支持)
-
-IPluginV2Legacy  (遗留接口, 不推荐)
-
-关键方法:
-· getOutputDimensions():  计算输出维度
-· setExpression():  设置 CUDA kernel 表达式
-· forward():  执行前向传播
-· serialize():  序列化插件参数
-· deserialize():  反序列化插件参数
+- `getOutputDimensions()`：计算输出维度
+- `setExpression()`：设置 CUDA kernel 表达式
+- `forward()`：执行前向传播
+- `serialize()`：序列化插件参数
+- `deserialize()`：反序列化插件参数
 
 ```cpp
 // TensorRT 自定义插件示例: FusedNMS Plugin
@@ -1465,16 +1346,16 @@ REGISTER_TENSORRT_PLUGIN(FusedNMSPluginCreator);
 
 YOLO 推理中常用的 TensorRT 自定义插件：
 
-插件名称  用途
-
-FusedNMS  将 NMS 融合到推理图中，消除 Python 后处理
-CustomResize  支持任意比例的 resize（非 32 对齐）
-DIOU_NMS  基于 DIoU 的 NMS，提升密集场景检测精度
-SoftNMS  Soft-NMS 变体，保留部分低置信度预测
-DecodeHead  将 YOLO 的 anchor-free 解码集成到网络中
-ONNX_Sigmoid  修复 ONNX→TRT 转换中的 sigmoid 精度问题
-GroupNorm  支持 GroupNorm 层（部分 YOLO 变体使用）
-SyncBN  支持 SyncBatchNorm（分布式训练后的模型）
+| 插件名称 | 用途 |
+|---------|------|
+| FusedNMS | 将 NMS 融合到推理图中，消除 Python 后处理 |
+| CustomResize | 支持任意比例的 resize（非 32 对齐） |
+| DIOU_NMS | 基于 DIoU 的 NMS，提升密集场景检测精度 |
+| SoftNMS | Soft-NMS 变体，保留部分低置信度预测 |
+| DecodeHead | 将 YOLO 的 anchor-free 解码集成到网络中 |
+| ONNX_Sigmoid | 修复 ONNX→TRT 转换中的 sigmoid 精度问题 |
+| GroupNorm | 支持 GroupNorm 层（部分 YOLO 变体使用） |
+| SyncBN | 支持 SyncBatchNorm（分布式训练后的模型） |
 
 ## 二、各框架推理实现
 
@@ -1695,35 +1576,20 @@ let request = VNCoreMLRequest(model: model) { request, error in
 
 CoreML 在 iOS 15+ 上支持更高级的集成方式，包括与 Vision Framework 的深度集成和 CoreML 模型的子图优化。
 
-```
-CoreML 推理加速架构：
-
+**CoreML 推理加速架构**：
 
 iOS 设备上的执行路径：
 
-CoreML  ▶  Neural  ▶  Metal
-Framework  Engine  Performance
-(API层)  (调度层)  Shaders
+- CoreML Framework（API 层）→ Neural Engine（调度层）→ Metal Performance Shaders
+- 对应：VNCoreML Request（Vision Framework）、模型缓存（MLModel cache）、GPU 并行计算（A17 GPU）
 
+**性能对比**（iPhone 15 Pro, YOLO26n, 640×640）：
 
-▼  ▼  ▼
-
-VNCoreML  模型缓存  GPU 并行
-Request  (MLModel  计算
-(Vision  cache)  (A17 GPU)
-Framework)
-
-
-性能对比（iPhone 15 Pro, YOLO26n, 640×640）：
-
-执行引擎  延迟(ms)  FPS  功耗
-
-Neural Engine  ~12.0  ~83  低
-GPU (Metal)  ~8.5  ~118  中
-CPU  ~45.0  ~22  最低
-
-
-```
+| 执行引擎 | 延迟 (ms) | FPS | 功耗 |
+|---------|----------|-----|------|
+| Neural Engine | ~12.0 | ~83 | 低 |
+| GPU (Metal) | ~8.5 | ~118 | 中 |
+| CPU | ~45.0 | ~22 | 最低 |
 
 ```swift
 import CoreML
@@ -1794,46 +1660,26 @@ print(f"Optimized layers: {len(optimized_model.predicted_feature_name)}")
 
 ```
 
-CoreML 转换优化阶段：
+**CoreML 转换优化阶段**：
 
-ONNX Model ▶ CoreML Converter ▶ Optimized MLModel
+- 转换路径：ONNX Model → CoreML Converter → Optimized MLModel
+- 优化步骤：1. 算子映射（ONNX→CoreML）；2. 常量折叠；3. 图简化；4. 精度校准；5. FP16 精度；6. 算子融合；7. 内存优化；8. NNEF 后端选择
 
-1. 算子映射  2. FP16 精度
-(ONNX→CoreML)  3. 算子融合
-2. 常量折叠  4. 内存优化
-3. 图简化  5. NNEF 后端选择
-4. 精度校准
-
-▼
 支持的后端：
-· Neural Engine (A12+)  ← 优先选择
-· Metal Performance Shaders (MPS)
-· CPU (Apple Silicon / Intel)
+
+- Neural Engine (A12+) ← 优先选择
+- Metal Performance Shaders (MPS)
+- CPU (Apple Silicon / Intel)
 
 ### 2.8 ONNX GraphSurgeon 优化
 
 ONNX GraphSurgeon 是一个用于修改和优化 ONNX 图的 Python 库，可以在导出阶段对模型图进行深度优化。
 
-```
-GraphSurgeon 优化流程：
+**GraphSurgeon 优化流程**：
 
-
-原始 ONNX 图:
-Input ▶ Conv ▶ BN ▶ SiLU ▶ Conv ▶ BN ▶ SiLU ▶ Output
-(可融合)
-
-GraphSurgeon 优化:
-1. 识别可融合的算子序列 (Conv + BN + Act)
-2. 折叠常量（Fold Constants）
-3. 删除冗余节点
-4. 替换不支持的算子
-5. 重排计算图
-
-优化后 ONNX 图:
-Input ▶ FusedConv ▶ FusedConv ▶ Output
-(节点数减少 40%+)
-
-```
+- 原始 ONNX 图：Input → Conv → BN → SiLU → Conv → BN → SiLU → Output（可融合）
+- GraphSurgeon 优化：1. 识别可融合的算子序列 (Conv + BN + Act)；2. 折叠常量（Fold Constants）；3. 删除冗余节点；4. 替换不支持的算子；5. 重排计算图
+- 优化后 ONNX 图：Input → FusedConv → FusedConv → Output（节点数减少 40%+）
 
 ```python
 import onnx
@@ -1972,23 +1818,12 @@ for detection in results.detections:
 
 MNN（Mobile Neural Network）是阿里巴巴开源的高性能移动端推理框架，支持 iOS、Android 和嵌入式 Linux。
 
-```
-MNN 架构概览：
-
+**MNN 架构概览**：
 
 MNN 推理流程：
 
-MNN 模型  ▶  MNN Session  ▶  MNN Session
-(.mnn/.var)  (预处理)  (推理+后处理)
-
-
-▼  ▼  ▼
-
-ONNX/Caffe  图形后端  性能后端
-/TFLite 转换  (GPU/Metal)  (CPU/NEON)
-
-
-```
+- MNN 模型（.mnn/.var）→ MNN Session（预处理）→ MNN Session（推理+后处理）
+- 转换与后端：ONNX/Caffe/TFLite 转换、图形后端（GPU/Metal）、性能后端（CPU/NEON）
 
 ```cpp
 // MNN C++ 推理示例
@@ -2230,12 +2065,13 @@ def detect_with_ncnn(image_path, model_path):
 | NCNN | FP32/16 | 快 | 全平台 | ★★★☆☆ |
 | MediaPipe | FP16 | 中等 | 全平台 | ★★★★★ |
 
-选择建议：
-· 开发调试：PyTorch → ONNX → TensorRT/OpenVINO
-· 云端部署：TensorRT (NVIDIA) / OpenVINO (Intel)
-· 移动端部署：TFLite (Android) / CoreML (iOS)
-· 边缘设备：NCNN/MNN (轻量级) / RKNN (瑞芯微)
-· 跨平台：ONNX Runtime
+**选择建议**：
+
+- 开发调试：PyTorch → ONNX → TensorRT/OpenVINO
+- 云端部署：TensorRT (NVIDIA) / OpenVINO (Intel)
+- 移动端部署：TFLite (Android) / CoreML (iOS)
+- 边缘设备：NCNN/MNN (轻量级) / RKNN (瑞芯微)
+- 跨平台：ONNX Runtime
 
 ## 三、边缘设备部署
 
@@ -2875,22 +2711,11 @@ client = grpcclient.InferenceClient("triton-server:8001")
 
 Triton 支持将多个模型串联成集成，实现流水线式推理。
 
-```
-Triton 模型集成架构：
+**Triton 模型集成架构**：
 
-
-输入图像
-
-▼
-
-YOLO26  ▶  YOLO26-Seg ▶  Post-Proc
-(检测)  (分割)  (结果聚合)
-
-
-▼  ▼  ▼
-边界框列表  实例掩码  最终结果
-
-```
+- 输入图像
+- YOLO26（检测）→ YOLO26-Seg（分割）→ Post-Proc（结果聚合）
+- 输出：边界框列表、实例掩码、最终结果
 
 ```python
 # Triton Ensemble 配置 (config.pbtxt)
@@ -3118,39 +2943,13 @@ def analyze_triton_performance(client, model_name):
 
 Kafka 作为消息队列，适用于高吞吐、低延迟的流式推理场景。
 
-```
-Kafka 流式推理架构：
+**Kafka 流式推理架构**：
 
-
-数据源 (摄像头/传感器)
-
-▼
-
-Kafka  ◀  Kafka  ◀  数据源
-Producer  Broker  (RTSP/HTTP)
-
-
-▼
-
-Kafka
-Consumer
-(推理服务)
-
-
-▼
-
-Kafka
-Results
-Topic
-
-
-▼
-
-下游应用
-(告警/UI)
-
-
-```
+- 数据源（摄像头/传感器，RTSP/HTTP）
+- Kafka Producer → Kafka Broker
+- Kafka Consumer（推理服务）
+- Kafka Results Topic
+- 下游应用（告警/UI）
 
 ```python
 # Kafka 流式推理实现
@@ -3456,23 +3255,14 @@ results = model.predict(images, batch=32, conf=0.25)
 
 量化感知训练（Quantization-Aware Training, QAT）是在训练过程中模拟量化误差，使模型在量化后仍能保持较高精度。
 
-```
-PTQ vs QAT 对比：
+**PTQ vs QAT 对比**：
 
-
-PTQ (Post-Training Quantization):
-训练 (FP32) ▶ 导出 ONNX ▶ 量化 (INT8) ▶ 部署
-精度损失: ~0.5-2%
-优点: 简单快速
-缺点: 精度可能下降较多
-
-QAT (Quantization-Aware Training):
-训练 (FP32 + 量化模拟) ▶ 导出 ▶ 部署
-精度损失: ~0.1-0.5%
-优点: 精度保持更好
-缺点: 训练时间增加 ~20%
-
-```
+- PTQ (Post-Training Quantization)：
+  - 流程：训练 (FP32) → 导出 ONNX → 量化 (INT8) → 部署
+  - 精度损失：~0.5-2%；优点：简单快速；缺点：精度可能下降较多
+- QAT (Quantization-Aware Training)：
+  - 流程：训练 (FP32 + 量化模拟) → 导出 → 部署
+  - 精度损失：~0.1-0.5%；优点：精度保持更好；缺点：训练时间增加 ~20%
 
 ```python
 import torch
@@ -3633,26 +3423,25 @@ model.train(data="data.yaml", epochs=10)
 
 稀疏化（Sparsity）是通过将不重要的权重置为零来减少计算量。NVIDIA GPU 对稀疏矩阵有特殊优化。
 
-```
-稀疏化策略对比：
+**稀疏化策略对比**
 
+**1. 非结构化稀疏 (Unstructured Sparsity)**：
 
-1. 非结构化稀疏 (Unstructured Sparsity):
-· 随机将权重置为零
-· 稀疏度可达 50%+
-· 需要特殊硬件支持才能获得加速
+- 随机将权重置为零
+- 稀疏度可达 50%+
+- 需要特殊硬件支持才能获得加速
 
-2. 结构化稀疏 (Structured Sparsity):
-· 按通道/滤波器置零
-· 稀疏度通常 30-50%
-· 通用硬件也可加速
+**2. 结构化稀疏 (Structured Sparsity)**：
 
-3. NVIDIA 稀疏计算 (8:16 稀疏):
-· 每 16 个权重中 8 个为零
-· 需要 Tensor Core 支持
-· 可获得 ~2x 计算加速
+- 按通道/滤波器置零
+- 稀疏度通常 30-50%
+- 通用硬件也可加速
 
-```
+**3. NVIDIA 稀疏计算 (8:16 稀疏)**：
+
+- 每 16 个权重中 8 个为零
+- 需要 Tensor Core 支持
+- 可获得 ~2x 计算加速
 
 ```python
 # 结构化稀疏剪枝
@@ -3706,27 +3495,26 @@ sparse_input = compress(model.weight, sparsity=0.5)
 
 混合精度训练（Mixed Precision Training）同时使用 FP16 和 FP32，在保持精度的同时加速训练和推理。
 
-```
-混合精度训练策略：
+**混合精度训练策略**
 
+**FP16 (半精度)**：
 
-FP16 (半精度):
-· 计算速度快 (2x)
-· 显存占用减半
-· 可能损失精度 (尤其是小模型)
+- 计算速度快 (2x)
+- 显存占用减半
+- 可能损失精度 (尤其是小模型)
 
-FP32 (全精度):
-· 精度高
-· 计算慢
-· 显存占用大
+**FP32 (全精度)**：
 
-混合精度策略:
-· 权重存储: FP32 (主权重)
-· 前向传播: FP16 (计算加速)
-· 反向传播: FP32 (梯度精度)
-· 损失缩放: Loss Scaling 防止下溢
+- 精度高
+- 计算慢
+- 显存占用大
 
-```
+**混合精度策略**：
+
+- 权重存储：FP32 (主权重)
+- 前向传播：FP16 (计算加速)
+- 反向传播：FP32 (梯度精度)
+- 损失缩放：Loss Scaling 防止下溢
 
 ```python
 # PyTorch 混合精度训练
@@ -3777,24 +3565,22 @@ session = ort.InferenceSession(
 
 神经网络架构搜索（Neural Architecture Search, NAS）用于自动搜索最优的检测模型架构。
 
-```
-YOLO NAS 搜索空间：
+**YOLO NAS 搜索空间**
 
+**搜索维度**：
 
-搜索维度:
-· 网络深度 (层数)
-· 网络宽度 (通道数)
-· 卷积核大小 (3×3, 5×5, 7×7)
-· 注意力机制 (SE, CBAM, EMA)
-· 连接方式 (残差连接, 跳跃连接)
+- 网络深度 (层数)
+- 网络宽度 (通道数)
+- 卷积核大小 (3×3, 5×5, 7×7)
+- 注意力机制 (SE, CBAM, EMA)
+- 连接方式 (残差连接, 跳跃连接)
 
-搜索算法:
-· DARTS (Differentiable Architecture Search)
-· ENAS (Efficient NAS)
-· Progressive NAS
-· ProxylessNAS
+**搜索算法**：
 
-```
+- DARTS (Differentiable Architecture Search)
+- ENAS (Efficient NAS)
+- Progressive NAS
+- ProxylessNAS
 
 ```python
 # 使用 NNi (Microsoft Neural Network Intelligence) 进行 NAS
@@ -4880,26 +4666,14 @@ class ChaosEngineering:
 
 TVM 是一个开源的机器学习编译器框架，支持将深度学习模型编译到各种硬件平台。
 
-```
-TVM 编译流程：
+**TVM 编译流程**：
 
-  ONNX 模型
-      ▼
- TVM Frontend ← ONNX/TVM Relay 解析
- (解析阶段)
-           ▼
- Relay 优化 ← 算子融合、常量折叠、死代码消除
- (图优化阶段)
-           ▼
- 自动调优 ← AutoTVM / Ansor 搜索最优调度
- (调优阶段)
-           ▼
- Codegen ← 生成 LLVM/CUDA/Vulkan 代码
- (代码生成阶段)
-           ▼
-  .so 动态库 / LLVM IR / CUDA Kernel
-
-```
+- ONNX 模型
+- TVM Frontend ← ONNX/TVM Relay 解析（解析阶段）
+- Relay 优化 ← 算子融合、常量折叠、死代码消除（图优化阶段）
+- 自动调优 ← AutoTVM / Ansor 搜索最优调度（调优阶段）
+- Codegen ← 生成 LLVM/CUDA/Vulkan 代码（代码生成阶段）
+- .so 动态库 / LLVM IR / CUDA Kernel
 
 ```python
 import tvm
@@ -4968,23 +4742,13 @@ with autotvm.apply_history_best("tuning.log"):
 
 torch.compile 是 PyTorch 2.0+ 引入的编译优化器，可以将 PyTorch 模型编译为优化后的执行图。
 
-```
-torch.compile 工作流程：
+**torch.compile 工作流程**：
 
-  Python 代码
-      ▼
- TorchDynamo ← 捕获 Python 操作图
- (捕获阶段)
-           ▼
- FX Graph ← 静态计算图
- (图表示)
-           ▼
- TorchInductor ← GPU 代码生成
- (代码生成)
-           ▼
-  优化后的 CUDA Kernel
-
-```
+- Python 代码
+- TorchDynamo ← 捕获 Python 操作图（捕获阶段）
+- FX Graph ← 静态计算图（图表示）
+- TorchInductor ← GPU 代码生成（代码生成）
+- 优化后的 CUDA Kernel
 
 ```python
 import torch
@@ -5060,23 +4824,13 @@ compiled_model = torch.compile(model)
 
 XLA 是 Google 开发的机器学习编译器，专门为 TPU 和 GPU 优化。
 
-```
-XLA 编译流程：
+**XLA 编译流程**：
 
-  TensorFlow/JAX 代码
-      ▼
- HLO 图构建 ← 高阶线性代数表示
- (HLO IR)
-           ▼
- HLO 优化 ← 算子融合、内存优化
- (HLO Optimizer)
-           ▼
- Codegen ← 生成 GPU/TPU/CPU 代码
- (代码生成)
-           ▼
-  优化后的二进制代码
-
-```
+- TensorFlow/JAX 代码
+- HLO 图构建 ← 高阶线性代数表示（HLO IR）
+- HLO 优化 ← 算子融合、内存优化（HLO Optimizer）
+- Codegen ← 生成 GPU/TPU/CPU 代码（代码生成）
+- 优化后的二进制代码
 
 ```python
 # JAX + XLA 示例
@@ -5116,25 +4870,12 @@ x = jnp.ones((1, 224, 224, 3))
 
 MLIR 是 LLVM 推出的多级别中间表示框架，支持从高层语义到低级硬件代码的编译。
 
-```
-MLIR 编译层次：
+**MLIR 编译层次**：
 
-  高层 (High-Level):
- TorchMLIR / MLIR-TF ← PyTorch/TF 算子
- (算子级表示)
-                 ▼
-  中层 (Mid-Level):
- Linalg / Vector / Affine ← 通用计算原语
- (代数表示)
-                 ▼
-  低层 (Low-Level):
- LLVM IR / NVVM / SPIR-V ← 硬件特定 IR
- (硬件表示)
-                 ▼
-  目标硬件:
- GPU (CUDA) CPU (AVX) TPU/NPU
-
-```
+- 高层 (High-Level)：TorchMLIR / MLIR-TF ← PyTorch/TF 算子（算子级表示）
+- 中层 (Mid-Level)：Linalg / Vector / Affine ← 通用计算原语（代数表示）
+- 低层 (Low-Level)：LLVM IR / NVVM / SPIR-V ← 硬件特定 IR（硬件表示）
+- 目标硬件：GPU (CUDA)、CPU (AVX)、TPU/NPU
 
 ```python
 # MLIR Python API 示例
@@ -5183,20 +4924,18 @@ def llvm_to_binary(llvm_ir):
 
 oneDNN 是 Intel 开源的深度学习推理优化库，支持 CPU、GPU 和 VPU 后端。
 
-```
-oneDNN 特性：
+**oneDNN 特性**：
 
-  · 算法选择：自动选择最优算法（FFT、Winograd、直接卷积等）
-  · 内存格式传播：自动选择合适的内存布局
-  · 原语缓存：缓存已编译的算子，避免重复编译
-  · 多后端支持：CPU、GPU（Intel Arc）、VPU（Movidius）
+- 算法选择：自动选择最优算法（FFT、Winograd、直接卷积等）
+- 内存格式传播：自动选择合适的内存布局
+- 原语缓存：缓存已编译的算子，避免重复编译
+- 多后端支持：CPU、GPU（Intel Arc）、VPU（Movidius）
 
-  性能优化：
-  · CPU: AVX-512, AMX, DLBoost 优化
-  · GPU: Level Zero / OpenCL 后端
-  · 内存优化：池化分配、零拷贝传输
+**性能优化**：
 
-```
+- CPU：AVX-512, AMX, DLBoost 优化
+- GPU：Level Zero / OpenCL 后端
+- 内存优化：池化分配、零拷贝传输
 
 ```cpp
 // oneDNN YOLO 推理示例
@@ -5295,255 +5034,197 @@ YOLO 模型的推理与部署是一个系统性工程，需要综合考虑精度
 
 ### 8.1 推理部署技术选型决策树
 
-```
-                    需要部署 YOLO 模型？
-              ▼                     ▼
-        有 GPU 吗？            纯 CPU 环境
- OpenVINO / ONNX
-        ▼           ▼             Runtime
-    NVIDIA GPU   其他 GPU      CPU Execution
- Provider
-   TensorRT    ONNX Runtime    (Intel Xeon)
-   FP16/INT8       FP16
-        ▼
-   延迟要求 < 10ms?
-   ▼         ▼
-  是        否
-   ▼         ▼
-INT8 量化   FP16 足够
-   ▼         ▼
-Jetson/     普通 GPU
-T4/A100     服务器
+**推理部署技术选型决策树**：
 
-```
+- 需要部署 YOLO 模型？
+  - 有 GPU？
+    - NVIDIA GPU → TensorRT (FP16/INT8)
+    - 其他 GPU → ONNX Runtime (FP16)
+  - 纯 CPU 环境 → OpenVINO / ONNX Runtime (CPU Execution, Intel Xeon)
+- 延迟要求 < 10ms？
+  - 是 → INT8 量化（Jetson / T4 / A100）
+  - 否 → FP16 足够（普通 GPU 服务器）
 
 ### 8.2 各框架性能对比表
 
-```
-推理框架性能对比（YOLO26s, T4 GPU, batch=1）
+**推理框架性能对比**（YOLO26s, T4 GPU, batch=1）：
 
-框架              精度    延迟(ms)   吞吐(FPS)  适用场景
-PyTorch (GPU)     FP32    ~8.5       ~118       开发调试
-PyTorch (GPU)     FP16    ~4.2       ~238       原型验证
-ONNX Runtime      FP32    ~6.0       ~167       跨平台部署
-ONNX Runtime      FP16    ~3.5       ~286       生产部署
-TensorRT          FP32    ~4.5       ~222       最高精度要求
-TensorRT          FP16    ~2.1       ~476       推荐方案
-TensorRT          INT8    ~1.5       ~667       极致性能
-OpenVINO          FP32    ~35.0      ~29        Intel CPU
-OpenVINO          FP16    ~22.0      ~45        Intel CPU+GPU
-OpenVINO          INT8    ~15.0      ~67        Intel VPU
-TFLite (GPU)      FP16    ~12.0      ~83        Android
-CoreML (Metal)    FP16    ~8.0       ~125       iOS
-CoreMLNX          FP16    ~4.5       ~222       iOS (最新)
-RKNN (NPU)        INT8    ~10.0      ~100       RK3588
-SNPE (DSP)        QINT8   ~15.0      ~67        Qualcomm
-QNN (HTP)         INT8    ~12.0      ~83        Qualcomm (新一代)
-Edge TPU          INT8    ~15.0      ~67        Google Coral
-NCNN (NEON)       FP16    ~25.0      ~40        移动端轻量
-MNN (DSP)         FP16    ~22.0      ~45        跨平台轻量
-TVM (CUDA)        FP16    ~3.8       ~263       自定义硬件
-torch.compile     FP32    ~3.5       ~286       PyTorch 原生
-
-```
+| 框架 | 精度 | 延迟 (ms) | 吞吐 (FPS) | 适用场景 |
+|------|------|----------|-----------|---------|
+| PyTorch (GPU) | FP32 | ~8.5 | ~118 | 开发调试 |
+| PyTorch (GPU) | FP16 | ~4.2 | ~238 | 原型验证 |
+| ONNX Runtime | FP32 | ~6.0 | ~167 | 跨平台部署 |
+| ONNX Runtime | FP16 | ~3.5 | ~286 | 生产部署 |
+| TensorRT | FP32 | ~4.5 | ~222 | 最高精度要求 |
+| TensorRT | FP16 | ~2.1 | ~476 | 推荐方案 |
+| TensorRT | INT8 | ~1.5 | ~667 | 极致性能 |
+| OpenVINO | FP32 | ~35.0 | ~29 | Intel CPU |
+| OpenVINO | FP16 | ~22.0 | ~45 | Intel CPU+GPU |
+| OpenVINO | INT8 | ~15.0 | ~67 | Intel VPU |
+| TFLite (GPU) | FP16 | ~12.0 | ~83 | Android |
+| CoreML (Metal) | FP16 | ~8.0 | ~125 | iOS |
+| CoreMLNX | FP16 | ~4.5 | ~222 | iOS (最新) |
+| RKNN (NPU) | INT8 | ~10.0 | ~100 | RK3588 |
+| SNPE (DSP) | QINT8 | ~15.0 | ~67 | Qualcomm |
+| QNN (HTP) | INT8 | ~12.0 | ~83 | Qualcomm (新一代) |
+| Edge TPU | INT8 | ~15.0 | ~67 | Google Coral |
+| NCNN (NEON) | FP16 | ~25.0 | ~40 | 移动端轻量 |
+| MNN (DSP) | FP16 | ~22.0 | ~45 | 跨平台轻量 |
+| TVM (CUDA) | FP16 | ~3.8 | ~263 | 自定义硬件 |
+| torch.compile | FP32 | ~3.5 | ~286 | PyTorch 原生 |
 
 ### 8.3 部署成本分析
 
-```
-不同部署方案的性价比分析（月运营成本估算）
+**不同部署方案的性价比分析**（月运营成本估算）：
 
-方案                硬件成本      推理成本      维护成本      综合评分
-Jetson Orin Nano    ¥2,000       ¥50           ¥200         ★★★★☆
-Jetson Xavier       ¥3,500       ¥100          ¥300         ★★★☆☆
-RK3588 开发板       ¥800         ¥20           ¥100         ★★★★★
-Coral Edge TPU      ¥1,500       ¥30           ¥150         ★★★★☆
-SNPE (骁龙芯片)     ¥0 (内置)    ¥0            ¥50          ★★★★★
-QNN (骁龙芯片)      ¥0 (内置)    ¥0            ¥50          ★★★★★
-T4 GPU (云端)       ¥0 (按量)    ¥800/月       ¥100         ★★★☆☆
-A100 GPU (云端)     ¥0 (按量)    ¥3000/月      ¥200         ★★☆☆☆
-Intel Xeon CPU      ¥0 (按量)    ¥300/月       ¥100         ★★★★☆
-Android 手机        ¥0 (用户)    ¥0            ¥0           ★★★★★
-iOS App             ¥0 (用户)    ¥0            ¥0           ★★★★★
-
-```
+| 方案 | 硬件成本 | 推理成本 | 维护成本 | 综合评分 |
+|------|---------|---------|---------|---------|
+| Jetson Orin Nano | ¥2,000 | ¥50 | ¥200 | ★★★★☆ |
+| Jetson Xavier | ¥3,500 | ¥100 | ¥300 | ★★★☆☆ |
+| RK3588 开发板 | ¥800 | ¥20 | ¥100 | ★★★★★ |
+| Coral Edge TPU | ¥1,500 | ¥30 | ¥150 | ★★★★☆ |
+| SNPE (骁龙芯片) | ¥0 (内置) | ¥0 | ¥50 | ★★★★★ |
+| QNN (骁龙芯片) | ¥0 (内置) | ¥0 | ¥50 | ★★★★★ |
+| T4 GPU (云端) | ¥0 (按量) | ¥800/月 | ¥100 | ★★★☆☆ |
+| A100 GPU (云端) | ¥0 (按量) | ¥3000/月 | ¥200 | ★★☆☆☆ |
+| Intel Xeon CPU | ¥0 (按量) | ¥300/月 | ¥100 | ★★★★☆ |
+| Android 手机 | ¥0 (用户) | ¥0 | ¥0 | ★★★★★ |
+| iOS App | ¥0 (用户) | ¥0 | ¥0 | ★★★★★ |
 
 ### 8.4 常见部署陷阱与规避
 
-```
- 部署常见问题
- 问题 解决方案
- 精度下降 检查预处理一致性，验证量化校准集
- 确保训练和推理使用相同的预处理流程
- 延迟不达标 分析延迟瓶颈（预处理/推理/后处理）
- 考虑模型压缩、算子融合、批处理优化
- 内存溢出 (OOM) 减小 batch size，使用 FP16/INT8
- 检查预处理缓冲区是否过大
- 并发性能差 启用动态批处理，增加 GPU 利用率
- 考虑多实例部署，使用负载均衡
- 部署环境差异 使用 Docker 容器化，固定依赖版本
- 环境测试用 CI/CD 自动化验证
- 模型更新困难 建立模型版本管理机制
- 使用模型注册表 (MLflow Model Registry)
+**部署常见问题**：
 
-```
+| 问题 | 解决方案 |
+|------|---------|
+| 精度下降 | 检查预处理一致性，验证量化校准集；确保训练和推理使用相同的预处理流程 |
+| 延迟不达标 | 分析延迟瓶颈（预处理/推理/后处理）；考虑模型压缩、算子融合、批处理优化 |
+| 内存溢出 (OOM) | 减小 batch size，使用 FP16/INT8；检查预处理缓冲区是否过大 |
+| 并发性能差 | 启用动态批处理，增加 GPU 利用率；考虑多实例部署，使用负载均衡 |
+| 部署环境差异 | 使用 Docker 容器化，固定依赖版本；环境测试用 CI/CD 自动化验证 |
+| 模型更新困难 | 建立模型版本管理机制；使用模型注册表 (MLflow Model Registry) |
 
 ### 8.5 部署 Checklist
 
-```
-YOLO 部署前检查清单
+**YOLO 部署前检查清单**：
 
-□ 模型验证
-  □ 训练集/验证集 mAP 达到预期
-  □ 推理精度与训练一致（逐层对比）
-  □ 边界情况测试（暗光、模糊、遮挡）
-
-□ 性能优化
-  □ 已完成算子融合 (model.fuse())
-  □ 已选择合适的精度 (FP16/INT8)
-  □ 已测试不同输入尺寸的性能
-  □ 已测试不同 batch size 的吞吐量
-  □ 已测试量化后的精度损失
-
-□ 部署准备
-  □ 已导出为目标格式 (ONNX/TensorRT/TFLite)
-  □ 已验证导出模型推理结果
-  □ 已准备校准数据集（如使用 INT8）
-  □ 已测试边缘设备/服务器兼容性
-
-□ 服务化
-  □ API 接口设计合理
-  □ 已实现错误处理和日志记录
-  □ 已配置监控和告警
-  □ 已准备回滚方案
-
-□ 测试验证
-  □ 已完成单元测试
-  □ 已完成集成测试
-  □ 已完成压力测试
-  □ 已完成 A/B 测试（与基线对比）
-  □ 已完成混沌工程测试
-
-```
+- [ ] **模型验证**
+  - [ ] 训练集/验证集 mAP 达到预期
+  - [ ] 推理精度与训练一致（逐层对比）
+  - [ ] 边界情况测试（暗光、模糊、遮挡）
+- [ ] **性能优化**
+  - [ ] 已完成算子融合 (model.fuse())
+  - [ ] 已选择合适的精度 (FP16/INT8)
+  - [ ] 已测试不同输入尺寸的性能
+  - [ ] 已测试不同 batch size 的吞吐量
+  - [ ] 已测试量化后的精度损失
+- [ ] **部署准备**
+  - [ ] 已导出为目标格式 (ONNX/TensorRT/TFLite)
+  - [ ] 已验证导出模型推理结果
+  - [ ] 已准备校准数据集（如使用 INT8）
+  - [ ] 已测试边缘设备/服务器兼容性
+- [ ] **服务化**
+  - [ ] API 接口设计合理
+  - [ ] 已实现错误处理和日志记录
+  - [ ] 已配置监控和告警
+  - [ ] 已准备回滚方案
+- [ ] **测试验证**
+  - [ ] 已完成单元测试
+  - [ ] 已完成集成测试
+  - [ ] 已完成压力测试
+  - [ ] 已完成 A/B 测试（与基线对比）
+  - [ ] 已完成混沌工程测试
 
 ---
 
-```
-                    需要部署 YOLO 模型？
-              ▼                     ▼
-        有 GPU 吗？            纯 CPU 环境
- OpenVINO / ONNX
-        ▼           ▼             Runtime
-    NVIDIA GPU   其他 GPU      CPU Execution
- Provider
-   TensorRT    ONNX Runtime    (Intel Xeon)
-   FP16/INT8       FP16
-        ▼
-   延迟要求 < 10ms?
-   ▼         ▼
-  是        否
-   ▼         ▼
-INT8 量化   FP16 足够
-   ▼         ▼
-Jetson/     普通 GPU
-T4/A100     服务器
+**推理部署技术选型决策树**：
 
-```
+- 需要部署 YOLO 模型？
+  - 有 GPU？
+    - NVIDIA GPU → TensorRT (FP16/INT8)
+    - 其他 GPU → ONNX Runtime (FP16)
+  - 纯 CPU 环境 → OpenVINO / ONNX Runtime (CPU Execution, Intel Xeon)
+- 延迟要求 < 10ms？
+  - 是 → INT8 量化（Jetson / T4 / A100）
+  - 否 → FP16 足够（普通 GPU 服务器）
 
 ### 8.2 各框架性能对比表
 
-```
-推理框架性能对比（YOLO26s, T4 GPU, batch=1）
+**推理框架性能对比（YOLO26s, T4 GPU, batch=1）**：
 
-框架              精度    延迟(ms)   吞吐(FPS)  适用场景
-PyTorch (GPU)     FP32    ~8.5       ~118       开发调试
-PyTorch (GPU)     FP16    ~4.2       ~238       原型验证
-ONNX Runtime      FP32    ~6.0       ~167       跨平台部署
-ONNX Runtime      FP16    ~3.5       ~286       生产部署
-TensorRT          FP32    ~4.5       ~222       最高精度要求
-TensorRT          FP16    ~2.1       ~476       推荐方案
-TensorRT          INT8    ~1.5       ~667       极致性能
-OpenVINO          FP32    ~35.0      ~29        Intel CPU
-OpenVINO          FP16    ~22.0      ~45        Intel CPU+GPU
-OpenVINO          INT8    ~15.0      ~67        Intel VPU
-TFLite (GPU)      FP16    ~12.0      ~83        Android
-CoreML (Metal)    FP16    ~8.0       ~125       iOS
-RKNN (NPU)        INT8    ~10.0      ~100       RK3588
-SNPE (DSP)        QINT8   ~15.0      ~67        Qualcomm
-
-```
+| 框架 | 精度 | 延迟(ms) | 吞吐(FPS) | 适用场景 |
+| --- | --- | --- | --- | --- |
+| PyTorch (GPU) | FP32 | ~8.5 | ~118 | 开发调试 |
+| PyTorch (GPU) | FP16 | ~4.2 | ~238 | 原型验证 |
+| ONNX Runtime | FP32 | ~6.0 | ~167 | 跨平台部署 |
+| ONNX Runtime | FP16 | ~3.5 | ~286 | 生产部署 |
+| TensorRT | FP32 | ~4.5 | ~222 | 最高精度要求 |
+| TensorRT | FP16 | ~2.1 | ~476 | 推荐方案 |
+| TensorRT | INT8 | ~1.5 | ~667 | 极致性能 |
+| OpenVINO | FP32 | ~35.0 | ~29 | Intel CPU |
+| OpenVINO | FP16 | ~22.0 | ~45 | Intel CPU+GPU |
+| OpenVINO | INT8 | ~15.0 | ~67 | Intel VPU |
+| TFLite (GPU) | FP16 | ~12.0 | ~83 | Android |
+| CoreML (Metal) | FP16 | ~8.0 | ~125 | iOS |
+| RKNN (NPU) | INT8 | ~10.0 | ~100 | RK3588 |
+| SNPE (DSP) | QINT8 | ~15.0 | ~67 | Qualcomm |
 
 ### 8.3 部署成本分析
 
-```
-不同部署方案的性价比分析（月运营成本估算）
+**不同部署方案的性价比分析（月运营成本估算）**
 
-方案                硬件成本      推理成本      维护成本      综合评分
-Jetson Orin Nano    ¥2,000       ¥50           ¥200         ★★★★☆
-Jetson Xavier       ¥3,500       ¥100          ¥300         ★★★☆☆
-RK3588 开发板       ¥800         ¥20           ¥100         ★★★★★
-T4 GPU (云端)       ¥0 (按量)    ¥800/月       ¥100         ★★★☆☆
-A100 GPU (云端)     ¥0 (按量)    ¥3000/月      ¥200         ★★☆☆☆
-Intel Xeon CPU      ¥0 (按量)    ¥300/月       ¥100         ★★★★☆
-Android 手机        ¥0 (用户)    ¥0            ¥0           ★★★★★
-iOS App             ¥0 (用户)    ¥0            ¥0           ★★★★★
-
-```
+| 方案 | 硬件成本 | 推理成本 | 维护成本 | 综合评分 |
+| --- | --- | --- | --- | --- |
+| Jetson Orin Nano | ¥2,000 | ¥50 | ¥200 | ★★★★☆ |
+| Jetson Xavier | ¥3,500 | ¥100 | ¥300 | ★★★☆☆ |
+| RK3588 开发板 | ¥800 | ¥20 | ¥100 | ★★★★★ |
+| T4 GPU (云端) | ¥0 (按量) | ¥800/月 | ¥100 | ★★★☆☆ |
+| A100 GPU (云端) | ¥0 (按量) | ¥3000/月 | ¥200 | ★★☆☆☆ |
+| Intel Xeon CPU | ¥0 (按量) | ¥300/月 | ¥100 | ★★★★☆ |
+| Android 手机 | ¥0 (用户) | ¥0 | ¥0 | ★★★★★ |
+| iOS App | ¥0 (用户) | ¥0 | ¥0 | ★★★★★ |
 
 ### 8.4 常见部署陷阱与规避
 
-```
- 部署常见问题
- 问题 解决方案
- 精度下降 检查预处理一致性，验证量化校准集
- 确保训练和推理使用相同的预处理流程
- 延迟不达标 分析延迟瓶颈（预处理/推理/后处理）
- 考虑模型压缩、算子融合、批处理优化
- 内存溢出 (OOM) 减小 batch size，使用 FP16/INT8
- 检查预处理缓冲区是否过大
- 并发性能差 启用动态批处理，增加 GPU 利用率
- 考虑多实例部署，使用负载均衡
- 部署环境差异 使用 Docker 容器化，固定依赖版本
- 环境测试用 CI/CD 自动化验证
- 模型更新困难 建立模型版本管理机制
- 使用模型注册表 (MLflow Model Registry)
+**部署常见问题**：
 
-```
+| 问题 | 解决方案 |
+|------|---------|
+| 精度下降 | 检查预处理一致性，验证量化校准集；确保训练和推理使用相同的预处理流程 |
+| 延迟不达标 | 分析延迟瓶颈（预处理/推理/后处理）；考虑模型压缩、算子融合、批处理优化 |
+| 内存溢出 (OOM) | 减小 batch size，使用 FP16/INT8；检查预处理缓冲区是否过大 |
+| 并发性能差 | 启用动态批处理，增加 GPU 利用率；考虑多实例部署，使用负载均衡 |
+| 部署环境差异 | 使用 Docker 容器化，固定依赖版本；环境测试用 CI/CD 自动化验证 |
+| 模型更新困难 | 建立模型版本管理机制；使用模型注册表 (MLflow Model Registry) |
 
 ### 8.5 部署 Checklist
 
-```
-YOLO 部署前检查清单
+**YOLO 部署前检查清单**：
 
-□ 模型验证
-  □ 训练集/验证集 mAP 达到预期
-  □ 推理精度与训练一致（逐层对比）
-  □ 边界情况测试（暗光、模糊、遮挡）
-
-□ 性能优化
-  □ 已完成算子融合 (model.fuse())
-  □ 已选择合适的精度 (FP16/INT8)
-  □ 已测试不同输入尺寸的性能
-  □ 已测试不同 batch size 的吞吐量
-
-□ 部署准备
-  □ 已导出为目标格式 (ONNX/TensorRT/TFLite)
-  □ 已验证导出模型推理结果
-  □ 已准备校准数据集（如使用 INT8）
-  □ 已测试边缘设备/服务器兼容性
-
-□ 服务化
-  □ API 接口设计合理
-  □ 已实现错误处理和日志记录
-  □ 已配置监控和告警
-  □ 已准备回滚方案
-
-□ 测试验证
-  □ 已完成单元测试
-  □ 已完成集成测试
-  □ 已完成压力测试
-  □ 已完成 A/B 测试（与基线对比）
-
-```
+- [ ] **模型验证**
+  - [ ] 训练集/验证集 mAP 达到预期
+  - [ ] 推理精度与训练一致（逐层对比）
+  - [ ] 边界情况测试（暗光、模糊、遮挡）
+- [ ] **性能优化**
+  - [ ] 已完成算子融合 (model.fuse())
+  - [ ] 已选择合适的精度 (FP16/INT8)
+  - [ ] 已测试不同输入尺寸的性能
+  - [ ] 已测试不同 batch size 的吞吐量
+- [ ] **部署准备**
+  - [ ] 已导出为目标格式 (ONNX/TensorRT/TFLite)
+  - [ ] 已验证导出模型推理结果
+  - [ ] 已准备校准数据集（如使用 INT8）
+  - [ ] 已测试边缘设备/服务器兼容性
+- [ ] **服务化**
+  - [ ] API 接口设计合理
+  - [ ] 已实现错误处理和日志记录
+  - [ ] 已配置监控和告警
+  - [ ] 已准备回滚方案
+- [ ] **测试验证**
+  - [ ] 已完成单元测试
+  - [ ] 已完成集成测试
+  - [ ] 已完成压力测试
+  - [ ] 已完成 A/B 测试（与基线对比）
 
 ---
 
@@ -5551,17 +5232,11 @@ YOLO 部署前检查清单
 
 ### 10.1 多模型流水线部署
 
-```
-多模型流水线架构
+**多模型流水线架构**：
 
-摄像头 ► 目标检测 ► 实例分割 ► 姿态估计 ► 业务逻辑 ► 输出
- (YOLO26) (YOLO26) (YOLO26)
- ▼ ▼ ▼
- 过滤小目标 提取轮廓 分析姿态
- 降低延迟 精确分割 行为识别
-                    异步流水线处理
-
-```
+- 摄像头 → 目标检测（YOLO26）→ 实例分割（YOLO26）→ 姿态估计（YOLO26）→ 业务逻辑 → 输出
+- 目标检测：过滤小目标、降低延迟；实例分割：提取轮廓、精确分割；姿态估计：分析姿态、行为识别
+- 异步流水线处理
 
 ```python
 from ultralytics import YOLO
@@ -6234,4 +5909,3 @@ yolo-inference-deployment/
 ---
 
 > **📌 系列导航**：[← 上一篇：模型在npu的cpp部署](模型在npu的cpp部署.md) · [📖 导读目录](README.md) · [下一篇：yolo模型实战项目完整指南 →](YOLO模型实战项目完整指南.md)
-```
