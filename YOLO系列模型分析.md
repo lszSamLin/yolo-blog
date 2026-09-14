@@ -1382,15 +1382,18 @@ Distribution Focal Loss 需要额外的分布建模
 #### 局限性总结
 
 YOLO 各版本局限性 → 下一版本改进 映射表:
-版本  主要局限性  驱动的改进
-v1 → v2  网格粗/无锚框/背景误检严重  引入锚框+聚类+BN+多尺度
-v2 → v3  单一尺度/锚框少/无特征金字塔  多尺度FPN+9锚框+Focal Loss
-v3 → v4  数据增强弱/梯度流差/损失不精确  Mosaic+CSP+PANet+CIoU+Mish
-v4 → v5  工程化差/API复杂/锚框匹配低效  PyTorch原生+Focus+C3+简化API
-v5 → v8  Anchor-Based/C3融合弱/标签分配粗糙  C2f+Anchor-Free+TaskAligned
-v8 → v10 NMS依赖/DFL复杂/优化器一般  CDA+NMS-Free+一致性双分配
-v10→v11  参数量大/计算冗余  轻量化C2f+紧凑Backbone
-v11→v26  任务不统一/优化器局限/无开放词汇  MuSGD+DFL-Free+7任务统一+YOLOE
+
+| 版本 | 主要局限性 | 驱动的改进 |
+| --- | --- | --- |
+| v1 → v2 | 网格粗/无锚框/背景误检严重 | 引入锚框+聚类+BN+多尺度 |
+| v2 → v3 | 单一尺度/锚框少/无特征金字塔 | 多尺度FPN+9锚框+Focal Loss |
+| v3 → v4 | 数据增强弱/梯度流差/损失不精确 | Mosaic+CSP+PANet+CIoU+Mish |
+| v4 → v5 | 工程化差/API复杂/锚框匹配低效 | PyTorch原生+Focus+C3+简化API |
+| v5 → v8 | Anchor-Based/C3融合弱/标签分配粗糙 | C2f+Anchor-Free+TaskAligned |
+| v8 → v10 NMS依赖/DFL复杂/优化器一般 | CDA+NMS-Free+一致性双分配 |  |
+| v10→v11 | 参数量大/计算冗余 | 轻量化C2f+紧凑Backbone |
+| v11→v26 | 任务不统一/优化器局限/无开放词汇 | MuSGD+DFL-Free+7任务统一+YOLOE |
+
 
 ### 1.5 全版本 COCO 性能对比表
 
@@ -12488,21 +12491,24 @@ print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=20))
 
 **各组件优化策略**：
 
-组件  优化手段  预期加速比
-预处理  GPU 加速 (cuda tensor)  2-5x
-批量预处理  按需
-Backbone  TensorRT FP16 量化  2-3x
-算子融合 (fuse conv+bn)  1.2-1.5x
-模型剪枝 (channel pruning)  1.5-2x (精度略降)
-使用更小模型 (n→s→m)  2-4x
-Neck  TensorRT 自动优化  包含在整体中
-减少 C2f 模块数量  1.2-1.5x
-通道压缩 (降维)  1.3-2x (精度略降)
-Head  使用 one-to-one 模式  1.5-2x (去NMS)
-减少输出候选数  1.2-1.5x
-后处理  end2end=True 去除 NMS  1.5-3x
-GPU 加速 NMS  5-10x
-降低 conf 阈值减少候选框  1.2-1.5x
+
+| 组件 | 优化手段 | 预期加速比 |
+| --- | --- | --- |
+| 预处理 | GPU 加速 (cuda tensor) | 2-5x |
+| 批量预处理 | 按需 |  |
+| Backbone | TensorRT FP16 量化 | 2-3x |
+| 算子融合 (fuse conv+bn) | 1.2-1.5x |  |
+| 模型剪枝 (channel pruning) | 1.5-2x (精度略降) |  |
+| 使用更小模型 (n→s→m) | 2-4x |  |
+| Neck | TensorRT 自动优化 | 包含在整体中 |
+| 减少 C2f 模块数量 | 1.2-1.5x |  |
+| 通道压缩 (降维) | 1.3-2x (精度略降) |  |
+| Head | 使用 one-to-one 模式 | 1.5-2x (去NMS) |
+| 减少输出候选数 | 1.2-1.5x |  |
+| 后处理 | end2end=True 去除 NMS | 1.5-3x |
+| GPU 加速 NMS | 5-10x |  |
+| 降低 conf 阈值减少候选框 | 1.2-1.5x |  |
+
 
 **输入尺寸对各组件延迟的影响**：
 

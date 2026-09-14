@@ -4395,10 +4395,12 @@ YOLOv8 默认使用 SGD（随机梯度下降）优化器，也支持 Adam 和 Ad
 
 SGD 工作原理（YOLOv8 默认）：
 
-Step  1:  计算当前批次梯度  g_t
-Step  2:  更新动量  v_t
-Step  3:  参数更新：θ  =
-其中  α  为学习率，配合余弦退火调度衰减
+- **Step 1**：计算当前批次梯度 g_t
+- **Step 2**：更新动量 v_t
+- **Step 3**：参数更新：θ =
+
+其中 α 为学习率，配合余弦退火调度衰减
+
 
 **SGD vs AdamW 对比**：
 
@@ -5921,12 +5923,13 @@ YOLOv8 在损失函数设计上做了多项重要改动，这些改动直接影�
 
 YOLOv8 → YOLOv8 损失函数变化：
 
-损失类型 YOLOv8 YOLOv8 变化
+| 损失类型 | YOLOv8 | YOLOv8 变化 |
+| --- | --- | --- |
+| Box Loss | CIoU Loss | — |
+| Cls Loss | Varifocal | Varifocal（相同） |
+| DFL Loss | DFL（必需） | 移除 |
+| (分布焦点损失) | 改用L1直接回归 | ★ |
 
-Box  Loss  CIoU  Loss
-Cls  Loss  Varifocal  Varifocal（相同）
-DFL  Loss  DFL（必需）  移除
-(分布焦点损失)  改用L1直接回归  ★
 
 
 #### DFL 的移除与 L1 距离回归
@@ -5968,11 +5971,14 @@ Progressive Loss 权重演化：
 
 训练阶段 box权重 cls权重 说明
 
-Warmup期  较低  较高  先稳定分类能力
-Early期(0-30%)  逐渐升高  中等  开始加强定位
-Mid期(30-60%)  较高  中等  定位分类并重
-Late期(60-90%)  最高  较低  精细化定位
-Final期(90-100%)稳定  最低  微调阶段
+
+| Warmup期 | 较低 | 较高 | 先稳定分类能力 |
+| --- | --- | --- | --- |
+| Early期(0-30%) | 逐渐升高 | 中等 | 开始加强定位 |
+| Mid期(30-60%) | 较高 | 中等 | 定位分类并重 |
+| Late期(60-90%) | 最高 | 较低 | 精细化定位 |
+| Final期(90-100%)稳定 | 最低 | 微调阶段 |  |
+
 
 
 ```python
