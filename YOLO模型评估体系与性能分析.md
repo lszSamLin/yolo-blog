@@ -18,37 +18,37 @@
 
 目标检测的评估基础是混淆矩阵（Confusion Matrix）。与分类任务不同，检测任务中每个预测结果需要同时满足两个条件：类别正确，且位置足够准确。位置准确度通过 IoU（Intersection over Union）阈值来判断。
 
-目标检测结果分类框架
+**目标检测结果分类框架**
 
-预测为阳性 (Predicted Positive)  预测为阴性
-(Predicted Negative)
+| | 预测为阳性 (Predicted Positive) | 预测为阴性 (Predicted Negative) |
+| --- | --- | --- |
+| 真实标签为阳性 (Actual Positive) | **TP (True Positive)**：正确检测到的目标 | **FN (False Negative)**：漏报/假阴性 |
+| 真实标签为阴性 (Actual Negative) | **FP (False Positive)**：误报/假阳性 | **TN (True Negative)**：正确判定为背景 |
 
-TP (True  FP (False
-Positive)  Positive)
+**TP（正确检测到的目标）**：
 
-正确检测到的目标  误报/假阳性
-· 类别正确  · 背景被误判为
-· IoU > 阈值  目标
-· 类别正确  · 同一目标多次
-· 同一目标只计  检测（未做NMS）
-一次
+- 类别正确
+- IoU > 阈值
+- 同一目标只计一次
 
-真实标签为阳性 (Actual Positive)  真实标签为阴性
-(Actual Negative)
+**FP（误报/假阳性）**：
 
-FN (False  TN (True
-Negative)  Negative)
+- 背景被误判为目标
+- 同一目标多次检测（未做NMS）
 
-漏报/假阴性  正确判定为背景
-· 目标存在但未  · 检测中不涉及
-被检测到  此概念
-· 类别预测错误
-· IoU < 阈值
+**FN（漏报/假阴性）**：
 
-关键区别：
-· 分类任务中，TN 是可计数的（未分类为该类别的样本）
-· 检测任务中，TN 几乎无意义（背景区域无法穷举）
-· 因此检测评估主要关注 TP、FP、FN 三个量
+- 目标存在但未被检测到
+- 类别预测错误
+- IoU < 阈值
+
+**TN（正确判定为背景）**：检测中不涉及此概念
+
+**关键区别：**
+
+- 分类任务中，TN 是可计数的（未分类为该类别的样本）
+- 检测任务中，TN 几乎无意义（背景区域无法穷举）
+- 因此检测评估主要关注 TP、FP、FN 三个量
 
 在目标检测中，判断一个预测是否为 TP 需要满足以下条件：
 
