@@ -10881,6 +10881,7 @@ def distill_training(student_model, teacher_model, dataloader, epochs=50):
 
 ### 7.1 根据硬件平台选择
 
+```python
 #
 
 # 边缘设备（RK3588, Jetson Nano, 树莓派）
@@ -10938,7 +10939,7 @@ model.export(format="tflite")    # TensorFlow Lite
 model.export(format="coreml")    # CoreML (iOS)
 
 # 移动端预期推理速度: 10-30 FPS (取决于设备型号)
-
+```
 
 **硬件选择建议**：
 
@@ -10951,21 +10952,20 @@ model.export(format="coreml")    # CoreML (iOS)
 | T4 GPU | YOLO26m | ~53% mAP | 45-60 | FP16 推荐 |
 | A100 GPU | YOLO26x | ~57% mAP | 80-120 | FP16 推荐 |
 
-**硬件成本分析**：
+**硬件成本分析**
 
+**部署成本分析 (月度估算)**：
 
- 部署成本分析 (月度估算)
- 平台 硬件成本 电费 维护成本 总月成本
- 树莓派 4B $75 $2 $0 ~$5 (一次性 $75)
- Jetson Nano $150 $5 $0 ~$8 (一次性 $150)
- Jetson Orin $500 $15 $0 ~$20 (一次性 $500)
- RK3588 开发板 $200 $5 $0 ~$8 (一次性 $200)
- T4 GPU 云 — — $700 ~$700 (按需)
- A100 GPU 云 — — $2000 ~$2000 (按需)
+| 平台 | 硬件成本 | 电费 | 维护成本 | 总月成本 |
+| --- | --- | --- | --- | --- |
+| 树莓派 4B | $75 | $2 | $0 | ~$5 (一次性 $75) |
+| Jetson Nano | $150 | $5 | $0 | ~$8 (一次性 $150) |
+| Jetson Orin | $500 | $15 | $0 | ~$20 (一次性 $500) |
+| RK3588 开发板 | $200 | $5 | $0 | ~$8 (一次性 $200) |
+| T4 GPU 云 | — | — | $700 | ~$700 (按需) |
+| A100 GPU 云 | — | — | $2000 | ~$2000 (按需) |
 
 注: 云 GPU 费用按 AWS/GCP 定价估算，边缘设备为一次性硬件成本
-
-```
 
 **边缘设备部署指南**：
 
@@ -11010,32 +11010,31 @@ Jetson Orin Nano 部署指南:
 
 手机移动端部署指南 (iOS/Android):
 
+**iOS (CoreML)**
 
-iOS (CoreML):
-  1. 模型导出
-     model.export(format="coreml")
-  2. Xcode 集成
-     · 将 .mlmodel 拖入 Xcode 项目
-     · 使用 VNCoreMLRequest 进行推理
-  3. 性能优化
-     · 使用 Neural Engine (A12+ 芯片)
-     · 设置 input 为 CVPixelBuffer
-  4. 预期性能
-     · iPhone 15 (A17 Pro): 30-50 FPS (YOLO26n)
-     · iPhone 13 (A14): 15-25 FPS (YOLO26n)
+1. 模型导出：`model.export(format="coreml")`
+2. Xcode 集成：
+   - 将 .mlmodel 拖入 Xcode 项目
+   - 使用 VNCoreMLRequest 进行推理
+3. 性能优化：
+   - 使用 Neural Engine (A12+ 芯片)
+   - 设置 input 为 CVPixelBuffer
+4. 预期性能：
+   - iPhone 15 (A17 Pro): 30-50 FPS (YOLO26n)
+   - iPhone 13 (A14): 15-25 FPS (YOLO26n)
 
-Android (TensorFlow Lite / NNAPI):
-  1. 模型导出
-     model.export(format="tflite")
-  2. Android 集成
-     · 使用 TensorFlow Lite Interpreter
-     · 或使用 NNAPI 后端 (Android 8.1+)
-  3. 性能优化
-     · 启用 GPU Delegate
-     · 使用 NNAPI + DSP/HDL 加速
-  4. 预期性能
-     · Snapdragon 8 Gen 2: 40-60 FPS (YOLO26n)
-     · Snapdragon 7 Gen 1: 20-35 FPS (YOLO26n)
+**Android (TensorFlow Lite / NNAPI)**
+
+1. 模型导出：`model.export(format="tflite")`
+2. Android 集成：
+   - 使用 TensorFlow Lite Interpreter
+   - 或使用 NNAPI 后端 (Android 8.1+)
+3. 性能优化：
+   - 启用 GPU Delegate
+   - 使用 NNAPI + DSP/HDL 加速
+4. 预期性能：
+   - Snapdragon 8 Gen 2: 40-60 FPS (YOLO26n)
+   - Snapdragon 7 Gen 1: 20-35 FPS (YOLO26n)
 
 ---
 

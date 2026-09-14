@@ -1969,6 +1969,7 @@ def build_segmentation_pipeline():
 
 ### 2.3 分割损失函数
 
+```python
 import torch
 import torch.nn as nn
 
@@ -4988,6 +4989,7 @@ class PoseTracker:
 
 ### 3.3 姿态损失函数
 
+```python
 import torch
 import torch.nn as nn
 
@@ -5051,6 +5053,7 @@ class PoseHead(nn.Module):
 
         self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
 
+```python
     def forward(self, x):
         for i in range(self.nl):
             x[i] = torch.cat((
@@ -16116,6 +16119,7 @@ ALERT_RULES = {
 
 ```
 
+```python
 # 导出为 TensorRT
 
 model.export(format="engine", half=True, trt_version=8)
@@ -18013,9 +18017,10 @@ Jetson 平台对比:
 | Jetson AGX | 31 TFLOPS | 32GB | 20-50W | YOLOv8m/l |
 | Jetson Orin | 275 TFLOPS | 16-64GB | 15-60W | YOLOv8 全尺寸 |
 
-Jetson 部署完整流程:
+**Jetson 部署完整流程**：
+
 1. 在 PC 上训练并导出 TensorRT 引擎
-model.export(format='engine', half=True, imgsz=640, simplify=True)
+   `model.export(format='engine', half=True, imgsz=640, simplify=True)`
 2. 传输引擎文件到 Jetson
 3. 在 Jetson 上加载并推理
 

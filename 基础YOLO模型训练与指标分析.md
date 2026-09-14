@@ -2066,6 +2066,7 @@ YOLOv8 支持 7 种任务类型，每种任务的数据集格式略有不同。�
 
 #### 1. 检测任务（Detect）— 与 YOLOv8 兼容
 
+```text
 dataset/
 data.yaml
 images/
@@ -2077,6 +2078,7 @@ val/img001.txt
 
 # img001.txt 格式（每行一个目标）：
 <class_id> <x_center> <y_center> <width> <height>
+```
 
 #### 2. 分割任务（Segment）
 
@@ -2916,6 +2918,8 @@ class CurriculumLearning:
 | YOLOv8s + ImageNet | 有监督预训练 | 44.9% |
 | YOLOv8s + MAE | 自监督预训练 | 46.8% (+1.9pp) |
 | YOLOv8s + DINOv2 | 自监督预训练 | 46.2% (+1.3pp) |
+
+```python
 import torch
 
 
@@ -4436,6 +4440,7 @@ YOLOv8 各模型规模使用**统一的默认损失权重**（可通过 `train()
 #### 4. 学习率调度（不同模型规模）
 
 YOLOv8 使用固定的损失权重配置，通过 `close_mosaic` 参数在训练后期调整增强策略：
+```python
 model.train(
     data="data.yaml",
     model="yolov8n.pt",
@@ -8663,32 +8668,14 @@ def create_live_dashboard(results_history):
 
 ### 8.8 TensorBoard 高级使用技巧
 
-TensorBoard 高级技巧：
+**TensorBoard 高级技巧**
 
-1. 多实验对比
-
-tensorboard --logdir
-→ 在同一坐标系下叠加对比不同超参数的效果
-2. 自定义标量记录
-    from torch.utils.tensorboard import
-
-writer =
-writer.add_scalar("Custom/margin", margin_value,
-writer.add_histogram("Weights/distribution", weights,
-writer.add_image("augment/batch", image_tensor,
-`writer.close()`
-
-3. 自定义图像记录
-
-writer.add_image("predictions/val_batch", prediction_image,
-4. 自定义文本记录
-**writer.add_text("hparams/model_arch", str(model.model.yaml))**
-5. 时间范围筛选
-
-在 SCALARS
-6. 平滑系数调整
-
-默认 0.900，调试时调低至
+1. **多实验对比**：`tensorboard --logdir` → 在同一坐标系下叠加对比不同超参数的效果
+2. **自定义标量记录**：`from torch.utils.tensorboard import`、`writer =`、`writer.add_scalar("Custom/margin", margin_value,`、`writer.add_histogram("Weights/distribution", weights,`、`writer.add_image("augment/batch", image_tensor,`、`writer.close()`
+3. **自定义图像记录**：`writer.add_image("predictions/val_batch", prediction_image,`
+4. **自定义文本记录**：`writer.add_text("hparams/model_arch", str(model.model.yaml))`
+5. **时间范围筛选**：在 SCALARS
+6. **平滑系数调整**：默认 0.900，调试时调低至
 
 ---
 
@@ -11251,6 +11238,7 @@ YOLOv8 批量推理优化：
 边缘设备（Jetson） 1~4 TensorRT
 **批量推理代码示例：**
 
+```python
 # GPU 批量推理
 model = YOLO("yolov8n.pt")
 results = model.predict(
@@ -11279,19 +11267,22 @@ ret, frame =
 results = model.predict(frame,
 # 处理结果...
     cap.release()
+```
 
 #### 内存优化技术
 
 YOLOv8 内存优化：
 
-优化手段 效果 适用场景
+| 优化手段 | 效果 | 适用场景 |
+| --- | --- | --- |
+| FP16 | 精度 | 显存减半，速度+20% |
+| INT8 | 量化 | 显存/4，速度+40% |
+| end2end=False | 减少后处理内存 | 部署时 |
+| 关闭 | Grad | 计算 |
 
-FP16 精度 显存减半，速度+20%
-INT8 量化 显存/4，速度+40%
-end2end=False 减少后处理内存 部署时
-关闭 Grad 计算
 **内存优化代码：**
 
+```python
 # 1. FP16
 model = YOLO("yolov8n.pt")
 results = model.predict("test.jpg",
@@ -11306,6 +11297,7 @@ model.export(format="onnx", end2end=False)
 # 4. 批量推理时控制显存
 model.predict(source="images/", batch=8, half=True)
 # batch 过大可能导致
+```
 
 ---
 
