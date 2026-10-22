@@ -59,14 +59,22 @@ Rockchip NPU（Neural Processing Unit）是瑞芯微芯片内置的神经网络�
 极低功耗持续运行  → RK3562 考虑
 
 2. 确定接口需求
+```
+
 需要 CSI 摄像头接口  → 选择带 MIPI CSI 的开发板
 需要以太网  → NanoPi R5S 或 Orange Pi 3B
 需要 NVMe 存储  → Rock 5B 或 Orange Pi 5
+```
+
 
 3. 确定预算
+```
+
 100-300元  → RK3562 系列
 300-600元  → RK3568 系列
 600元以上  → RK3588 系列
+```
+
 
 ### 1.4 外设兼容性注意事项
 
@@ -1653,7 +1661,7 @@ rknn.config(mean_values=[[0, 0, 0]], std_values=[[255, 255, 255]], target_platfo
 - **颜色空间不一致**：确认都使用 RGB（不是 BGR）
 - **填充方式不一致**：确认都使用 letterbox 填充（灰色 114）
 - **类别顺序不一致**：确认 classes.txt 与训练时一致
-- **输出布局 / 置信度刻度**：若 NPU 端置信度整体偏低、顶部被压缩或呈台阶状，很可能是导出含 `score_sum` 的 9 头布局阻碍了 INT8 阶段的 sigmoid 融合——改用 `[box, Sigmoid(cls)]×3` 的 6 头布局可无损修复（mAP 逐位一致）。实测见 [6 头 vs 9 头评测报告](../coco_benchmark_结果_9头vs6头/评测报告.md)
+- **输出布局 / 置信度刻度**：若 NPU 端置信度整体偏低、顶部被压缩或呈台阶状，很可能是导出含 `score_sum` 的 9 头布局阻碍了 INT8 阶段的 sigmoid 融合——改用 `[box, Sigmoid(cls)]×3` 的 6 头布局可无损修复（mAP 逐位一致）。实测见 [6 头 vs 9 头评测报告](coco_benchmark_结果_9头vs6头/评测报告.md)
 - **校准集预处理**：INT8 校准图必须与部署预处理一致（预 letterbox 灰 114）；用拉伸图校准会把置信度磨平、mAP 显著劣化
 
 ### 5.2 NPU 内存不足

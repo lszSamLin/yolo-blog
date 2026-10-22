@@ -21,9 +21,13 @@
 ### 1.2 支持的模型格式
 
 支持导入的框架格式:
+```
+
 PyTorch (.pt)  ← 直接导入（部分算子限制）
 ONNX (.onnx)  ← 推荐，最通用
 Tensorflow SavedModel  ← 完整支持
+```
+
 Tensorflow GraphDef (.pb)
 Tensorflow Lite (.tflite)
 Caffe (.caffemodel)

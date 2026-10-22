@@ -1952,11 +1952,11 @@ NCNN 是腾讯开源的轻量级神经网络推理框架，专为移动端优化
 
 NCNN 特性：
 
-· 零依赖：不依赖任何第三方库
-· 超轻量：库大小 < 200KB
-· 高性能：ARM NEON 优化，支持 OpenCL/Vulkan
-· 跨平台：Android、iOS、Linux、Windows
-· 模型格式：原生支持 NCNN 格式（可自行转换）
+-零依赖：不依赖任何第三方库
+-超轻量：库大小 < 200KB
+-高性能：ARM NEON 优化，支持 OpenCL/Vulkan
+-跨平台：Android、iOS、Linux、Windows
+-模型格式：原生支持 NCNN 格式（可自行转换）
 
 性能对比（YOLOv8s, 640×640, Android 12, Snapdragon 8 Gen 2）：
 
@@ -2243,17 +2243,17 @@ SNPE 架构：
 
 SNPE Runtime
 Preprocessing
-· 图像缩放/裁剪
-· 归一化
-· 通道转换
+-图像缩放/裁剪
+-归一化
+-通道转换
 SNPE Runtime
-· Graph 优化
-· 算子调度
-· 内存管理
+-Graph 优化
+-算子调度
+-内存管理
 Hardware Accelerators
-· Hexagon DSP (主要加速后端)
-· Adreno GPU
-· CPU
+-Hexagon DSP (主要加速后端)
+-Adreno GPU
+-CPU
 
 性能对比（Snapdragon 8 Gen 2, YOLOv8s, 640×640）：
 
@@ -2317,19 +2317,19 @@ QNN 架构：
 
 QNN Runtime
 QNN API Layer
-· Context Management
-· Graph Compilation
-· Memory Management
+-Context Management
+-Graph Compilation
+-Memory Management
 QNN Backend
-· Hexagon HVX (Vector DSP)
-· Adreno GPU (OpenCL/Vulkan)
-· AI Engine Direct (Hexagon)
-· CPU
+-Hexagon HVX (Vector DSP)
+-Adreno GPU (OpenCL/Vulkan)
+-AI Engine Direct (Hexagon)
+-CPU
 Compilation Pipeline
-· ONNX/TFLite 解析
-· 算子映射到后端
-· 图优化 (算子融合, 常量折叠)
-· 代码生成 (Hexagon HIDL)
+-ONNX/TFLite 解析
+-算子映射到后端
+-图优化 (算子融合, 常量折叠)
+-代码生成 (Hexagon HIDL)
 
 ```cpp
 // QNN C++ 推理示例
@@ -2413,18 +2413,18 @@ CoreMLNX（CoreML Native Execution）是 Apple 推出的下一代模型执行引
 CoreMLNX vs 传统 CoreML：
 
 传统 CoreML:
-· 使用 Neural Engine 后端
-· 模型编译为专用格式 (.mlmodelc)
-· 通过 Vision Framework 集成
-· 延迟: ~12ms (iPhone 15 Pro)
+-使用 Neural Engine 后端
+-模型编译为专用格式 (.mlmodelc)
+-通过 Vision Framework 集成
+-延迟: ~12ms (iPhone 15 Pro)
 
 CoreMLNX:
-· 支持 Metal Performance Shaders (MPS)
-· 支持自定义 Metal kernel
-· 通过 CoreMLNX API 直接集成
-· 延迟: ~6ms (iPhone 15 Pro, 2x 加速)
-· 支持动态形状 (Dynamic Shapes)
-· 支持模型子图替换
+-支持 Metal Performance Shaders (MPS)
+-支持自定义 Metal kernel
+-通过 CoreMLNX API 直接集成
+-延迟: ~6ms (iPhone 15 Pro, 2x 加速)
+-支持动态形状 (Dynamic Shapes)
+-支持模型子图替换
 
 性能对比：
 
@@ -2503,11 +2503,11 @@ Edge TPU 架构：
 
 Edge TPU 硬件：
 Edge TPU Core (MXU: Matrix Multiplication Unit)
-· 1 TOPS 算力 (Coral Dev Board)
-· 8 TOPS 算力 (Coral Accelerator)
-· INT8 量化推理
-· 低延迟 (~10ms 推理)
-· 低功耗 (~2-4W)
+-1 TOPS 算力 (Coral Dev Board)
+-8 TOPS 算力 (Coral Accelerator)
+-INT8 量化推理
+-低延迟 (~10ms 推理)
+-低功耗 (~2-4W)
 
 部署流程：
 ONNX/YOLO → TFLite → Edge TPU Compiler → .tflite_edgetpu
@@ -2577,11 +2577,11 @@ edgetpu_demo --model yolo26n_edgetpu.tflite --input test.jpg
 | Raspberry Pi 5 | CPU (NEON) | FP32 | ~350 | 2.9 | 7 | 4096 |
 | 成本(美元) | $300 | $250 | $150 | $180 | $1000 | $80 |
   选型建议：
-  · 最高性能：Jetson Orin Nano (125 FPS, 但成本较高)
-  · 最佳性价比：RK3588 (100 FPS, 成本仅 $250)
-  · 移动端首选：Snapdragon 8 Gen2 (154 FPS, 低功耗)
-  · 苹果生态：iPhone 15 Pro (83 FPS, 最佳用户体验)
-  · 超低成本：Raspberry Pi 5 (2.9 FPS, 适合非实时场景)
+  -最高性能：Jetson Orin Nano (125 FPS, 但成本较高)
+  -最佳性价比：RK3588 (100 FPS, 成本仅 $250)
+  -移动端首选：Snapdragon 8 Gen2 (154 FPS, 低功耗)
+  -苹果生态：iPhone 15 Pro (83 FPS, 最佳用户体验)
+  -超低成本：Raspberry Pi 5 (2.9 FPS, 适合非实时场景)
 
 
 ## 四、模型服务化部署
@@ -3792,27 +3792,21 @@ def autonomous_drive_pipeline(frame):
 
 医疗影像检测流水线架构：
 
+```text
 影像来源 (DICOM/PACS)
-
-▼
-
+        ▼
 影像预处理  ← DICOM 解析、灰度化、降噪
 (预处理模块)  窗宽窗位调整、直方图均衡化
-
-▼
-
+        ▼
 YOLO 检测模型  ← YOLOv8s-seg (分割模型)
 (推理引擎)  病灶检测 + 实例分割
-
-▼
-
+        ▼
 后处理模块  ← 病灶大小测量、分类、排序
 (分析引擎)  malignancy 风险评估
-
-▼
-
+        ▼
 报告生成  ← DICOM Report、可视化标注
 (报告模块)  PACS 集成、医生审阅界面
+```
 
 ```python
 # 医疗影像检测系统
@@ -3909,22 +3903,18 @@ class MedicalImageDetector:
 
 精准农业检测系统架构：
 
-无人机/摄像头
-
-▼
-
+```text
+无人机 / 摄像头
+        ▼
 边缘计算单元  ← Raspberry Pi 5 + Coral TPU
 (实时检测)  杂草检测 + 作物计数
-
-▼
-
+        ▼
 云端分析平台  ← YOLOv8x + 数据分析
 (深度分析)  产量预测 + 病害趋势
-
-▼
-
+        ▼
 决策支持系统  ← 施肥建议、灌溉计划
 (农艺师界面)  病虫害防治建议
+```
 
 ```python
 # 农业作物检测系统
@@ -4005,34 +3995,26 @@ class AgricultureDetector:
 
 安防监控检测流水线：
 
+```text
 摄像头 1
 摄像头 2
 摄像头 N
-
-▼
-
+        ▼
 视频流解码  ← RTSP/HTTP 解码, 硬件加速
 (FFmpeg/GPU)  NVDEC 硬件解码
-
-▼
-
+        ▼
 帧采样选择  ← 运动检测 + 关键帧选择
 (帧筛选)  避免无效帧推理
-
-▼
-
-YOLO 检测  ← 多模型并行 (人+车+物)
+        ▼
+YOLO 检测  ← 多模型并行 (人 + 车 + 物)
 (推理服务)  Triton 动态批处理
-
-▼
-
+        ▼
 行为分析  ← 区域入侵、徘徊检测
 (逻辑层)  目标跟踪 + 轨迹分析
-
-▼
-
+        ▼
 告警触发  ← 告警规则引擎
 (告警系统)  推送 + 录像 + 通知
+```
 
 ```python
 # 安防监控系统
@@ -4164,27 +4146,21 @@ class SecurityMonitor:
 
 零售分析系统架构：
 
+```text
 店内摄像头
-
-▼
-
+        ▼
 客流检测  ← YOLOv8n 人检测
 (实时)  入口/出口计数
-
-▼
-
+        ▼
 货架分析  ← YOLOv8s 商品检测
 (定时)  缺货检测 + 陈列优化
-
-▼
-
+        ▼
 热力图生成  ← 轨迹追踪 + 统计
 (离线)  顾客动线分析
-
-▼
-
+        ▼
 分析报告  ← 客流统计 + 热力图
 (可视化)  销售预测 + 库存建议
+```
 
 ```python
 # 零售分析系统
@@ -4336,34 +4312,26 @@ def throughput_test(model, images, batch_sizes=[1, 4, 8, 16, 32]):
 
 ```
 
-    return results
-
-```
-
 ### 7.3 模型对比与数值精度测试
 
 在部署过程中，确保不同框架间推理结果的一致性至关重要。
 
-```
-
 模型对比测试策略：
 
   1. 层间输出对比 (Layer-by-Layer Comparison)
-     · 比较每一层的输出差异
-     · 定位精度损失发生的层
-     · 适用于调试转换问题
+     - 比较每一层的输出差异
+     - 定位精度损失发生的层
+     - 适用于调试转换问题
 
   2. 端到端输出对比
-     · 比较最终检测结果
-     · 评估整体精度损失
-     · 适用于生产验证
+     - 比较最终检测结果
+     - 评估整体精度损失
+     - 适用于生产验证
 
   3. 数值精度测试
-     · FP32 vs FP16 vs INT8 输出差异分析
-     · 误差传播分析
-     ·  tolerance 阈值设定
-
-```
+     - FP32 vs FP16 vs INT8 输出差异分析
+     - 误差传播分析
+     - tolerance 阈值设定
 
 ```python
 import numpy as np
@@ -5899,7 +5867,6 @@ yolo-inference-deployment/
  api_reference.md
  deployment_guide.md
  README.md
-
 ```
 
 ---
